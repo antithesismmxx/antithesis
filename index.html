@@ -55,12 +55,38 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pg-close{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0;flex-shrink:0;transition:color .2s;cursor:pointer;}
 .pg-close:hover{color:var(--gold);}
 
-/* Admin pengumuman panel */
-.pg-admin-btn{position:fixed;bottom:80px;right:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;}
-.pg-admin-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
-.admin-logout-btn{position:fixed;bottom:132px;right:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(180,60,60,.4);color:#c0392b;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;padding:10px 18px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;display:none;}
+/* ══ TOMBOL ADMIN — hanya muncul saat sudah login ══ */
+.admin-btn-group{
+  position:fixed;bottom:28px;right:28px;z-index:800;
+  display:flex;flex-direction:column;gap:10px;align-items:flex-end;
+}
+.pg-admin-btn,.cd-admin-toggle-right,.admin-logout-btn{
+  background:rgba(10,10,10,.92);
+  border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);
+  font-family:'Montserrat',sans-serif;
+  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
+  padding:12px 20px;
+  transition:all .3s;
+  backdrop-filter:blur(8px);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.pg-admin-btn:hover,.cd-admin-toggle-right:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
+.admin-logout-btn{border-color:rgba(180,60,60,.4);color:#c0392b;}
 .admin-logout-btn:hover{border-color:#c0392b;background:rgba(192,57,43,.1);}
-@media(max-width:960px){.admin-logout-btn{bottom:auto;top:80px;right:16px;}}
+
+/* Tombol Atur Acara di kiri bawah */
+.cd-admin-toggle{
+  position:fixed;bottom:28px;left:28px;z-index:800;
+  background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);font-family:'Montserrat',sans-serif;
+  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
+  padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;
+}
+.cd-admin-toggle:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
+
+/* Admin panels */
 .pg-admin-panel{position:fixed;bottom:130px;right:28px;z-index:800;background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.2);padding:28px;width:300px;display:none;backdrop-filter:blur(12px);}
 .pg-admin-panel.open{display:block;}
 .pg-panel-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
@@ -74,6 +100,165 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pg-btn-post:hover{opacity:.85;}
 .pg-btn-del{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:11px;transition:all .3s;cursor:pointer;}
 .pg-btn-del:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
+
+/* ══ ADMIN LOGIN MODAL — BARU & ELEGAN ══ */
+.pin-overlay{
+  position:fixed;inset:0;z-index:9000;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0);
+  backdrop-filter:blur(0px);
+  transition:background .4s, backdrop-filter .4s;
+}
+.pin-overlay.show{
+  display:flex;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(12px);
+  animation:pin-bg-in .4s ease forwards;
+}
+@keyframes pin-bg-in{from{background:rgba(0,0,0,0);backdrop-filter:blur(0)}to{background:rgba(0,0,0,.88);backdrop-filter:blur(12px)}}
+
+.pin-box{
+  position:relative;
+  width:360px;
+  background:var(--dark2);
+  border:1px solid rgba(201,168,76,.18);
+  overflow:hidden;
+  animation:pin-box-in .45s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes pin-box-in{
+  from{opacity:0;transform:translateY(32px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* Garis emas atas */
+.pin-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);
+}
+/* Efek cahaya sudut */
+.pin-box::after{
+  content:'';position:absolute;top:-80px;right:-80px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.07),transparent 70%);
+  pointer-events:none;
+}
+
+.pin-header{
+  padding:36px 36px 28px;
+  text-align:center;
+  border-bottom:1px solid rgba(201,168,76,.08);
+  position:relative;
+}
+.pin-lock-icon{
+  width:52px;height:52px;
+  border:1px solid rgba(201,168,76,.25);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 18px;
+  font-size:1.3rem;
+  background:rgba(201,168,76,.05);
+  position:relative;
+}
+.pin-lock-icon::before{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:1px solid rgba(201,168,76,.1);
+}
+.pin-title{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.pin-title em{font-style:italic;color:var(--gold);}
+.pin-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);}
+
+/* Indikator PIN */
+.pin-indicator{
+  padding:24px 36px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.pin-dots{display:flex;justify-content:center;gap:14px;}
+.pin-dot{
+  width:12px;height:12px;border-radius:50%;
+  border:1px solid rgba(201,168,76,.25);
+  background:transparent;
+  transition:all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.pin-dot.filled{
+  background:var(--gold);
+  border-color:var(--gold);
+  transform:scale(1.15);
+  box-shadow:0 0 8px rgba(201,168,76,.4);
+}
+.pin-dot.error{
+  background:#c0392b;border-color:#c0392b;
+  box-shadow:0 0 8px rgba(192,57,43,.5);
+}
+.pin-hint{
+  font-family:'Montserrat',sans-serif;font-size:.48rem;
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--muted2);
+  height:14px;transition:color .2s;
+}
+.pin-hint.err{color:#c0392b;}
+
+/* Numpad */
+.pin-numpad{
+  padding:0 28px 28px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+}
+.pin-key{
+  background:var(--dark3);
+  border:1px solid rgba(201,168,76,.08);
+  color:var(--white);
+  font-family:'Playfair Display',serif;
+  font-size:1.35rem;font-weight:700;
+  padding:18px 10px;
+  transition:all .18s ease;
+  cursor:pointer;position:relative;overflow:hidden;
+}
+.pin-key::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center,rgba(201,168,76,.15),transparent 70%);
+  opacity:0;transition:opacity .2s;
+}
+.pin-key:hover{
+  border-color:rgba(201,168,76,.35);
+  background:rgba(201,168,76,.06);
+  color:var(--gold);
+  transform:translateY(-1px);
+}
+.pin-key:hover::after{opacity:1;}
+.pin-key:active{transform:translateY(0) scale(.96);}
+.pin-key.del{
+  font-family:'Montserrat',sans-serif;
+  font-size:.6rem;letter-spacing:.1em;
+  color:var(--muted);font-weight:400;
+}
+.pin-key.del:hover{color:var(--gold);}
+
+/* Footer modal */
+.pin-footer{
+  padding:14px 36px 22px;
+  text-align:center;
+  border-top:1px solid rgba(201,168,76,.07);
+}
+.pin-cancel{
+  background:none;border:none;
+  color:var(--muted);
+  font-family:'Montserrat',sans-serif;
+  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
+  padding:8px 20px;cursor:pointer;
+  transition:color .2s;
+}
+.pin-cancel:hover{color:var(--gold);}
+
+/* Shake animation */
+.pin-shake{animation:pin-shake .45s ease;}
+@keyframes pin-shake{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-9px)}
+  30%{transform:translateX(9px)}
+  45%{transform:translateX(-6px)}
+  60%{transform:translateX(6px)}
+  75%{transform:translateX(-3px)}
+  90%{transform:translateX(3px)}
+}
 
 /* ══ BUKU KENANGAN ══ */
 .buku-wrap{background:var(--dark);}
@@ -89,8 +274,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .btn-buku::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .3s;}
 .btn-buku:hover::before{opacity:1;}
 .btn-buku span{position:relative;z-index:1;}
-
-/* Buku entries */
 .buku-entries-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
 .buku-entries-title{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;}
 .buku-count{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
@@ -212,15 +395,12 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .daftar-input:focus,.daftar-select:focus{border-color:rgba(201,168,76,.5);}
 .daftar-input::placeholder{color:var(--muted2);}
 .daftar-select option{background:var(--dark3);}
-
-/* Upload foto */
 .foto-upload-area{border:1px dashed rgba(201,168,76,.25);padding:24px;text-align:center;transition:border-color .3s;position:relative;cursor:pointer;}
 .foto-upload-area:hover{border-color:rgba(201,168,76,.5);}
 .foto-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,168,76,.3);margin:0 auto 12px;display:none;}
 .foto-placeholder{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;}
 .foto-placeholder span{display:block;font-size:1.8rem;margin-bottom:8px;opacity:.5;}
 .foto-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
-
 .daftar-actions{display:flex;gap:12px;margin-top:24px;}
 .btn-submit-daftar{flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:opacity .3s;cursor:pointer;}
 .btn-submit-daftar:hover{opacity:.85;}
@@ -230,7 +410,6 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 
 /* ══ REQUEST ACARA ══ */
 .request-wrap{background:var(--dark2);}
-
 .acara-types{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:48px 0 44px;}
 .atb{position:relative;border:1px solid rgba(201,168,76,.14);background:var(--dark3);padding:30px 22px;text-align:center;transition:all .4s;overflow:hidden;cursor:pointer;}
 .atb::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.07),transparent);opacity:0;transition:opacity .4s;}
@@ -242,10 +421,8 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .atb-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);transition:color .3s;}
 .atb:hover .atb-name,.atb.active .atb-name{color:var(--gold);}
 .atb-desc{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);margin-top:8px;line-height:1.5;}
-
 .req-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;margin-top:8px;}
 .req-form-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:28px;}
-
 .fg{margin-bottom:18px;}
 .fl{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:10px;}
 .fi,.fs{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:13px 18px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
@@ -253,12 +430,10 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .fi::placeholder{color:var(--muted2);}
 .fs option{background:var(--dark3);color:var(--white);}
 .date-row{display:grid;grid-template-columns:2fr 2fr 3fr;gap:10px;}
-
 .lokasi-pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
 .lp{border:1px solid rgba(201,168,76,.15);background:transparent;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;padding:13px 12px;text-align:center;transition:all .3s;cursor:pointer;}
 .lp:hover{border-color:rgba(201,168,76,.4);color:var(--cream);}
 .lp.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
-
 .btn-req{width:100%;padding:16px;margin-top:10px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:all .35s;position:relative;overflow:hidden;cursor:pointer;}
 .btn-req::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .3s;}
 .btn-req:hover::before{opacity:1;}
@@ -266,16 +441,12 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .req-ok{display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.28);padding:18px 22px;margin-top:14px;}
 .req-ok p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);line-height:1.6;}
 .req-ok p strong{color:var(--gold);}
-
-/* Request List */
 .rl-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
 .rl-title{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;}
 .rl-count{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
-
 .req-entries{max-height:510px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;}
 .req-entries::-webkit-scrollbar{width:3px;}
 .req-entries::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);}
-
 .re{border:1px solid rgba(201,168,76,.09);background:var(--dark3);padding:20px 22px;margin-bottom:10px;position:relative;overflow:hidden;transition:border-color .3s;}
 .re:hover{border-color:rgba(201,168,76,.22);}
 .re::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);opacity:.5;}
@@ -301,15 +472,6 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .motto-sep{width:55px;height:1px;background:var(--gold);margin:46px auto;opacity:.45;}
 .motto-body{font-family:'Cormorant Garamond',serif;font-size:1.18rem;font-style:italic;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.85;}
 
-/* FOOTER */
-footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:55px 60px;display:flex;justify-content:space-between;align-items:center;}
-.foot-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);}
-.foot-brand span{display:block;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--muted);font-weight:300;text-transform:uppercase;margin-top:4px;}
-.foot-mid-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--muted);}
-.foot-links{display:flex;gap:30px;list-style:none;}
-.foot-links a{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.28em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .3s;}
-.foot-links a:hover{color:var(--gold-light);}
-
 /* COUNTDOWN */
 .countdown-wrap{display:none;background:var(--dark);border-top:1px solid rgba(201,168,76,.09);border-bottom:1px solid rgba(201,168,76,.09);padding:70px 60px;position:relative;overflow:hidden;}
 .countdown-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(201,168,76,.04),transparent 70%);}
@@ -329,10 +491,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 .cd-done{font-family:'Playfair Display',serif;font-size:1.6rem;font-style:italic;color:var(--gold);padding:28px 0 0;text-align:center;animation:fu .7s ease forwards;}
 
 /* ADMIN PANEL COUNTDOWN */
-/* FIX: Tombol ini dipindah ke kiri agar tidak bentrok dengan tombol Pengumuman */
-.cd-admin-toggle{position:fixed;bottom:28px;left:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;}
-.cd-admin-toggle:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
-/* FIX: Panel countdown di kiri bawah */
 .cd-admin-panel{position:fixed;bottom:80px;left:28px;z-index:800;background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.2);padding:28px;width:300px;display:none;backdrop-filter:blur(12px);}
 .cd-admin-panel.open{display:block;}
 .cd-admin-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
@@ -348,27 +506,14 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 .cd-btn-clear{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:11px;transition:all .3s;cursor:pointer;}
 .cd-btn-clear:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
 
-/* ══ PIN MODAL ══ */
-.pin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
-.pin-overlay.show{display:flex;}
-.pin-box{background:var(--dark2);border:1px solid rgba(201,168,76,.25);padding:44px 40px;width:320px;text-align:center;position:relative;}
-.pin-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
-.pin-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:6px;}
-.pin-title em{font-style:italic;color:var(--gold);}
-.pin-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);margin-bottom:28px;}
-.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:28px;}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(201,168,76,.3);background:transparent;transition:all .2s;}
-.pin-dot.filled{background:var(--gold);border-color:var(--gold);}
-.pin-dot.error{background:#c0392b;border-color:#c0392b;}
-.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.pin-key{background:var(--dark3);border:1px solid rgba(201,168,76,.12);color:var(--white);font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;padding:16px;transition:all .2s;cursor:pointer;}
-.pin-key:hover{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.07);color:var(--gold);}
-.pin-key.del{font-family:'Montserrat',sans-serif;font-size:.7rem;letter-spacing:.1em;color:var(--muted);}
-.pin-key.del:hover{color:var(--gold);}
-.pin-cancel{margin-top:14px;width:100%;background:transparent;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:10px;cursor:pointer;}
-.pin-cancel:hover{color:var(--gold);}
-.pin-shake{animation:pin-shake .4s ease;}
-@keyframes pin-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:55px 60px;display:flex;justify-content:space-between;align-items:center;}
+.foot-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);}
+.foot-brand span{display:block;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--muted);font-weight:300;text-transform:uppercase;margin-top:4px;}
+.foot-mid-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--muted);}
+.foot-links{display:flex;gap:30px;list-style:none;}
+.foot-links a{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.28em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .3s;}
+.foot-links a:hover{color:var(--gold-light);}
 
 /* REVEAL */
 .rv{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease;}
@@ -391,6 +536,8 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   .foot-links{flex-wrap:wrap;justify-content:center;}
   .cd-admin-toggle{left:50%;transform:translateX(-50%);bottom:16px;white-space:nowrap;}
   .cd-admin-panel{left:50%;transform:translateX(-50%);bottom:70px;width:calc(100% - 48px);max-width:300px;}
+  .admin-btn-group{bottom:16px;right:16px;}
+  .pin-box{width:calc(100vw - 40px);max-width:360px;}
 }
 </style>
 </head>
@@ -470,7 +617,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     <div class="cd-event-name rv" id="cdEventName">—</div>
     <div class="cd-event-date rv" id="cdEventDate">—</div>
     <div class="cd-boxes rv d1">
-      <!-- FIX: ID diganti cdHariNum, cdJamNum, cdMenitNum, cdDetikNum agar tidak bentrok -->
       <div class="cd-box"><span class="cd-num" id="cdHariNum">00</span><span class="cd-unit">Hari</span></div>
       <div class="cd-box"><span class="cd-num" id="cdJamNum">00</span><span class="cd-unit">Jam</span></div>
       <div class="cd-box"><span class="cd-num" id="cdMenitNum">00</span><span class="cd-unit">Menit</span></div>
@@ -480,7 +626,7 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </div>
 
-<!-- ADMIN TOGGLE (Atur Acara) — dipindah ke kiri -->
+<!-- Tombol Atur Acara (kiri bawah) -->
 <button class="cd-admin-toggle" id="cdAdminToggle">⚙ Atur Acara</button>
 <div class="cd-admin-panel" id="cdAdminPanel">
   <div class="cd-admin-title">
@@ -495,11 +641,9 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     <option>🤝 Temu Kangen</option>
   </select>
   <label class="cd-afl">Tanggal</label>
-  <!-- FIX: ID diganti cdDateInput agar tidak bentrok dengan cdJamNum -->
   <input type="date" class="cd-afi" id="cdDateInput"/>
   <label class="cd-afl">Jam Mulai</label>
-  <!-- FIX: ID diganti cdJamInput -->
-  <input type="time" class="cd-afi" id="cdJamInput" placeholder="Contoh: 18:30"/>
+  <input type="time" class="cd-afi" id="cdJamInput"/>
   <label class="cd-afl">Lokasi</label>
   <input type="text" class="cd-afi" id="cdLokasiInput" placeholder="Contoh: Surakarta / Solo"/>
   <div class="cd-admin-btns">
@@ -509,15 +653,12 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 </div>
 
 <!-- PROFIL ANGGOTA -->
-<!-- FIX: Section ini sebelumnya hilang dari HTML, sekarang ditambahkan kembali -->
 <section class="sec profil-wrap" id="profil">
   <div class="sec-label rv">Direktori</div>
   <h2 class="sec-h rv">Anggota <em>ANTITHESIS</em></h2>
   <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--muted);margin-top:12px;font-style:italic;" class="rv d1">
     180 jiwa yang bersatu dalam satu nama, satu semangat, satu kenangan.
   </p>
-
-  <!-- Search & Filter -->
   <div class="profil-search-bar rv d1">
     <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama anggota..."/>
     <button class="pfbtn active" data-filter="semua">Semua</button>
@@ -525,18 +666,12 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     <button class="pfbtn" data-filter="IPS">IPS</button>
     <button class="pfbtn" data-filter="Agama">Agama</button>
   </div>
-
-  <!-- Grid Anggota -->
   <div class="anggota-grid rv d2" id="anggotaGrid"></div>
   <div class="profil-empty" id="profilEmpty">Anggota tidak ditemukan. ✦</div>
-
-  <!-- Tombol Daftar Mandiri -->
   <div class="daftar-toggle rv d3">
     <button class="btn-daftar" id="btnShowDaftar">+ Daftarkan Dirimu</button>
     <span style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted2);">Belum terdaftar? Tambahkan profilmu secara anonim.</span>
   </div>
-
-  <!-- Form Daftar -->
   <div class="daftar-form-wrap" id="daftarFormWrap">
     <div class="daftar-title">Daftarkan <em>Profilmu</em></div>
     <div class="daftar-sub">Isi data di bawah ini. Nama dan jurusan wajib diisi.</div>
@@ -593,8 +728,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   <p style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--muted);margin-top:14px;font-style:italic;" class="rv d1">
     Pilih jenis acara yang kamu inginkan, tentukan tanggal &amp; lokasi, lalu kirimkan usulanmu!
   </p>
-
-  <!-- Pilih jenis acara -->
   <div class="acara-types rv d2">
     <button class="atb" data-type="HBH">
       <div class="atb-check">✓</div>
@@ -615,12 +748,9 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       <div class="atb-desc">Reuni bebas — Kumpul kapan saja, di mana saja</div>
     </button>
   </div>
-
   <div class="req-layout">
-    <!-- FORM -->
     <div class="rv d2">
       <div class="req-form-title">Detail Usulanmu</div>
-
       <div class="fg">
         <label class="fl">Tanggal Acara yang Diusulkan</label>
         <div class="date-row">
@@ -642,12 +772,9 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
             <option value="09">September</option><option value="10">Oktober</option>
             <option value="11">November</option><option value="12">Desember</option>
           </select>
-          <select class="fs" id="reqTahun">
-            <option value="">Tahun</option>
-          </select>
+          <select class="fs" id="reqTahun"><option value="">Tahun</option></select>
         </div>
       </div>
-
       <div class="fg">
         <label class="fl">Pilih Lokasi (Jawa Tengah)</label>
         <div class="lokasi-pills">
@@ -657,19 +784,15 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
           <button class="lp" data-lokasi="Boyolali / Klaten / Salatiga">📍 Boyolali / Klaten / Salatiga</button>
         </div>
       </div>
-
       <div class="fg">
         <label class="fl">Ide Tempat / Catatan (opsional)</label>
         <input type="text" class="fi" id="reqCatatan" placeholder="Contoh: restoran tepi sawah, aula masjid..."/>
       </div>
-
       <button class="btn-req" id="btnReq"><span>Kirim Request →</span></button>
       <div class="req-ok" id="reqOk">
         <p>Request <strong id="reqTypeConf">—</strong> kamu sudah masuk secara anonim. Semoga bisa terlaksana! ✦</p>
       </div>
     </div>
-
-    <!-- LIST -->
     <div class="rv d3">
       <div class="rl-head">
         <div class="rl-title">Usulan Masuk</div>
@@ -690,7 +813,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     Setiap kata yang kamu tulis akan abadi bersama kenangan ANTITHESIS.
   </p>
   <div class="buku-layout">
-    <!-- FORM -->
     <div class="rv d1">
       <div class="buku-form-title">Tinggalkan Pesanmu</div>
       <textarea class="buku-textarea" id="bukuMsg" placeholder="Tulis kenangan, pesan, atau kesan kamu tentang ANTITHESIS..."></textarea>
@@ -703,7 +825,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       </div>
       <button class="btn-buku" id="btnBuku"><span>Kirim Pesan Anonim →</span></button>
     </div>
-    <!-- LIST -->
     <div class="rv d2">
       <div class="buku-entries-head">
         <div class="buku-entries-title">Pesan Masuk</div>
@@ -716,9 +837,13 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </section>
 
+<!-- TOMBOL ADMIN (kanan bawah) — hanya muncul bila sudah login -->
+<div class="admin-btn-group" id="adminBtnGroup" style="display:none;">
+  <button class="admin-logout-btn" id="adminLogoutBtn">🔓 Keluar Admin</button>
+  <button class="pg-admin-btn" id="pgAdminBtn">📢 Pengumuman</button>
+</div>
 
-<!-- PENGUMUMAN ADMIN PANEL -->
-<button class="pg-admin-btn" id="pgAdminBtn">📢 Pengumuman</button>
+<!-- Panel Pengumuman Admin -->
 <div class="pg-admin-panel" id="pgAdminPanel">
   <div class="pg-panel-title">
     Post Pengumuman
@@ -740,19 +865,28 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   <p class="motto-body rv">ANTITHESIS bukan tentang siapa yang paling menonjol, melainkan tentang bagaimana kita saling melengkapi. Setiap perbedaan adalah warna dalam satu kanvas besar bernama kebersamaan.</p>
 </section>
 
-<!-- PIN MODAL -->
+<!-- ══ PIN MODAL — TAMPILAN BARU ══ -->
 <div class="pin-overlay" id="pinOverlay">
   <div class="pin-box" id="pinBox">
-    <div class="pin-title">Panel <em>Admin</em></div>
-    <div class="pin-sub">Masukkan PIN untuk melanjutkan</div>
-    <div class="pin-dots" id="pinDots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
-      <div class="pin-dot" id="pd4"></div>
-      <div class="pin-dot" id="pd5"></div>
+
+    <div class="pin-header">
+      <div class="pin-lock-icon">🔐</div>
+      <div class="pin-title">Panel <em>Admin</em></div>
+      <div class="pin-sub">Masukkan PIN 6 digit untuk melanjutkan</div>
     </div>
+
+    <div class="pin-indicator">
+      <div class="pin-dots" id="pinDots">
+        <div class="pin-dot" id="pd0"></div>
+        <div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div>
+        <div class="pin-dot" id="pd3"></div>
+        <div class="pin-dot" id="pd4"></div>
+        <div class="pin-dot" id="pd5"></div>
+      </div>
+      <div class="pin-hint" id="pinHint">Ketuk angka di bawah</div>
+    </div>
+
     <div class="pin-numpad">
       <button class="pin-key" data-n="1">1</button>
       <button class="pin-key" data-n="2">2</button>
@@ -763,11 +897,15 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       <button class="pin-key" data-n="7">7</button>
       <button class="pin-key" data-n="8">8</button>
       <button class="pin-key" data-n="9">9</button>
-      <button class="pin-key del" id="pinDel">Hapus</button>
+      <button class="pin-key del" id="pinDel">⌫ Hapus</button>
       <button class="pin-key" data-n="0">0</button>
       <button class="pin-key del" id="pinClearAll">Reset</button>
     </div>
-    <button class="pin-cancel" id="pinCancel">Batalkan</button>
+
+    <div class="pin-footer">
+      <button class="pin-cancel" id="pinCancel">✕ &nbsp;Batalkan</button>
+    </div>
+
   </div>
 </div>
 
@@ -823,10 +961,9 @@ const cntObs=new IntersectionObserver(entries=>{
 document.querySelector('.stats-inner')&&cntObs.observe(document.querySelector('.stats-inner'));
 
 // ══ ANGGOTA DATA ══
-const anggotaData=[];          // data hardcode kosong, data dari Firebase
+const anggotaData=[];
 let anggotaFirebase=[];
 function getAllAnggota(){return [...anggotaData,...anggotaFirebase];}
-
 function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
 
 function renderAnggota(data){
@@ -876,7 +1013,6 @@ function doFilter(){
 
 // ══ FORM DAFTAR MANDIRI ══
 let fotoBase64='';
-
 document.getElementById('btnShowDaftar').addEventListener('click',function(){
   const wrap=document.getElementById('daftarFormWrap');
   wrap.classList.toggle('show');
@@ -886,8 +1022,6 @@ document.getElementById('btnCancelDaftar').addEventListener('click',()=>{
   document.getElementById('daftarFormWrap').classList.remove('show');
   document.getElementById('btnShowDaftar').classList.remove('active');
 });
-
-// Preview foto & kompres
 document.getElementById('dfFoto').addEventListener('change',function(){
   const file=this.files[0];
   if(!file) return;
@@ -913,7 +1047,6 @@ document.getElementById('dfFoto').addEventListener('change',function(){
   };
   reader.readAsDataURL(file);
 });
-
 document.getElementById('btnSubmitDaftar').addEventListener('click',function(){
   const nama=document.getElementById('dfNama').value.trim();
   const kelas=document.getElementById('dfKelas').value.trim();
@@ -979,9 +1112,7 @@ renderReq();
 // ══ HITUNG MUNDUR ══
 const namaBln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 let cdInterval=null;
-
 function pad(n){return String(n).padStart(2,'0');}
-
 function startCountdown(acara){
   clearInterval(cdInterval);
   const wrap=document.getElementById('countdownWrap');
@@ -994,14 +1125,11 @@ function startCountdown(acara){
   document.getElementById('cdEventDate').textContent=tglStr;
   wrap.classList.add('visible');
   document.getElementById('cdDone').style.display='none';
-  document.querySelectorAll('.cd-box').forEach(b=>b.style.display='flex');
-
   function tick(){
     const now=new Date();
     const diff=target-now;
     if(diff<=0){
       clearInterval(cdInterval);
-      // Tetap tampilkan box dengan angka 00
       document.getElementById('cdHariNum').textContent='00';
       document.getElementById('cdJamNum').textContent='00';
       document.getElementById('cdMenitNum').textContent='00';
@@ -1027,13 +1155,12 @@ function initFirebase(){
   const db=window.__db, ref=window.__ref, push=window.__push,
         onValue=window.__onValue, set=window.__set, remove=window.__remove;
 
-  // ── HITUNG MUNDUR (shared) ──
+  // Hitung Mundur
   const cdRef=ref(db,'antithesis/acara');
   onValue(cdRef,snap=>{
     const acara=snap.val();
     if(acara && acara.date){
       startCountdown(acara);
-      // FIX: Menggunakan ID input yang diperbaiki
       document.getElementById('cdType').value=acara.type||'';
       document.getElementById('cdDateInput').value=acara.date||'';
       document.getElementById('cdJamInput').value=acara.jam||'';
@@ -1046,9 +1173,9 @@ function initFirebase(){
 
   document.getElementById('cdBtnSet').addEventListener('click',function(){
     const type=document.getElementById('cdType').value.trim();
-    const date=document.getElementById('cdDateInput').value;       // FIX
-    const jam=document.getElementById('cdJamInput').value.trim();  // FIX
-    const lokasi=document.getElementById('cdLokasiInput').value.trim(); // FIX
+    const date=document.getElementById('cdDateInput').value;
+    const jam=document.getElementById('cdJamInput').value.trim();
+    const lokasi=document.getElementById('cdLokasiInput').value.trim();
     if(!type||!date){alert('Pilih jenis acara dan tanggal!');return;}
     set(ref(db,'antithesis/acara'),{type,date,jam,lokasi});
     document.getElementById('cdAdminPanel').classList.remove('open');
@@ -1057,41 +1184,38 @@ function initFirebase(){
   document.getElementById('cdBtnClear').addEventListener('click',function(){
     remove(ref(db,'antithesis/acara'));
     document.getElementById('cdType').value='';
-    document.getElementById('cdDateInput').value='';   // FIX
-    document.getElementById('cdJamInput').value='';    // FIX
-    document.getElementById('cdLokasiInput').value=''; // FIX
+    document.getElementById('cdDateInput').value='';
+    document.getElementById('cdJamInput').value='';
+    document.getElementById('cdLokasiInput').value='';
     document.getElementById('cdAdminPanel').classList.remove('open');
   });
 
-  // ── PENGUMUMAN (shared) ──
+  // Pengumuman
   const pgRef=ref(db,'antithesis/pengumuman');
   onValue(pgRef,snap=>{
     const txt=snap.val()||'';
     document.getElementById('pgInput').value=txt;
     showPg(txt);
   });
-
   document.getElementById('pgBtnPost').addEventListener('click',()=>{
     const v=document.getElementById('pgInput').value.trim();
     if(!v){alert('Tulis isi pengumuman dulu!');return;}
     set(ref(db,'antithesis/pengumuman'),v);
     document.getElementById('pgAdminPanel').classList.remove('open');
   });
-
   document.getElementById('pgBtnDel').addEventListener('click',()=>{
     remove(ref(db,'antithesis/pengumuman'));
     document.getElementById('pgInput').value='';
     document.getElementById('pgAdminPanel').classList.remove('open');
   });
 
-  // ── REQUEST ACARA (shared, real-time) ──
+  // Request Acara
   const reqRef=ref(db,'antithesis/requests');
   onValue(reqRef,snap=>{
     const raw=snap.val()||{};
     reqData=Object.entries(raw).map(([id,v])=>({id,...v}));
     renderReq();
   });
-
   document.getElementById('btnReq').addEventListener('click',function(){
     const tgl=document.getElementById('reqTgl').value;
     const bulan=document.getElementById('reqBulan').value;
@@ -1122,14 +1246,13 @@ function initFirebase(){
     else sessionStorage.setItem(likedKey,'1');
   };
 
-  // ── BUKU KENANGAN (shared, real-time) ──
+  // Buku Kenangan
   const bukuRef=ref(db,'antithesis/buku');
   onValue(bukuRef,snap=>{
     const raw=snap.val()||{};
     bukuData=Object.values(raw).reverse();
     renderBuku();
   });
-
   document.getElementById('btnBuku').addEventListener('click',function(){
     const msg=document.getElementById('bukuMsg').value.trim();
     if(!msg){
@@ -1144,14 +1267,13 @@ function initFirebase(){
     document.getElementById('bukuMsg').style.borderColor='';
   });
 
-  // ── DAFTAR MANDIRI ANGGOTA (shared, real-time) ──
+  // Daftar Mandiri
   const anggotaRef=ref(db,'antithesis/anggota');
   onValue(anggotaRef,snap=>{
     const raw=snap.val()||{};
     anggotaFirebase=Object.values(raw);
     doFilter();
   });
-
   window.__submitAnggota=function(data){
     push(anggotaRef,data).then(()=>{
       document.getElementById('dfNama').value='';
@@ -1172,119 +1294,143 @@ function initFirebase(){
     });
   };
 }
-
 if(window.__firebaseReady) initFirebase();
 else window.addEventListener('firebase-ready', initFirebase);
 
-// ══ PIN ADMIN ══
-const ADMIN_PIN='300105';
-let pinInput='';
-let pinTarget=null;
+// ══ PIN ADMIN — PERBAIKAN KEAMANAN ══
+// PIN tidak disimpan di localStorage, hanya di memori sesi
+const ADMIN_PIN = '300105';
+let pinInput = '';
+let pinTarget = null;
+let isAdminSession = false; // status login hanya di memori, bukan localStorage
+
+function isAdmin(){ return isAdminSession; }
+
+function updateAdminUI(){
+  const group = document.getElementById('adminBtnGroup');
+  // Tombol admin HANYA muncul jika sudah login
+  group.style.display = isAdminSession ? 'flex' : 'none';
+}
+updateAdminUI();
 
 function updatePinDots(){
   for(let i=0;i<6;i++){
     const d=document.getElementById('pd'+i);
     if(!d) return;
-    d.classList.toggle('filled', i<pinInput.length);
+    d.classList.toggle('filled', i < pinInput.length);
     d.classList.remove('error');
   }
+  // Update hint
+  const hint = document.getElementById('pinHint');
+  hint.classList.remove('err');
+  hint.textContent = pinInput.length === 0 ? 'Ketuk angka di bawah' : `${pinInput.length} / 6 digit`;
 }
+
 function openPin(target){
-  pinTarget=target; pinInput=''; updatePinDots();
+  pinTarget = target;
+  pinInput = '';
+  updatePinDots();
   document.getElementById('pinOverlay').classList.add('show');
 }
+
 function closePin(){
   document.getElementById('pinOverlay').classList.remove('show');
-  pinInput=''; pinTarget=null; updatePinDots();
+  pinInput = '';
+  pinTarget = null;
+  updatePinDots();
 }
+
 function pinSuccess(){
+  isAdminSession = true;
   closePin();
-  localStorage.setItem('antithesis_admin','1');
-  if(pinTarget==='pg') document.getElementById('pgAdminPanel').classList.add('open');
-  if(pinTarget==='cd') document.getElementById('cdAdminPanel').classList.add('open');
-  if(typeof updateAdminUI==='function') updateAdminUI();
+  updateAdminUI();
+  if(pinTarget === 'pg') document.getElementById('pgAdminPanel').classList.add('open');
+  if(pinTarget === 'cd') document.getElementById('cdAdminPanel').classList.add('open');
 }
+
 function pinError(){
-  for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.add('error');}
+  for(let i=0;i<6;i++){
+    const d=document.getElementById('pd'+i);
+    if(d) d.classList.add('error');
+  }
+  const hint = document.getElementById('pinHint');
+  hint.textContent = '✕  PIN salah, coba lagi';
+  hint.classList.add('err');
   document.getElementById('pinBox').classList.add('pin-shake');
   setTimeout(()=>{
     document.getElementById('pinBox').classList.remove('pin-shake');
-    pinInput=''; updatePinDots();
-  },500);
+    pinInput = '';
+    updatePinDots();
+  }, 600);
 }
+
 document.querySelectorAll('.pin-key[data-n]').forEach(k=>k.addEventListener('click',function(){
-  if(pinInput.length>=ADMIN_PIN.length) return;
-  pinInput+=this.dataset.n; updatePinDots();
-  if(pinInput.length===ADMIN_PIN.length){
-    setTimeout(()=>{if(pinInput===ADMIN_PIN) pinSuccess(); else pinError();},150);
+  if(pinInput.length >= ADMIN_PIN.length) return;
+  pinInput += this.dataset.n;
+  updatePinDots();
+  if(pinInput.length === ADMIN_PIN.length){
+    setTimeout(()=>{ if(pinInput === ADMIN_PIN) pinSuccess(); else pinError(); }, 150);
   }
 }));
-document.getElementById('pinDel').addEventListener('click',()=>{pinInput=pinInput.slice(0,-1);updatePinDots();});
-document.getElementById('pinClearAll').addEventListener('click',()=>{pinInput='';updatePinDots();});
-document.getElementById('pinCancel').addEventListener('click',closePin);
-document.getElementById('pinOverlay').addEventListener('click',function(e){if(e.target===this)closePin();});
-function isAdmin(){return localStorage.getItem('antithesis_admin')==='1';}
-
-// Tampilkan tombol logout jika sudah login admin
-function updateAdminUI(){
-  const btn=document.getElementById("adminLogoutBtn");
-  if(btn) btn.style.display=isAdmin()?"block":"none";
-}
-updateAdminUI();
+document.getElementById('pinDel').addEventListener('click',()=>{ pinInput=pinInput.slice(0,-1); updatePinDots(); });
+document.getElementById('pinClearAll').addEventListener('click',()=>{ pinInput=''; updatePinDots(); });
+document.getElementById('pinCancel').addEventListener('click', closePin);
+document.getElementById('pinOverlay').addEventListener('click',function(e){ if(e.target===this) closePin(); });
 
 // Logout
-document.getElementById("adminLogoutBtn").addEventListener("click",()=>{
-  if(confirm("Keluar dari mode admin?")){
-    localStorage.removeItem("antithesis_admin");
+document.getElementById('adminLogoutBtn').addEventListener('click',()=>{
+  if(confirm('Keluar dari mode admin?')){
+    isAdminSession = false;
     updateAdminUI();
-    document.getElementById("cdAdminPanel").classList.remove("open");
-    document.getElementById("pgAdminPanel").classList.remove("open");
+    document.getElementById('cdAdminPanel').classList.remove('open');
+    document.getElementById('pgAdminPanel').classList.remove('open');
   }
 });
 
-// Admin toggle Atur Acara
+// Tombol Atur Acara (kiri bawah) — selalu muncul, tapi perlu PIN jika belum login
 document.getElementById('cdAdminToggle').addEventListener('click',()=>{
-  const panel=document.getElementById('cdAdminPanel');
-  if(panel.classList.contains('open')){panel.classList.remove('open');return;}
+  const panel = document.getElementById('cdAdminPanel');
+  if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
   if(isAdmin()) panel.classList.add('open'); else openPin('cd');
 });
 document.getElementById('cdAdminClose').addEventListener('click',()=>
   document.getElementById('cdAdminPanel').classList.remove('open'));
 
+// Tombol Pengumuman (hanya muncul jika sudah login)
+document.getElementById('pgAdminBtn').addEventListener('click',()=>{
+  const p = document.getElementById('pgAdminPanel');
+  if(p.classList.contains('open')){ p.classList.remove('open'); return; }
+  p.classList.add('open');
+});
+document.getElementById('pgPanelClose').addEventListener('click',()=>
+  document.getElementById('pgAdminPanel').classList.remove('open'));
+
 // ══ PENGUMUMAN UI ══
 function showPg(txt){
-  const pgBar=document.getElementById('pgBar');
-  if(!txt){pgBar.classList.remove('show');return;}
-  document.getElementById('pgText').textContent=txt;
+  const pgBar = document.getElementById('pgBar');
+  if(!txt){ pgBar.classList.remove('show'); return; }
+  document.getElementById('pgText').textContent = txt;
   pgBar.classList.add('show');
 }
 document.getElementById('pgClose').addEventListener('click',()=>
   document.getElementById('pgBar').classList.remove('show'));
 
-document.getElementById('pgAdminBtn').addEventListener('click',()=>{
-  const p=document.getElementById('pgAdminPanel');
-  if(p.classList.contains('open')){p.classList.remove('open');return;}
-  if(isAdmin()) p.classList.add('open'); else openPin('pg');
-});
-document.getElementById('pgPanelClose').addEventListener('click',()=>
-  document.getElementById('pgAdminPanel').classList.remove('open'));
-
 // ══ BUKU KENANGAN UI ══
-let bukuData=[];
-let selMood='🌟';
+let bukuData = [];
+let selMood = '🌟';
 document.querySelectorAll('.buku-mood-btn').forEach(b=>b.addEventListener('click',function(){
   document.querySelectorAll('.buku-mood-btn').forEach(x=>x.classList.remove('active'));
   this.classList.add('active');
-  selMood=this.dataset.mood;
+  selMood = this.dataset.mood;
 }));
 function renderBuku(){
-  const list=document.getElementById('bukuList');
-  document.getElementById('bukuCount').textContent=bukuData.length;
+  const list = document.getElementById('bukuList');
+  document.getElementById('bukuCount').textContent = bukuData.length;
   if(!bukuData.length){
     list.innerHTML='<div class="buku-empty">Belum ada pesan. Jadilah yang pertama menulis! ✦</div>';
     return;
   }
-  list.innerHTML=bukuData.map(b=>`
+  list.innerHTML = bukuData.map(b=>`
     <div class="buku-entry">
       <div class="be-top">
         <span class="be-mood">${b.mood}</span>
@@ -1299,10 +1445,10 @@ function renderBuku(){
 renderBuku();
 
 // ══ NAV ACTIVE SECTION ══
-const secs=document.querySelectorAll('section[id]');
+const secs = document.querySelectorAll('section[id]');
 window.addEventListener('scroll',()=>{
-  let c='';
-  secs.forEach(s=>{if(scrollY>=s.offsetTop-200) c=s.id;});
+  let c = '';
+  secs.forEach(s=>{ if(scrollY >= s.offsetTop-200) c = s.id; });
   document.querySelectorAll('.nav-links a').forEach(a=>
     a.classList.toggle('active', a.getAttribute('href')==='#'+c));
 });
