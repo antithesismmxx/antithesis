@@ -456,7 +456,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
   <ul class="nav-links">
     <li><a href="#tentang">Tentang</a></li>
-    <li><a href="#anggota">Anggota</a></li>
     <li><a href="#request">Request Acara</a></li>
     <li><a href="#buku">Kenangan</a></li>
     <li><a href="#motto">Motto</a></li>
@@ -548,66 +547,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     <button class="cd-btn-clear" id="cdBtnClear">Hapus Acara</button>
   </div>
 </div>
-
-<!-- PROFIL ANGGOTA -->
-<section class="sec profil-wrap" id="anggota">
-  <div class="sec-label rv">Profil Anggota</div>
-  <h2 class="sec-h rv">Wajah-Wajah <em>ANTITHESIS</em></h2>
-
-  <!-- Form Daftar Mandiri -->
-  <div class="daftar-toggle rv d1">
-    <button class="btn-daftar" id="btnShowDaftar">+ Daftarkan Dirimu</button>
-    <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--muted);">Belum ada profilmu? Isi datamu di sini!</span>
-  </div>
-  <div class="daftar-form-wrap" id="daftarFormWrap">
-    <div class="daftar-title">Daftar <em>Profil Anggota</em></div>
-    <div class="daftar-sub">Isi datamu dan langsung tampil di halaman ini.</div>
-    <div class="daftar-grid">
-      <div class="daftar-field">
-        <label class="daftar-label">Nama Lengkap *</label>
-        <input type="text" class="daftar-input" id="dfNama" placeholder="Nama lengkapmu..."/>
-      </div>
-      <div class="daftar-field">
-        <label class="daftar-label">Kelas</label>
-        <input type="text" class="daftar-input" id="dfKelas" placeholder="Contoh: XII IPA 1"/>
-      </div>
-      <div class="daftar-field">
-        <label class="daftar-label">Jurusan</label>
-        <select class="daftar-select" id="dfJurusan">
-          <option value="">— Pilih —</option>
-          <option value="IPA">IPA</option>
-          <option value="IPS">IPS</option>
-          <option value="MA">MA</option>
-        </select>
-      </div>
-      <div class="daftar-field">
-        <label class="daftar-label">Foto Profil (opsional)</label>
-        <div class="foto-upload-area" id="fotoUploadArea">
-          <input type="file" class="foto-input" id="dfFoto" accept="image/*"/>
-          <img class="foto-preview" id="fotoPreview" src="" alt="preview"/>
-          <div class="foto-placeholder" id="fotoPlaceholder">
-            <span>📷</span>Upload Foto
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="daftar-actions">
-      <button class="btn-submit-daftar" id="btnSubmitDaftar">Simpan Profil →</button>
-      <button class="btn-cancel-daftar" id="btnCancelDaftar">Batal</button>
-    </div>
-    <div class="daftar-ok" id="daftarOk">✦ Profilmu berhasil ditambahkan! Terima kasih sudah bergabung.</div>
-  </div>
-
-  <div class="profil-search-bar rv d1" style="margin-top:40px;">
-    <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama anggota..."/>
-    <button class="pfbtn active" data-filter="semua">Semua</button>
-    <button class="pfbtn" data-filter="IPA">IPA</button>
-    <button class="pfbtn" data-filter="IPS">IPS</button>
-    <button class="pfbtn" data-filter="MA">MA</button>
-  </div>
-  <div class="anggota-grid" id="anggotaGrid"></div>
-  <p class="profil-empty" id="profilEmpty">Tidak ada anggota yang cocok.</p>
-</section>
 
 <!-- REQUEST ACARA -->
 <section class="sec request-wrap" id="request">
@@ -823,20 +762,7 @@ const cntObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInter
 document.querySelector('.stats-inner')&&cntObs.observe(document.querySelector('.stats-inner'));
 
 // ANGGOTA
-const anggotaData=[
-  {nama:'Ahmad Fauzan',nis:'181001',kelas:'XII IPA 1',jurusan:'IPA',motto:'Ilmu tanpa amal bagaikan pohon tanpa buah.',jabatan:'Ketua Angkatan'},
-  {nama:'Siti Nur Aisyah',nis:'181002',kelas:'XII IPA 1',jurusan:'IPA',motto:'Diam bukan berarti menyerah, tapi sedang mengamati.',jabatan:'Sekretaris'},
-  {nama:'Muhammad Rizal',nis:'181003',kelas:'XII IPA 2',jurusan:'IPA',motto:'Keras kepala untuk hal yang benar adalah kebijaksanaan.',jabatan:'Bendahara'},
-  {nama:'Dewi Rahmawati',nis:'181004',kelas:'XII IPS 1',jurusan:'IPS',motto:'Setiap langkah kecil adalah bagian dari perjalanan besar.',jabatan:'Koord. Acara'},
-  {nama:'Bagas Prasetyo',nis:'181005',kelas:'XII IPS 1',jurusan:'IPS',motto:'Hidup terlalu singkat untuk tidak berani bermimpi besar.',jabatan:'Koord. Humas'},
-  {nama:'Nurul Hidayah',nis:'181006',kelas:'XII IPS 2',jurusan:'IPS',motto:'Kebaikan yang kecil nilainya lebih dari niat yang besar.',jabatan:'Anggota'},
-  {nama:'Fariz Darmawan',nis:'181007',kelas:'XII MA 1',jurusan:'MA',motto:'Perbedaan bukan jurang, melainkan jembatan.',jabatan:'Koord. MA'},
-  {nama:"Layla Qurratu A'yun",nis:'181008',kelas:'XII MA 1',jurusan:'MA',motto:'Hati yang ikhlas adalah kunci setiap pintu kebaikan.',jabatan:'Anggota'},
-  {nama:'Ibnu Hajar',nis:'181009',kelas:'XII MA 2',jurusan:'MA',motto:'Belajar dari kemarin, hidup untuk hari ini, harap untuk esok.',jabatan:'Anggota'},
-  {nama:'Annisa Fitri',nis:'181010',kelas:'XII IPA 2',jurusan:'IPA',motto:'Perempuan kuat bukan yang tak pernah jatuh, tapi yang bangkit lagi.',jabatan:'Anggota'},
-  {nama:'Habibi Santoso',nis:'181011',kelas:'XII IPS 2',jurusan:'IPS',motto:'Tawa adalah bahasa universal yang semua orang mengerti.',jabatan:'Anggota'},
-  {nama:'Zulfika Amalia',nis:'181012',kelas:'XII MA 2',jurusan:'MA',motto:'Ilmu agama dan dunia adalah dua sayap yang harus seimbang.',jabatan:'Anggota'},
-];
+const anggotaData=[];
 function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('');}
 
 // Gabungan data hardcode + data Firebase
