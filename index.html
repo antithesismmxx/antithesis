@@ -500,6 +500,8 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </select>
   <label class="cd-afl">Tanggal</label>
   <input type="date" class="cd-afi" id="cdDate"/>
+  <label class="cd-afl">Jam Mulai</label>
+  <input type="time" class="cd-afi" id="cdJam" placeholder="Contoh: 18:30"/>
   <label class="cd-afl">Lokasi</label>
   <input type="text" class="cd-afi" id="cdLokasi" placeholder="Contoh: Surakarta / Solo"/>
   <div class="cd-admin-btns">
@@ -830,11 +832,13 @@ function pad(n){return String(n).padStart(2,'0');}
 function startCountdown(acara){
   clearInterval(cdInterval);
   const wrap=document.getElementById('countdownWrap');
-  const target=new Date(acara.date+'T00:00:00');
+  const dateStr=acara.jam ? acara.date+'T'+acara.jam+':00' : acara.date+'T00:00:00';
+  const target=new Date(dateStr);
+  let tglStr=target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear();
+  if(acara.jam) tglStr+=' · ⏰ '+acara.jam+' WIB';
+  if(acara.lokasi) tglStr+=' · 📍 '+acara.lokasi;
   document.getElementById('cdEventName').innerHTML=acara.type;
-  document.getElementById('cdEventDate').textContent=
-    target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear()+
-    (acara.lokasi?' · 📍 '+acara.lokasi:'');
+  document.getElementById('cdEventDate').textContent=tglStr;
   wrap.classList.add('visible');
   document.getElementById('cdDone').style.display='none';
   document.querySelectorAll('.cd-box').forEach(b=>b.style.display='');
@@ -879,10 +883,11 @@ function initFirebase(){
   const cdRef=ref(db,'antithesis/acara');
   onValue(cdRef,snap=>{
     const acara=snap.val();
-    if(acara && new Date(acara.date+'T00:00:00')>new Date(-864e5)){
+    if(acara && acara.date){
       startCountdown(acara);
       document.getElementById('cdType').value=acara.type||'';
       document.getElementById('cdDate').value=acara.date||'';
+      document.getElementById('cdJam').value=acara.jam||'';
       document.getElementById('cdLokasi').value=acara.lokasi||'';
     } else {
       clearInterval(cdInterval);
@@ -893,9 +898,10 @@ function initFirebase(){
   document.getElementById('cdBtnSet').addEventListener('click',function(){
     const type=document.getElementById('cdType').value.trim();
     const date=document.getElementById('cdDate').value;
+    const jam=document.getElementById('cdJam').value.trim();
     const lokasi=document.getElementById('cdLokasi').value.trim();
     if(!type||!date){alert('Pilih jenis acara dan tanggal!');return;}
-    set(ref(db,'antithesis/acara'),{type,date,lokasi});
+    set(ref(db,'antithesis/acara'),{type,date,jam,lokasi});
     adminPanel.classList.remove('open');
   });
 
@@ -903,6 +909,7 @@ function initFirebase(){
     remove(ref(db,'antithesis/acara'));
     document.getElementById('cdType').value='';
     document.getElementById('cdDate').value='';
+    document.getElementById('cdJam').value='';
     document.getElementById('cdLokasi').value='';
     adminPanel.classList.remove('open');
   });
