@@ -208,6 +208,45 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .ac:hover .ac-corner{border-color:transparent rgba(201,168,76,.5) transparent transparent;}
 .profil-empty{text-align:center;padding:80px 20px;color:var(--muted);font-style:italic;font-size:1.1rem;display:none;}
 
+/* ══ FORM DAFTAR MANDIRI ══ */
+.daftar-toggle{display:flex;align-items:center;gap:14px;margin-top:50px;margin-bottom:0;}
+.btn-daftar{background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;padding:13px 28px;transition:all .3s;}
+.btn-daftar:hover{background:rgba(201,168,76,.07);border-color:var(--gold);}
+.btn-daftar.active{background:rgba(201,168,76,.1);border-color:var(--gold);}
+.daftar-form-wrap{display:none;background:var(--dark3);border:1px solid rgba(201,168,76,.12);padding:36px 40px;margin-top:20px;position:relative;}
+.daftar-form-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.5;}
+.daftar-form-wrap.show{display:block;}
+.daftar-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.daftar-title em{font-style:italic;color:var(--gold);}
+.daftar-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);margin-bottom:30px;}
+.daftar-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.daftar-field{display:flex;flex-direction:column;gap:8px;}
+.daftar-field.full{grid-column:1/-1;}
+.daftar-label{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;}
+.daftar-input,.daftar-select{width:100%;background:var(--dark2);border:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:12px 16px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.daftar-input:focus,.daftar-select:focus{border-color:rgba(201,168,76,.5);}
+.daftar-input::placeholder{color:var(--muted2);}
+.daftar-select option{background:var(--dark3);}
+
+/* Upload foto */
+.foto-upload-area{border:1px dashed rgba(201,168,76,.25);padding:24px;text-align:center;transition:border-color .3s;position:relative;cursor:pointer;}
+.foto-upload-area:hover{border-color:rgba(201,168,76,.5);}
+.foto-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,168,76,.3);margin:0 auto 12px;display:none;}
+.foto-placeholder{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;}
+.foto-placeholder span{display:block;font-size:1.8rem;margin-bottom:8px;opacity:.5;}
+.foto-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+
+.daftar-actions{display:flex;gap:12px;margin-top:24px;}
+.btn-submit-daftar{flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:opacity .3s;}
+.btn-submit-daftar:hover{opacity:.85;}
+.btn-cancel-daftar{padding:14px 20px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;transition:all .3s;}
+.btn-cancel-daftar:hover{border-color:rgba(201,168,76,.4);color:var(--gold);}
+.daftar-ok{display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:14px 20px;margin-top:16px;font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--gold);text-align:center;}
+
+/* Foto di kartu anggota */
+.ac-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+@media(max-width:960px){.daftar-grid{grid-template-columns:1fr;}.daftar-form-wrap{padding:24px 20px;}}
+
 /* ══ REQUEST ACARA ══ */
 .request-wrap{background:var(--dark2);}
 
@@ -417,7 +456,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
   <ul class="nav-links">
     <li><a href="#tentang">Tentang</a></li>
-    <li><a href="#anggota">Anggota</a></li>
     <li><a href="#request">Request Acara</a></li>
     <li><a href="#buku">Kenangan</a></li>
     <li><a href="#motto">Motto</a></li>
@@ -500,6 +538,8 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </select>
   <label class="cd-afl">Tanggal</label>
   <input type="date" class="cd-afi" id="cdDate"/>
+  <label class="cd-afl">Jam Mulai</label>
+  <input type="time" class="cd-afi" id="cdJam" placeholder="Contoh: 18:30"/>
   <label class="cd-afl">Lokasi</label>
   <input type="text" class="cd-afi" id="cdLokasi" placeholder="Contoh: Surakarta / Solo"/>
   <div class="cd-admin-btns">
@@ -507,21 +547,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
     <button class="cd-btn-clear" id="cdBtnClear">Hapus Acara</button>
   </div>
 </div>
-
-<!-- PROFIL ANGGOTA -->
-<section class="sec profil-wrap" id="anggota">
-  <div class="sec-label rv">Profil Anggota</div>
-  <h2 class="sec-h rv">Wajah-Wajah <em>ANTITHESIS</em></h2>
-  <div class="profil-search-bar rv d1">
-    <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama anggota..."/>
-    <button class="pfbtn active" data-filter="semua">Semua</button>
-    <button class="pfbtn" data-filter="IPA">IPA</button>
-    <button class="pfbtn" data-filter="IPS">IPS</button>
-    <button class="pfbtn" data-filter="MA">MA</button>
-  </div>
-  <div class="anggota-grid" id="anggotaGrid"></div>
-  <p class="profil-empty" id="profilEmpty">Tidak ada anggota yang cocok.</p>
-</section>
 
 <!-- REQUEST ACARA -->
 <section class="sec request-wrap" id="request">
@@ -737,34 +762,34 @@ const cntObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isInter
 document.querySelector('.stats-inner')&&cntObs.observe(document.querySelector('.stats-inner'));
 
 // ANGGOTA
-const anggotaData=[
-  {nama:'Ahmad Fauzan',nis:'181001',kelas:'XII IPA 1',jurusan:'IPA',motto:'Ilmu tanpa amal bagaikan pohon tanpa buah.',jabatan:'Ketua Angkatan'},
-  {nama:'Siti Nur Aisyah',nis:'181002',kelas:'XII IPA 1',jurusan:'IPA',motto:'Diam bukan berarti menyerah, tapi sedang mengamati.',jabatan:'Sekretaris'},
-  {nama:'Muhammad Rizal',nis:'181003',kelas:'XII IPA 2',jurusan:'IPA',motto:'Keras kepala untuk hal yang benar adalah kebijaksanaan.',jabatan:'Bendahara'},
-  {nama:'Dewi Rahmawati',nis:'181004',kelas:'XII IPS 1',jurusan:'IPS',motto:'Setiap langkah kecil adalah bagian dari perjalanan besar.',jabatan:'Koord. Acara'},
-  {nama:'Bagas Prasetyo',nis:'181005',kelas:'XII IPS 1',jurusan:'IPS',motto:'Hidup terlalu singkat untuk tidak berani bermimpi besar.',jabatan:'Koord. Humas'},
-  {nama:'Nurul Hidayah',nis:'181006',kelas:'XII IPS 2',jurusan:'IPS',motto:'Kebaikan yang kecil nilainya lebih dari niat yang besar.',jabatan:'Anggota'},
-  {nama:'Fariz Darmawan',nis:'181007',kelas:'XII MA 1',jurusan:'MA',motto:'Perbedaan bukan jurang, melainkan jembatan.',jabatan:'Koord. MA'},
-  {nama:"Layla Qurratu A'yun",nis:'181008',kelas:'XII MA 1',jurusan:'MA',motto:'Hati yang ikhlas adalah kunci setiap pintu kebaikan.',jabatan:'Anggota'},
-  {nama:'Ibnu Hajar',nis:'181009',kelas:'XII MA 2',jurusan:'MA',motto:'Belajar dari kemarin, hidup untuk hari ini, harap untuk esok.',jabatan:'Anggota'},
-  {nama:'Annisa Fitri',nis:'181010',kelas:'XII IPA 2',jurusan:'IPA',motto:'Perempuan kuat bukan yang tak pernah jatuh, tapi yang bangkit lagi.',jabatan:'Anggota'},
-  {nama:'Habibi Santoso',nis:'181011',kelas:'XII IPS 2',jurusan:'IPS',motto:'Tawa adalah bahasa universal yang semua orang mengerti.',jabatan:'Anggota'},
-  {nama:'Zulfika Amalia',nis:'181012',kelas:'XII MA 2',jurusan:'MA',motto:'Ilmu agama dan dunia adalah dua sayap yang harus seimbang.',jabatan:'Anggota'},
-];
+const anggotaData=[];
 function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('');}
+
+// Gabungan data hardcode + data Firebase
+let anggotaFirebase=[];
+function getAllAnggota(){return [...anggotaData,...anggotaFirebase];}
+
 function renderAnggota(data){
   const g=document.getElementById('anggotaGrid'),e=document.getElementById('profilEmpty');
   if(!data.length){g.innerHTML='';e.style.display='block';return;}
   e.style.display='none';
-  g.innerHTML=data.map(a=>`<div class="ac rv on" data-j="${a.jurusan}">
-    <div class="ac-corner"></div>
-    <div class="ac-top"><div class="ac-av">${getInit(a.nama)}</div>
-    <div><div class="ac-name">${a.nama}</div><div class="ac-nis">NIS · ${a.nis}</div></div></div>
-    <div class="ac-bot"><div class="ac-kelas">${a.kelas} · ${a.jabatan}</div>
-    <div class="ac-motto">"${a.motto}"</div><div class="ac-badge">${a.jurusan}</div></div>
-  </div>`).join('');
+  g.innerHTML=data.map(a=>{
+    const av=a.foto
+      ? `<div class="ac-av"><img src="${a.foto}" alt="${a.nama}"/></div>`
+      : `<div class="ac-av">${getInit(a.nama)}</div>`;
+    const nis=a.nis?`<div class="ac-nis">NIS · ${a.nis}</div>`:'';
+    const jabatan=a.jabatan?` · ${a.jabatan}`:'';
+    const motto=a.motto?`<div class="ac-motto">"${a.motto}"</div>`:'';
+    return `<div class="ac rv on" data-j="${a.jurusan||''}">
+      <div class="ac-corner"></div>
+      <div class="ac-top">${av}
+      <div><div class="ac-name">${a.nama}</div>${nis}</div></div>
+      <div class="ac-bot"><div class="ac-kelas">${a.kelas||''}${jabatan}</div>
+      ${motto}<div class="ac-badge">${a.jurusan||''}</div></div>
+    </div>`;
+  }).join('');
 }
-renderAnggota(anggotaData);
+renderAnggota(getAllAnggota());
 let af='semua';
 document.querySelectorAll('.pfbtn').forEach(b=>b.addEventListener('click',function(){
   document.querySelectorAll('.pfbtn').forEach(x=>x.classList.remove('active'));
@@ -773,8 +798,55 @@ document.querySelectorAll('.pfbtn').forEach(b=>b.addEventListener('click',functi
 document.getElementById('searchAnggota').addEventListener('input',doFilter);
 function doFilter(){
   const q=document.getElementById('searchAnggota').value.toLowerCase();
-  renderAnggota(anggotaData.filter(a=>(a.nama.toLowerCase().includes(q)||a.kelas.toLowerCase().includes(q))&&(af==='semua'||a.jurusan===af)));
+  renderAnggota(getAllAnggota().filter(a=>(a.nama.toLowerCase().includes(q)||(a.kelas||'').toLowerCase().includes(q))&&(af==='semua'||a.jurusan===af)));
 }
+
+// ══ FORM DAFTAR MANDIRI ══
+let fotoBase64='';
+document.getElementById('btnShowDaftar').addEventListener('click',function(){
+  const wrap=document.getElementById('daftarFormWrap');
+  wrap.classList.toggle('show');
+  this.classList.toggle('active');
+});
+document.getElementById('btnCancelDaftar').addEventListener('click',()=>{
+  document.getElementById('daftarFormWrap').classList.remove('show');
+  document.getElementById('btnShowDaftar').classList.remove('active');
+});
+
+// Preview foto
+document.getElementById('dfFoto').addEventListener('change',function(){
+  const file=this.files[0];
+  if(!file) return;
+  // Kompres & resize ke max 300px
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const max=300;
+      let w=img.width,h=img.height;
+      if(w>h){if(w>max){h=h*(max/w);w=max;}}else{if(h>max){w=w*(max/h);h=max;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      fotoBase64=canvas.toDataURL('image/jpeg',0.75);
+      document.getElementById('fotoPreview').src=fotoBase64;
+      document.getElementById('fotoPreview').style.display='block';
+      document.getElementById('fotoPlaceholder').style.display='none';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('btnSubmitDaftar').addEventListener('click',function(){
+  const nama=document.getElementById('dfNama').value.trim();
+  const kelas=document.getElementById('dfKelas').value.trim();
+  const jurusan=document.getElementById('dfJurusan').value;
+  if(!nama){document.getElementById('dfNama').style.borderColor='rgba(201,168,76,.6)';document.getElementById('dfNama').focus();return;}
+  // Kirim ke Firebase via initFirebase
+  if(window.__submitAnggota) window.__submitAnggota({nama,kelas,jurusan,foto:fotoBase64});
+});
+
 
 // ══ REQUEST ACARA ══
 let selType=null,selLokasi=null,reqData=[];
@@ -830,11 +902,13 @@ function pad(n){return String(n).padStart(2,'0');}
 function startCountdown(acara){
   clearInterval(cdInterval);
   const wrap=document.getElementById('countdownWrap');
-  const target=new Date(acara.date+'T00:00:00');
+  const dateStr=acara.jam ? acara.date+'T'+acara.jam+':00' : acara.date+'T00:00:00';
+  const target=new Date(dateStr);
+  let tglStr=target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear();
+  if(acara.jam) tglStr+=' · ⏰ '+acara.jam+' WIB';
+  if(acara.lokasi) tglStr+=' · 📍 '+acara.lokasi;
   document.getElementById('cdEventName').innerHTML=acara.type;
-  document.getElementById('cdEventDate').textContent=
-    target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear()+
-    (acara.lokasi?' · 📍 '+acara.lokasi:'');
+  document.getElementById('cdEventDate').textContent=tglStr;
   wrap.classList.add('visible');
   document.getElementById('cdDone').style.display='none';
   document.querySelectorAll('.cd-box').forEach(b=>b.style.display='');
@@ -879,10 +953,11 @@ function initFirebase(){
   const cdRef=ref(db,'antithesis/acara');
   onValue(cdRef,snap=>{
     const acara=snap.val();
-    if(acara && new Date(acara.date+'T00:00:00')>new Date(-864e5)){
+    if(acara && acara.date){
       startCountdown(acara);
       document.getElementById('cdType').value=acara.type||'';
       document.getElementById('cdDate').value=acara.date||'';
+      document.getElementById('cdJam').value=acara.jam||'';
       document.getElementById('cdLokasi').value=acara.lokasi||'';
     } else {
       clearInterval(cdInterval);
@@ -893,9 +968,10 @@ function initFirebase(){
   document.getElementById('cdBtnSet').addEventListener('click',function(){
     const type=document.getElementById('cdType').value.trim();
     const date=document.getElementById('cdDate').value;
+    const jam=document.getElementById('cdJam').value.trim();
     const lokasi=document.getElementById('cdLokasi').value.trim();
     if(!type||!date){alert('Pilih jenis acara dan tanggal!');return;}
-    set(ref(db,'antithesis/acara'),{type,date,lokasi});
+    set(ref(db,'antithesis/acara'),{type,date,jam,lokasi});
     adminPanel.classList.remove('open');
   });
 
@@ -903,6 +979,7 @@ function initFirebase(){
     remove(ref(db,'antithesis/acara'));
     document.getElementById('cdType').value='';
     document.getElementById('cdDate').value='';
+    document.getElementById('cdJam').value='';
     document.getElementById('cdLokasi').value='';
     adminPanel.classList.remove('open');
   });
@@ -986,6 +1063,33 @@ function initFirebase(){
     document.getElementById('bukuMsg').value='';
     document.getElementById('bukuMsg').style.borderColor='';
   });
+
+  // ── DAFTAR MANDIRI ANGGOTA (shared, real-time) ──
+  const anggotaRef=ref(db,'antithesis/anggota');
+  onValue(anggotaRef,snap=>{
+    const raw=snap.val()||{};
+    anggotaFirebase=Object.values(raw);
+    doFilter();
+  });
+
+  window.__submitAnggota=function(data){
+    push(anggotaRef,data).then(()=>{
+      // Reset form
+      document.getElementById('dfNama').value='';
+      document.getElementById('dfKelas').value='';
+      document.getElementById('dfJurusan').value='';
+      document.getElementById('dfNama').style.borderColor='';
+      fotoBase64='';
+      document.getElementById('fotoPreview').style.display='none';
+      document.getElementById('fotoPlaceholder').style.display='';
+      document.getElementById('daftarOk').style.display='block';
+      setTimeout(()=>{
+        document.getElementById('daftarOk').style.display='none';
+        document.getElementById('daftarFormWrap').classList.remove('show');
+        document.getElementById('btnShowDaftar').classList.remove('active');
+      },3000);
+    });
+  };
 }
 
 // Cek apakah Firebase sudah siap atau tunggu event
