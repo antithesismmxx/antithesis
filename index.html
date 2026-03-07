@@ -58,9 +58,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* Admin pengumuman panel */
 .pg-admin-btn{position:fixed;bottom:80px;right:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;}
 .pg-admin-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
-.admin-logout-btn{position:fixed;bottom:132px;right:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(180,60,60,.4);color:#c0392b;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;padding:10px 18px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;display:none;}
-.admin-logout-btn:hover{border-color:#c0392b;background:rgba(192,57,43,.1);}
-@media(max-width:960px){.admin-logout-btn{bottom:auto;top:80px;right:16px;}}
 .pg-admin-panel{position:fixed;bottom:130px;right:28px;z-index:800;background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.2);padding:28px;width:300px;display:none;backdrop-filter:blur(12px);}
 .pg-admin-panel.open{display:block;}
 .pg-panel-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;}
@@ -716,8 +713,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </section>
 
-<!-- ADMIN LOGOUT -->
-<button class="admin-logout-btn" id="adminLogoutBtn">🔓 Keluar Admin</button>
 
 <!-- PENGUMUMAN ADMIN PANEL -->
 <button class="pg-admin-btn" id="pgAdminBtn">📢 Pengumuman</button>
@@ -1204,7 +1199,6 @@ function pinSuccess(){
   localStorage.setItem('antithesis_admin','1');
   if(pinTarget==='pg') document.getElementById('pgAdminPanel').classList.add('open');
   if(pinTarget==='cd') document.getElementById('cdAdminPanel').classList.add('open');
-  if(typeof updateAdminUI==='function') updateAdminUI();
 }
 function pinError(){
   for(let i=0;i<6;i++){const d=document.getElementById('pd'+i);if(d)d.classList.add('error');}
@@ -1227,18 +1221,8 @@ document.getElementById('pinCancel').addEventListener('click',closePin);
 document.getElementById('pinOverlay').addEventListener('click',function(e){if(e.target===this)closePin();});
 function isAdmin(){return localStorage.getItem('antithesis_admin')==='1';}
 
-// Tampilkan tombol logout jika sudah login admin
-function updateAdminUI(){
-  const btn=document.getElementById("adminLogoutBtn");
-  if(btn) btn.style.display=isAdmin()?"block":"none";
 }
-updateAdminUI();
 
-// Logout
-document.getElementById("adminLogoutBtn").addEventListener("click",()=>{
-  if(confirm("Keluar dari mode admin?")){
-    localStorage.removeItem("antithesis_admin");
-    updateAdminUI();
     document.getElementById("cdAdminPanel").classList.remove("open");
     document.getElementById("pgAdminPanel").classList.remove("open");
   }
