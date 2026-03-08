@@ -46,6 +46,44 @@ onValue(ref(db,'antithesis/accounts'), snap => {
   renderAccounts();
 });
 
+// ── ACARA COUNTDOWN ──
+onValue(ref(db,'antithesis/acara'), snap => {
+  const a = snap.val();
+  if(a && a.date){
+    document.getElementById('cdType').value   = a.type   || '';
+    document.getElementById('cdDateInput').value  = a.date   || '';
+    document.getElementById('cdJamInput').value   = a.jam    || '';
+    document.getElementById('cdLokasiInput').value = a.lokasi || '';
+    document.getElementById('cdCurrentInfo').innerHTML =
+      `<span style="color:var(--gold)">Aktif:</span> ${a.type} · ${a.date}${a.jam?' · '+a.jam:''}${a.lokasi?' · '+a.lokasi:''}`;
+    document.getElementById('cdCurrentInfo').style.display='block';
+  } else {
+    document.getElementById('cdCurrentInfo').style.display='none';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('cdBtnSet').addEventListener('click', () => {
+    const type   = document.getElementById('cdType').value.trim();
+    const date   = document.getElementById('cdDateInput').value;
+    if(!type || !date){ alert('Pilih jenis dan tanggal acara!'); return; }
+    set(ref(db,'antithesis/acara'), {
+      type, date,
+      jam:    document.getElementById('cdJamInput').value,
+      lokasi: document.getElementById('cdLokasiInput').value
+    }).then(()=>{ showToast('✦ Acara berhasil disimpan!'); });
+  });
+
+  document.getElementById('cdBtnClear').addEventListener('click', () => {
+    if(confirm('Hapus jadwal acara mendatang?')){
+      remove(ref(db,'antithesis/acara')).then(()=>{
+        ['cdType','cdDateInput','cdJamInput','cdLokasiInput'].forEach(id=>document.getElementById(id).value='');
+        showToast('Jadwal acara dihapus.');
+      });
+    }
+  });
+});
+
 // ── WHITELIST ──
 window.__addWhitelist = function(nama) {
   if(!nama.trim()) return { ok:false, msg:'Nama tidak boleh kosong.' };
@@ -73,15 +111,17 @@ window.__resetPassword = async function(username, newPass) {
 function renderWhitelist() {
   const list   = document.getElementById('wlList');
   const count  = document.getElementById('wlCount');
+  if(!list) return;
   const entries = Object.entries(whitelist);
   count.textContent = entries.length;
   if(!entries.length){
     list.innerHTML = '<div class="empty-note">Belum ada nama. Tambahkan di atas.</div>';
     return;
   }
-  // Sort A-Z
   entries.sort((a,b) => a[1].localeCompare(b[1]));
-  list.innerHTML = entries.map(([key, nama]) => {
+  const q = document.getElementById('wlSearch')?.value.toLowerCase() || '';
+  const filtered = q ? entries.filter(([,nama])=>nama.toLowerCase().includes(q)) : entries;
+  list.innerHTML = filtered.map(([key, nama]) => {
     const hasAkun = Object.values(accounts).some(a => a.nama?.toLowerCase()===nama.toLowerCase());
     return `<div class="list-item" id="wl-${key}">
       <div class="item-left">
@@ -102,6 +142,7 @@ function renderWhitelist() {
 function renderAccounts() {
   const list  = document.getElementById('accList');
   const count = document.getElementById('accCount');
+  if(!list) return;
   const entries = Object.entries(accounts);
   count.textContent = entries.length;
   if(!entries.length){
@@ -109,7 +150,9 @@ function renderAccounts() {
     return;
   }
   entries.sort((a,b) => (a[1].nama||'').localeCompare(b[1].nama||''));
-  list.innerHTML = entries.map(([username, acc]) => {
+  const q = document.getElementById('accSearch')?.value.toLowerCase() || '';
+  const filtered = q ? entries.filter(([u,a])=>(a.nama||'').toLowerCase().includes(q)||u.includes(q)) : entries;
+  list.innerHTML = filtered.map(([username, acc]) => {
     const tgl = acc.createdAt ? new Date(acc.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}) : '—';
     return `<div class="list-item" id="acc-${username}">
       <div class="item-left">
@@ -121,7 +164,7 @@ function renderAccounts() {
       </div>
       <div class="item-actions">
         <button class="icon-btn reset-btn" onclick="openResetModal('${username}','${acc.nama||''}')" title="Reset Password">🔑</button>
-        <button class="icon-btn del-btn"   onclick="confirmDelAcc('${username}','${acc.nama||''}')" title="Hapus Akun">✕</button>
+        <button class="icon-btn del-btn" onclick="confirmDelAcc('${username}','${acc.nama||''}')" title="Hapus Akun">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -131,7 +174,7 @@ window.__renderWhitelist = renderWhitelist;
 window.__renderAccounts  = renderAccounts;
 
 window.confirmDel = function(key, nama){
-  if(confirm(`Hapus "${nama}" dari whitelist?\n\nJika anggota ini sudah punya akun, akunnya tidak ikut terhapus.`)){
+  if(confirm(`Hapus "${nama}" dari whitelist?\n\nAkunnya tidak ikut terhapus.`)){
     window.__removeWhitelist(key);
   }
 };
@@ -163,34 +206,16 @@ window.openResetModal = function(username, nama){
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--black);color:var(--white);font-family:'Cormorant Garamond',serif;min-height:100vh;}
-body::before{
-  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.5;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");}
 
-/* PIN SCREEN */
-.pin-screen{
-  position:fixed;inset:0;z-index:5000;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--black);
-  transition:opacity .5s;
-}
+/* PIN */
+.pin-screen{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:var(--black);transition:opacity .5s;}
 .pin-screen.hidden{opacity:0;pointer-events:none;}
-.pin-card{
-  width:100%;max-width:360px;margin:24px;
-  background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.18);
-  overflow:hidden;
-  animation:card-in .8s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;
-}
+.pin-card{width:100%;max-width:360px;margin:24px;background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.18);overflow:hidden;animation:card-in .8s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;}
 @keyframes card-in{from{opacity:0;transform:translateY(32px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
 .pin-topbar{height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);}
 .pin-head{padding:36px 36px 26px;text-align:center;border-bottom:1px solid rgba(201,168,76,.08);}
-.pin-lock{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:52px;height:52px;border:1px solid rgba(201,168,76,.28);border-radius:50%;
-  margin-bottom:16px;background:rgba(201,168,76,.04);font-size:1.4rem;
-  position:relative;animation:sglow 4s ease-in-out infinite;
-}
+.pin-lock{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border:1px solid rgba(201,168,76,.28);border-radius:50%;margin-bottom:16px;background:rgba(201,168,76,.04);position:relative;animation:sglow 4s ease-in-out infinite;font-size:1.4rem;}
 .pin-lock::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(201,168,76,.1);}
 @keyframes sglow{0%,100%{box-shadow:0 0 0 rgba(201,168,76,0);}50%{box-shadow:0 0 20px rgba(201,168,76,.18);}}
 .pin-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:5px;}
@@ -200,57 +225,32 @@ body::before{
 .pin-dots{display:flex;gap:14px;}
 .pd{width:12px;height:12px;border-radius:50%;border:1px solid rgba(201,168,76,.25);background:transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);}
 .pd.fill{background:var(--gold);border-color:var(--gold);transform:scale(1.15);box-shadow:0 0 8px rgba(201,168,76,.45);}
-.pd.err{background:var(--red);border-color:var(--red);box-shadow:0 0 8px rgba(192,57,43,.5);}
+.pd.err{background:var(--red);border-color:var(--red);}
 .pin-hint{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.28em;color:var(--muted2);text-transform:uppercase;height:14px;}
 .pin-hint.err{color:var(--red);}
 .pin-numpad{padding:0 26px 26px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.pkey{
-  background:var(--dark3);border:1px solid rgba(201,168,76,.08);
-  color:var(--white);font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;
-  padding:17px 10px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;
-}
-.pkey::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(201,168,76,.15),transparent 70%);opacity:0;transition:opacity .2s;}
+.pkey{background:var(--dark3);border:1px solid rgba(201,168,76,.08);color:var(--white);font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;padding:17px 10px;cursor:pointer;transition:all .18s;}
 .pkey:hover{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06);color:var(--gold);transform:translateY(-1px);}
-.pkey:hover::after{opacity:1;}
 .pkey:active{transform:scale(.96);}
-.pkey.del{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.1em;color:var(--muted);font-weight:400;}
+.pkey.del{font-family:'Montserrat',sans-serif;font-size:.56rem;color:var(--muted);font-weight:400;}
 .pkey.del:hover{color:var(--gold);}
 .pin-shake{animation:pshake .42s ease;}
 @keyframes pshake{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}30%{transform:translateX(8px)}45%{transform:translateX(-5px)}60%{transform:translateX(5px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
 
-/* MAIN CONTENT */
-.main{
-  max-width:1100px;margin:0 auto;padding:100px 40px 60px;
-  opacity:0;transition:opacity .6s;
-}
-.main.show{opacity:1;}
-
 /* TOPNAV */
-.topnav{
-  position:fixed;top:0;left:0;right:0;z-index:1000;
-  padding:18px 40px;
-  display:flex;justify-content:space-between;align-items:center;
-  background:rgba(6,6,6,.96);border-bottom:1px solid rgba(201,168,76,.1);
-  backdrop-filter:blur(12px);
-}
+.topnav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(6,6,6,.96);border-bottom:1px solid rgba(201,168,76,.1);backdrop-filter:blur(12px);}
 .nav-brand{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--gold);letter-spacing:.1em;}
 .nav-brand span{display:block;font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.42em;color:var(--muted);font-weight:300;text-transform:uppercase;margin-top:2px;}
 .nav-right{display:flex;align-items:center;gap:12px;}
 .nav-badge{font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);padding:5px 14px;}
-.btn-logout{
-  background:transparent;border:1px solid rgba(192,57,43,.3);color:#c0392b;
-  font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;
-  padding:8px 16px;cursor:pointer;transition:all .3s;
-}
+.btn-logout{background:transparent;border:1px solid rgba(192,57,43,.3);color:#c0392b;font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .3s;}
 .btn-logout:hover{border-color:#c0392b;background:rgba(192,57,43,.08);}
-.btn-back{
-  background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);
-  font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;
-  padding:8px 16px;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
-}
+.btn-back{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.28em;text-transform:uppercase;padding:8px 16px;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
 .btn-back:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
 
-/* PAGE TITLE */
+/* MAIN */
+.main{max-width:1200px;margin:0 auto;padding:100px 40px 60px;opacity:0;transition:opacity .6s;}
+.main.show{opacity:1;}
 .page-header{margin-bottom:50px;}
 .page-eyebrow{font-family:'Montserrat',sans-serif;font-size:.54rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:16px;margin-bottom:12px;}
 .page-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold);}
@@ -258,108 +258,78 @@ body::before{
 .page-title em{font-style:italic;color:var(--gold);}
 .page-sub{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--muted);margin-top:10px;}
 
-/* SECTIONS */
-.sections{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+/* SECTIONS GRID — 3 kolom */
+.sections{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;}
 .section{background:var(--dark2);border:1px solid rgba(201,168,76,.1);overflow:hidden;position:relative;}
 .section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.4;}
 .sec-head{padding:28px 30px 20px;border-bottom:1px solid rgba(201,168,76,.07);}
 .sec-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.sec-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--white);}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--white);}
 .sec-title em{font-style:italic;color:var(--gold);}
-.count-badge{
-  font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;
-  background:linear-gradient(135deg,var(--gold-p),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;
-}
+.count-badge{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold-p),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .sec-sub{font-family:'Cormorant Garamond',serif;font-size:.88rem;font-style:italic;color:var(--muted);}
 
 /* ADD ROW */
-.add-row{padding:20px 30px;border-bottom:1px solid rgba(201,168,76,.07);display:flex;gap:10px;}
-.add-input{
-  flex:1;background:var(--dark3);border:1px solid rgba(201,168,76,.14);
-  color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;
-  padding:11px 15px;outline:none;transition:border-color .3s;
-}
+.add-row{padding:18px 24px;border-bottom:1px solid rgba(201,168,76,.07);display:flex;gap:10px;}
+.add-input{flex:1;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;padding:10px 14px;outline:none;transition:border-color .3s;}
 .add-input:focus{border-color:rgba(201,168,76,.5);}
 .add-input::placeholder{color:var(--muted2);}
 .add-input.err{border-color:rgba(192,57,43,.6)!important;animation:shake .4s ease;}
 @keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-7px)}30%{transform:translateX(7px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
-.btn-add{
-  background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);
-  font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;font-weight:700;
-  padding:11px 18px;cursor:pointer;white-space:nowrap;transition:opacity .3s;
-}
+.btn-add{background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;font-weight:700;padding:10px 16px;cursor:pointer;white-space:nowrap;transition:opacity .3s;}
 .btn-add:hover{opacity:.85;}
-.add-err{
-  display:none;font-family:'Cormorant Garamond',serif;font-size:.88rem;font-style:italic;
-  color:#d9534f;padding:8px 30px;background:rgba(192,57,43,.07);border-bottom:1px solid rgba(192,57,43,.15);
-}
+.add-err{display:none;font-family:'Cormorant Garamond',serif;font-size:.88rem;font-style:italic;color:#d9534f;padding:8px 24px;background:rgba(192,57,43,.07);border-bottom:1px solid rgba(192,57,43,.15);}
 .add-err.show{display:block;}
 
+/* SEARCH */
+.search-bar{padding:12px 24px;border-bottom:1px solid rgba(201,168,76,.07);}
+.search-input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.95rem;padding:6px 0;outline:none;transition:border-color .3s;}
+.search-input:focus{border-bottom-color:rgba(201,168,76,.5);}
+.search-input::placeholder{color:var(--muted2);}
+
 /* LIST */
-.list-scroll{max-height:380px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;}
+.list-scroll{max-height:340px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;}
 .list-scroll::-webkit-scrollbar{width:3px;}
 .list-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);}
-.list-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 30px;border-bottom:1px solid rgba(201,168,76,.06);
-  transition:background .2s;
-}
+.list-item{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid rgba(201,168,76,.06);transition:background .2s;}
 .list-item:hover{background:rgba(201,168,76,.03);}
 .list-item:last-child{border-bottom:none;}
-.item-left{display:flex;align-items:center;gap:14px;}
-.item-avatar{
-  width:38px;height:38px;border-radius:50%;
-  background:linear-gradient(135deg,var(--dark4),var(--dark3));
-  border:1px solid rgba(201,168,76,.18);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Playfair Display',serif;font-size:1rem;color:rgba(201,168,76,.6);
-  flex-shrink:0;
-}
+.item-left{display:flex;align-items:center;gap:12px;}
+.item-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--dark4),var(--dark3));border:1px solid rgba(201,168,76,.18);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.95rem;color:rgba(201,168,76,.6);flex-shrink:0;}
 .acc-av{background:linear-gradient(135deg,rgba(201,168,76,.1),var(--dark3));}
 .item-name{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cream);line-height:1.3;}
-.item-sub{font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.22em;color:var(--muted2);text-transform:uppercase;margin-top:3px;}
-.item-badge{
-  font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.2em;
-  text-transform:uppercase;display:inline-block;padding:2px 9px;margin-top:4px;
-  border:1px solid transparent;
-}
+.item-sub{font-family:'Montserrat',sans-serif;font-size:.43rem;letter-spacing:.22em;color:var(--muted2);text-transform:uppercase;margin-top:2px;}
+.item-badge{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.2em;text-transform:uppercase;display:inline-block;padding:2px 8px;margin-top:3px;border:1px solid transparent;}
 .badge-green{color:var(--green);border-color:rgba(39,174,96,.25);background:rgba(39,174,96,.06);}
 .badge-dim{color:var(--muted2);border-color:rgba(201,168,76,.1);}
 .item-actions{display:flex;gap:6px;flex-shrink:0;}
-.icon-btn{
-  background:none;border:1px solid transparent;padding:6px 10px;cursor:pointer;
-  font-size:.85rem;transition:all .2s;
-}
+.icon-btn{background:none;border:1px solid transparent;padding:6px 10px;cursor:pointer;font-size:.85rem;transition:all .2s;}
 .del-btn{color:var(--muted2);}
 .del-btn:hover{color:var(--red);border-color:rgba(192,57,43,.3);background:rgba(192,57,43,.07);}
 .reset-btn{color:var(--muted2);}
 .reset-btn:hover{color:var(--gold);border-color:rgba(201,168,76,.3);background:rgba(201,168,76,.06);}
-.empty-note{padding:36px 24px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted2);font-size:.95rem;}
+.empty-note{padding:36px 20px;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted2);font-size:.95rem;}
 
-/* SEARCH BAR */
-.search-bar{padding:14px 30px;border-bottom:1px solid rgba(201,168,76,.07);}
-.search-input{
-  width:100%;background:transparent;border:none;border-bottom:1px solid rgba(201,168,76,.15);
-  color:var(--white);font-family:'Cormorant Garamond',serif;font-size:.95rem;
-  padding:6px 0;outline:none;transition:border-color .3s;
-}
-.search-input:focus{border-bottom-color:rgba(201,168,76,.5);}
-.search-input::placeholder{color:var(--muted2);}
+/* ATUR ACARA SECTION */
+.acara-body{padding:24px;}
+.ac-field{margin-bottom:16px;}
+.ac-label{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;}
+.ac-input,.ac-select{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;padding:11px 14px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.ac-input:focus,.ac-select:focus{border-color:rgba(201,168,76,.5);}
+.ac-input::placeholder{color:var(--muted2);}
+.ac-select option{background:var(--dark3);}
+.ac-current{display:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);padding:10px 14px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.12);margin-bottom:16px;line-height:1.5;}
+.ac-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.btn-ac-set{background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;font-weight:600;padding:12px;cursor:pointer;transition:opacity .3s;}
+.btn-ac-set:hover{opacity:.85;}
+.btn-ac-clear{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;padding:12px;cursor:pointer;transition:all .3s;}
+.btn-ac-clear:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
 
 /* RESET MODAL */
-.modal-bg{
-  position:fixed;inset:0;z-index:4000;display:none;
-  align-items:center;justify-content:center;
-  background:rgba(0,0,0,.88);backdrop-filter:blur(14px);
-}
+.modal-bg{position:fixed;inset:0;z-index:4000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);}
 .modal-bg.show{display:flex;animation:mbg .3s ease;}
 @keyframes mbg{from{opacity:0;}to{opacity:1;}}
-.modal-box{
-  width:100%;max-width:380px;margin:24px;
-  background:var(--dark2);border:1px solid rgba(201,168,76,.18);
-  overflow:hidden;animation:mbox .4s cubic-bezier(.25,.46,.45,.94);
-}
+.modal-box{width:100%;max-width:380px;margin:24px;background:var(--dark2);border:1px solid rgba(201,168,76,.18);overflow:hidden;animation:mbox .4s cubic-bezier(.25,.46,.45,.94);}
 @keyframes mbox{from{opacity:0;transform:translateY(24px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
 .modal-topbar{height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);}
 .modal-head{padding:26px 30px 18px;border-bottom:1px solid rgba(201,168,76,.08);position:relative;}
@@ -370,43 +340,27 @@ body::before{
 .modal-close:hover{color:var(--gold);}
 .modal-body{padding:22px 30px 28px;}
 .modal-label{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.34em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;}
-.modal-input{
-  width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);
-  color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;
-  padding:12px 15px;outline:none;transition:border-color .3s;margin-bottom:16px;
-}
+.modal-input{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1rem;padding:12px 15px;outline:none;transition:border-color .3s;margin-bottom:16px;}
 .modal-input:focus{border-color:rgba(201,168,76,.5);}
-.modal-err{
-  display:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;
-  color:#d9534f;margin-bottom:12px;padding:9px 13px;
-  background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.18);
-}
+.modal-err{display:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:#d9534f;margin-bottom:12px;padding:9px 13px;background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.18);}
 .modal-err.show{display:block;}
-.modal-ok{
-  display:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;
-  color:var(--green);margin-bottom:12px;padding:9px 13px;
-  background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.2);
-}
+.modal-ok{display:none;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--green);margin-bottom:12px;padding:9px 13px;background:rgba(39,174,96,.07);border:1px solid rgba(39,174,96,.2);}
 .modal-ok.show{display:block;}
 .modal-actions{display:grid;grid-template-columns:1fr auto;gap:10px;}
-.btn-modal-confirm{
-  padding:13px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);
-  font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;font-weight:700;cursor:pointer;transition:opacity .3s;
-}
+.btn-modal-confirm{padding:13px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;font-weight:700;cursor:pointer;transition:opacity .3s;}
 .btn-modal-confirm:hover{opacity:.85;}
-.btn-modal-cancel{
-  padding:13px 18px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);
-  font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;cursor:pointer;transition:all .3s;
-}
+.btn-modal-cancel{padding:13px 18px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;cursor:pointer;transition:all .3s;}
 .btn-modal-cancel:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
-
-/* PASS WRAP */
 .pass-wrap{position:relative;margin-bottom:16px;}
 .pass-wrap .modal-input{padding-right:44px;margin-bottom:0;}
 .ptog{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:4px;transition:color .2s;}
 .ptog:hover{color:var(--gold);}
 
-@media(max-width:860px){
+/* TOAST */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.4);padding:14px 28px;z-index:9999;font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold);text-align:center;backdrop-filter:blur(12px);animation:toast-in .4s ease;white-space:nowrap;}
+@keyframes toast-in{from{opacity:0;transform:translateX(-50%) translateY(16px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+
+@media(max-width:1000px){
   .sections{grid-template-columns:1fr;}
   .main{padding:80px 20px 40px;}
   .topnav{padding:16px 20px;}
@@ -415,7 +369,7 @@ body::before{
 </head>
 <body>
 
-<!-- ── PIN SCREEN ── -->
+<!-- PIN SCREEN -->
 <div class="pin-screen" id="pinScreen">
   <div class="pin-card">
     <div class="pin-topbar"></div>
@@ -443,21 +397,22 @@ body::before{
   </div>
 </div>
 
-<!-- ── MAIN ── -->
+<!-- TOPNAV -->
 <nav class="topnav">
   <div class="nav-brand">ANTITHESIS <span>Admin Panel</span></div>
   <div class="nav-right">
     <div class="nav-badge">🔐 Admin</div>
-    <a href="login.html" class="btn-back">← Kembali ke Portal</a>
+    <a href="index.html" class="btn-back">← Kembali</a>
     <button class="btn-logout" id="btnLogout">Keluar</button>
   </div>
 </nav>
 
+<!-- MAIN -->
 <div class="main" id="mainContent">
   <div class="page-header">
     <div class="page-eyebrow">Panel Administrasi</div>
     <h1 class="page-title">Kelola Data <em>ANTITHESIS</em></h1>
-    <p class="page-sub">Atur daftar anggota dan kelola akun yang sudah terdaftar.</p>
+    <p class="page-sub">Atur daftar anggota, kelola akun, dan jadwalkan acara mendatang.</p>
   </div>
 
   <div class="sections">
@@ -469,7 +424,7 @@ body::before{
           <div class="sec-title">Daftar <em>Anggota</em></div>
           <div class="count-badge" id="wlCount">0</div>
         </div>
-        <div class="sec-sub">Nama yang bisa mendaftar akun. Pencocokan tidak membedakan huruf besar/kecil.</div>
+        <div class="sec-sub">Nama yang diizinkan mendaftar akun.</div>
       </div>
       <div class="add-row">
         <input type="text" class="add-input" id="wlInput" placeholder="Ketik nama anggota..."/>
@@ -479,11 +434,9 @@ body::before{
       <div class="search-bar">
         <input type="text" class="search-input" id="wlSearch" placeholder="🔍  Cari nama..."/>
       </div>
-      <div class="list-scroll">
-        <div class="list-item"><div style="padding:8px 0;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted2);">Memuat data…</div></div>
+      <div class="list-scroll" id="wlList">
+        <div class="empty-note">Memuat data…</div>
       </div>
-      <!-- wrapper untuk filter search -->
-      <div id="wlList" style="display:none;"></div>
     </div>
 
     <!-- ACCOUNTS -->
@@ -493,13 +446,57 @@ body::before{
           <div class="sec-title">Akun <em>Terdaftar</em></div>
           <div class="count-badge" id="accCount">0</div>
         </div>
-        <div class="sec-sub">Anggota yang sudah membuat akun. Klik 🔑 untuk reset password.</div>
+        <div class="sec-sub">Anggota yang sudah membuat akun. 🔑 untuk reset password.</div>
       </div>
-      <div class="search-bar" style="border-top:none;">
+      <div class="search-bar">
         <input type="text" class="search-input" id="accSearch" placeholder="🔍  Cari nama atau username..."/>
       </div>
       <div class="list-scroll" id="accList">
-        <div class="list-item"><div style="padding:8px 0;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted2);">Memuat data…</div></div>
+        <div class="empty-note">Memuat data…</div>
+      </div>
+    </div>
+
+    <!-- ATUR ACARA -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-title-row">
+          <div class="sec-title">Atur <em>Acara</em></div>
+          <span style="font-size:1.5rem;">📅</span>
+        </div>
+        <div class="sec-sub">Jadwalkan countdown acara yang tampil di halaman anggota.</div>
+      </div>
+      <div class="acara-body">
+        <div class="ac-current" id="cdCurrentInfo"></div>
+
+        <div class="ac-field">
+          <label class="ac-label">Jenis Acara</label>
+          <select class="ac-select" id="cdType">
+            <option value="">— Pilih Jenis —</option>
+            <option value="🌙 HBH">🌙 HBH</option>
+            <option value="🍽️ Bukber">🍽️ Bukber</option>
+            <option value="🤝 Temu Kangen">🤝 Temu Kangen</option>
+          </select>
+        </div>
+
+        <div class="ac-field">
+          <label class="ac-label">Tanggal Acara</label>
+          <input type="date" class="ac-input" id="cdDateInput"/>
+        </div>
+
+        <div class="ac-field">
+          <label class="ac-label">Jam Mulai (opsional)</label>
+          <input type="time" class="ac-input" id="cdJamInput"/>
+        </div>
+
+        <div class="ac-field">
+          <label class="ac-label">Lokasi (opsional)</label>
+          <input type="text" class="ac-input" id="cdLokasiInput" placeholder="Surakarta / Solo…"/>
+        </div>
+
+        <div class="ac-btns">
+          <button class="btn-ac-set" id="cdBtnSet">💾 Simpan</button>
+          <button class="btn-ac-clear" id="cdBtnClear">🗑 Hapus</button>
+        </div>
       </div>
     </div>
 
@@ -531,7 +528,7 @@ body::before{
       </div>
       <div class="modal-actions">
         <button class="btn-modal-confirm" id="btnResetConfirm">Reset Password →</button>
-        <button class="btn-modal-cancel"  id="resetCancel">Batal</button>
+        <button class="btn-modal-cancel" id="resetCancel">Batal</button>
       </div>
     </div>
   </div>
@@ -549,22 +546,15 @@ function updateDots(){
   }
   const h=document.getElementById('pinHint');
   h.classList.remove('err');
-  h.textContent = pinInput.length===0 ? 'Ketuk angka di bawah' : `${pinInput.length} / 6 digit`;
+  h.textContent = pinInput.length===0?'Ketuk angka di bawah':`${pinInput.length} / 6 digit`;
 }
 document.querySelectorAll('.pkey[data-n]').forEach(k=>k.addEventListener('click',function(){
   if(pinInput.length>=6) return;
-  pinInput+=this.dataset.n;
-  updateDots();
-  if(pinInput.length===6){
-    setTimeout(()=>{
-      if(pinInput===ADMIN_PIN){ pinOk(); }
-      else{ pinFail(); }
-    },150);
-  }
+  pinInput+=this.dataset.n; updateDots();
+  if(pinInput.length===6) setTimeout(()=>{ if(pinInput===ADMIN_PIN) pinOk(); else pinFail(); },150);
 }));
 document.getElementById('pinDel').addEventListener('click',()=>{ pinInput=pinInput.slice(0,-1); updateDots(); });
 document.getElementById('pinReset').addEventListener('click',()=>{ pinInput=''; updateDots(); });
-// Keyboard support
 document.addEventListener('keydown',e=>{
   const screen=document.getElementById('pinScreen');
   if(screen.classList.contains('hidden')) return;
@@ -576,16 +566,13 @@ document.addEventListener('keydown',e=>{
 });
 function pinOk(){
   document.getElementById('pinScreen').classList.add('hidden');
-  setTimeout(()=>{ document.getElementById('mainContent').classList.add('show'); },300);
+  setTimeout(()=>document.getElementById('mainContent').classList.add('show'),300);
 }
 function pinFail(){
   for(let i=0;i<6;i++) document.getElementById('pd'+i).classList.add('err');
   const h=document.getElementById('pinHint'); h.textContent='✕  PIN salah, coba lagi'; h.classList.add('err');
   document.querySelector('.pin-card').classList.add('pin-shake');
-  setTimeout(()=>{
-    document.querySelector('.pin-card').classList.remove('pin-shake');
-    pinInput=''; updateDots();
-  },600);
+  setTimeout(()=>{ document.querySelector('.pin-card').classList.remove('pin-shake'); pinInput=''; updateDots(); },600);
 }
 
 // ── LOGOUT ──
@@ -605,61 +592,14 @@ function addWhitelist(){
   const err = document.getElementById('wlErr');
   if(!val){ flashInput('wlInput'); return; }
   const res = window.__addWhitelist(val);
-  if(res.ok){
-    document.getElementById('wlInput').value='';
-    err.classList.remove('show');
-  } else {
-    err.textContent=res.msg; err.classList.add('show');
-    flashInput('wlInput');
-  }
+  if(res.ok){ document.getElementById('wlInput').value=''; err.classList.remove('show'); }
+  else { err.textContent=res.msg; err.classList.add('show'); flashInput('wlInput'); }
 }
-function flashInput(id){
-  const el=document.getElementById(id);
-  if(!el) return;
-  el.classList.add('err');
-  setTimeout(()=>el.classList.remove('err'),500);
-}
+function flashInput(id){ const el=document.getElementById(id); if(!el) return; el.classList.add('err'); setTimeout(()=>el.classList.remove('err'),500); }
 
-// ── SEARCH WHITELIST ──
-document.getElementById('wlSearch').addEventListener('input', function(){
-  const q=this.value.toLowerCase();
-  document.querySelectorAll('#wlRender .list-item').forEach(item=>{
-    const name=item.querySelector('.item-name')?.textContent.toLowerCase()||'';
-    item.style.display=name.includes(q)?'':'none';
-  });
-});
-
-// ── SEARCH ACCOUNTS ──
-document.getElementById('accSearch').addEventListener('input', function(){
-  const q=this.value.toLowerCase();
-  document.querySelectorAll('#accList .list-item').forEach(item=>{
-    const name=item.querySelector('.item-name')?.textContent.toLowerCase()||'';
-    const sub=item.querySelector('.item-sub')?.textContent.toLowerCase()||'';
-    item.style.display=(name.includes(q)||sub.includes(q))?'':'none';
-  });
-});
-
-// Override renderWhitelist to put it in the visible scroll area
-const origRenderWl = window.__renderWhitelist;
-if(origRenderWl){
-  // Patch to use list-scroll inside the section
-  // The wlList hidden div is used as source; we copy to the scroll area
-}
-
-// Patch: make wlList visible and inside the scroll area
-// We restructure slightly: find the .list-scroll in the whitelist section
-const wlSection = document.querySelector('.section');
-const wlScroll  = wlSection.querySelector('.list-scroll');
-// Replace the dummy content with the actual wlList rendered content
-const wlListEl  = document.getElementById('wlList');
-wlListEl.style.display = '';
-wlListEl.className = 'list-scroll';
-wlScroll.replaceWith(wlListEl);
-
-// Add id for search
-wlListEl.id = 'wlRender';
-// But firebase module uses wlList... let's just keep id as wlList
-wlListEl.id = 'wlList';
+// ── SEARCH ──
+document.getElementById('wlSearch').addEventListener('input', ()=>window.__renderWhitelist&&window.__renderWhitelist());
+document.getElementById('accSearch').addEventListener('input', ()=>window.__renderAccounts&&window.__renderAccounts());
 
 // ── RESET PASSWORD MODAL ──
 document.getElementById('resetClose').addEventListener('click', closeReset);
@@ -667,7 +607,6 @@ document.getElementById('resetCancel').addEventListener('click', closeReset);
 document.getElementById('resetModal').addEventListener('click',function(e){ if(e.target===this) closeReset(); });
 function closeReset(){ document.getElementById('resetModal').classList.remove('show'); }
 
-// Password toggle in modal
 document.querySelectorAll('.ptog').forEach(btn=>{
   btn.addEventListener('click',function(){
     const inp=document.getElementById(this.dataset.target);
@@ -684,11 +623,9 @@ document.getElementById('btnResetConfirm').addEventListener('click', async funct
   const errEl    = document.getElementById('resetErr');
   const okEl     = document.getElementById('resetOk');
   errEl.classList.remove('show'); okEl.classList.remove('show');
-
   if(!newPass){ errEl.textContent='Password baru wajib diisi.'; errEl.classList.add('show'); return; }
   if(newPass.length<6){ errEl.textContent='Password minimal 6 karakter.'; errEl.classList.add('show'); return; }
   if(newPass!==newPass2){ errEl.textContent='Konfirmasi password tidak cocok.'; errEl.classList.add('show'); return; }
-
   this.disabled=true;
   try{
     await window.__resetPassword(username, newPass);
@@ -699,6 +636,15 @@ document.getElementById('btnResetConfirm').addEventListener('click', async funct
     errEl.textContent='⚠ Gagal menyimpan. Coba lagi.'; errEl.classList.add('show');
   } finally{ this.disabled=false; }
 });
+
+// ── TOAST ──
+function showToast(msg){
+  const old=document.getElementById('toastEl'); if(old) old.remove();
+  const el=document.createElement('div'); el.className='toast'; el.id='toastEl'; el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .5s'; setTimeout(()=>el.remove(),500); },3000);
+}
+window.showToast=showToast;
 </script>
 </body>
 </html>
