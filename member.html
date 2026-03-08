@@ -219,15 +219,19 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .re-vote-btn.sudah-dipilih{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4);color:rgba(201,168,76,.6);cursor:default;}
 .re-sudah-label{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.18em;color:rgba(201,168,76,.45);text-transform:uppercase;}
 .req-empty{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;}
-.req-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
-.req-sum-item{background:var(--dark3);border:1px solid rgba(201,168,76,.09);padding:14px 12px;text-align:center;position:relative;overflow:hidden;}
-.req-sum-item.top{border-color:rgba(201,168,76,.45);}
-.req-sum-item.top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
-.req-sum-icon{font-size:1.3rem;display:block;margin-bottom:4px;}
-.req-sum-type{font-family:'Montserrat',sans-serif;font-size:.45rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
-.req-sum-pct{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-top:4px;}
-.req-sum-votes{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.2em;color:var(--muted2);margin-top:3px;}
-.top-badge{position:absolute;top:6px;right:6px;font-family:'Montserrat',sans-serif;font-size:.38rem;letter-spacing:.15em;color:var(--black);background:var(--gold);padding:2px 6px;text-transform:uppercase;}
+.req-summary{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.rsj-item{background:var(--dark3);border:1px solid rgba(201,168,76,.09);padding:14px 16px;position:relative;transition:border-color .3s;}
+.rsj-item.top{border-color:rgba(201,168,76,.4);}
+.rsj-item.top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.rsj-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.rsj-icon{font-size:1.2rem;flex-shrink:0;}
+.rsj-name{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;flex:1;}
+.rsj-votes{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);}
+.rsj-bar-wrap{height:4px;background:rgba(201,168,76,.1);border-radius:2px;margin-bottom:8px;}
+.rsj-bar{height:100%;background:linear-gradient(to right,var(--gold),var(--gold-light));border-radius:2px;transition:width .6s ease;}
+.rsj-detail{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-style:italic;color:var(--muted);min-height:16px;line-height:1.5;}
+.rsj-detail span{display:inline-block;margin-right:10px;}
+.top-badge{position:absolute;top:10px;right:12px;font-family:'Montserrat',sans-serif;font-size:.36rem;letter-spacing:.15em;color:var(--black);background:var(--gold);padding:2px 7px;text-transform:uppercase;}
 
 /* BUKU KENANGAN */
 .buku-wrap{background:var(--dark);}
@@ -503,10 +507,23 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
         <div class="rl-title">Usulan Masuk</div>
         <div class="rl-count" id="reqCount">0</div>
       </div>
+      <!-- RINGKASAN PER JENIS -->
       <div class="req-summary" id="reqSummary" style="display:none;">
-        <div class="req-sum-item" id="sumHBH"><span class="req-sum-icon">🌙</span><div class="req-sum-type">HBH</div><div class="req-sum-pct" id="sumHBHpct">0%</div><div class="req-sum-votes" id="sumHBHvotes">0 suara</div></div>
-        <div class="req-sum-item" id="sumBukber"><span class="req-sum-icon">🍽️</span><div class="req-sum-type">Bukber</div><div class="req-sum-pct" id="sumBukberpct">0%</div><div class="req-sum-votes" id="sumBukbervotes">0 suara</div></div>
-        <div class="req-sum-item" id="sumTemu"><span class="req-sum-icon">🤝</span><div class="req-sum-type">Temu Kangen</div><div class="req-sum-pct" id="sumTemupct">0%</div><div class="req-sum-votes" id="sumTemuvotes">0 suara</div></div>
+        <div class="rsj-item" id="sumHBH">
+          <div class="rsj-top"><span class="rsj-icon">🌙</span><div class="rsj-name">HBH</div><div class="rsj-votes" id="sumHBHvotes">0 suara</div></div>
+          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumHBHbar" style="width:0%"></div></div>
+          <div class="rsj-detail" id="sumHBHdetail"></div>
+        </div>
+        <div class="rsj-item" id="sumBukber">
+          <div class="rsj-top"><span class="rsj-icon">🍽️</span><div class="rsj-name">Bukber</div><div class="rsj-votes" id="sumBukbervotes">0 suara</div></div>
+          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumBukberbar" style="width:0%"></div></div>
+          <div class="rsj-detail" id="sumBukberdetail"></div>
+        </div>
+        <div class="rsj-item" id="sumTemu">
+          <div class="rsj-top"><span class="rsj-icon">🤝</span><div class="rsj-name">Temu Kangen</div><div class="rsj-votes" id="sumTemuvotes">0 suara</div></div>
+          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumTemubar" style="width:0%"></div></div>
+          <div class="rsj-detail" id="sumTemudetail"></div>
+        </div>
       </div>
       <div class="req-entries" id="reqEntries"><div class="req-empty">Belum ada usulan. ✦</div></div>
     </div>
@@ -725,26 +742,49 @@ function renderReq(){
   const el=document.getElementById('reqEntries');
   document.getElementById('reqCount').textContent=reqData.length;
   if(!reqData.length){el.innerHTML='<div class="req-empty">Belum ada usulan. ✦</div>';document.getElementById('reqSummary').style.display='none';return;}
+
+  // ── Ringkasan per jenis ──
   const tipeMap={HBH:0,Bukber:0,'Temu Kangen':0};
-  reqData.forEach(r=>{if(tipeMap[r.type]!==undefined)tipeMap[r.type]+=(r.votes||0);});
-  const totalVotes=Object.values(tipeMap).reduce((a,b)=>a+b,0);
-  const topType=Object.entries(tipeMap).sort((a,b)=>b[1]-a[1])[0][0];
-  const sumEl=document.getElementById('reqSummary'); sumEl.style.display='grid';
-  const sumMap={HBH:'HBH',Bukber:'Bukber','Temu Kangen':'Temu'};
-  Object.entries(tipeMap).forEach(([type,votes])=>{
-    const key=sumMap[type];
-    const pct=totalVotes>0?Math.round(votes/totalVotes*100):0;
-    const pctEl=document.getElementById('sum'+key+'pct');
-    const votesEl=document.getElementById('sum'+key+'votes');
-    const boxEl=document.getElementById('sum'+key);
-    if(pctEl) pctEl.textContent=pct+'%';
-    if(votesEl) votesEl.textContent=votes+' suara';
-    if(boxEl){
-      boxEl.classList.toggle('top',type===topType&&totalVotes>0);
-      const ob=boxEl.querySelector('.top-badge');if(ob)ob.remove();
-      if(type===topType&&totalVotes>0){const badge=document.createElement('div');badge.className='top-badge';badge.textContent='🏆 Terpopuler';boxEl.appendChild(badge);}
+  const tipeReqs={HBH:[],Bukber:[],'Temu Kangen':[]};
+  reqData.forEach(r=>{
+    if(tipeMap[r.type]!==undefined){
+      tipeMap[r.type]+=(r.votes||0);
+      tipeReqs[r.type].push(r);
     }
   });
+  const maxSuara=Math.max(...Object.values(tipeMap),1);
+  const topType=Object.entries(tipeMap).sort((a,b)=>b[1]-a[1])[0][0];
+  const sumMap={HBH:'HBH',Bukber:'Bukber','Temu Kangen':'Temu'};
+  const blnSingkat=['',...'Jan Feb Mar Apr Mei Jun Jul Ags Sep Okt Nov Des'.split(' ')];
+
+  document.getElementById('reqSummary').style.display='flex';
+
+  Object.entries(tipeMap).forEach(([type,votes])=>{
+    const key=sumMap[type];
+    const barPct=Math.round(votes/maxSuara*100);
+    const votesEl=document.getElementById('sum'+key+'votes');
+    const barEl=document.getElementById('sum'+key+'bar');
+    const detailEl=document.getElementById('sum'+key+'detail');
+    const boxEl=document.getElementById('sum'+key);
+    if(votesEl) votesEl.textContent=votes+' suara';
+    if(barEl) setTimeout(()=>barEl.style.width=barPct+'%',50);
+    // Detail: lokasi & tanggal dari semua request jenis ini (top vote)
+    if(detailEl){
+      const sorted=[...tipeReqs[type]].sort((a,b)=>(b.votes||0)-(a.votes||0));
+      if(sorted.length){
+        const best=sorted[0];
+        detailEl.innerHTML=`<span>📍 ${best.lokasi}</span><span>📅 ${best.tgl} ${blnSingkat[+best.bulan]||''} ${best.tahun}</span>${sorted.length>1?`<span style="color:var(--muted2)">+${sorted.length-1} usulan lain</span>`:''}`;
+      } else {
+        detailEl.innerHTML='<span style="color:var(--muted2)">Belum ada usulan</span>';
+      }
+    }
+    if(boxEl){
+      boxEl.classList.toggle('top',type===topType&&votes>0);
+      const ob=boxEl.querySelector('.top-badge');if(ob)ob.remove();
+      if(type===topType&&votes>0){const badge=document.createElement('div');badge.className='top-badge';badge.textContent='🏆 Terfavorit';boxEl.appendChild(badge);}
+    }
+  });
+
   const maxV=Math.max(...reqData.map(x=>x.votes||0),1);
   el.innerHTML=[...reqData].sort((a,b)=>(b.votes||0)-(a.votes||0)).map(r=>{
     const votes=r.votes||0;
