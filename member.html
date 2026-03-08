@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANTITHESIS — Portal Anggota</title>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, set, remove, get }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
+  authDomain:        "antithesis-al-muayyad.firebaseapp.com",
+  databaseURL:       "https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "antithesis-al-muayyad",
+  storageBucket:     "antithesis-al-muayyad.firebasestorage.app",
+  messagingSenderId: "1014116431079",
+  appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+
+window.__db=db; window.__ref=ref; window.__push=push;
+window.__onValue=onValue; window.__set=set; window.__remove=remove; window.__get=get;
+window.__firebaseReady=true;
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-pale:#F5E6B8;
+  --black:#080808;--dark:#101010;--dark2:#181818;--dark3:#222222;--dark4:#2C2C2C;
+  --white:#F8F4EF;--cream:#EDE0C4;--muted:#6A5E50;--muted2:#4A4438;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Cormorant Garamond',serif;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9990;opacity:.5;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 60px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(8,8,8,.97),transparent);border-bottom:1px solid rgba(201,168,76,.07);transition:background .4s,border-color .4s;}
+nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15);}
+.nav-brand-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;letter-spacing:.12em;color:var(--gold);}
+.nav-brand-sub{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.4em;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+.nav-links{display:flex;gap:0;list-style:none;align-items:center;}
+.nav-links li a{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.28em;color:var(--muted);text-decoration:none;text-transform:uppercase;padding:10px 16px;position:relative;transition:color .3s;}
+.nav-links li a::after{content:'';position:absolute;bottom:6px;left:16px;right:16px;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s;}
+.nav-links li a:hover{color:var(--gold-light);}
+.nav-links li a:hover::after,.nav-links li a.active::after{transform:scaleX(1);}
+.nav-links li a.active{color:var(--gold);}
+.nav-auth{display:flex;align-items:center;gap:10px;margin-left:8px;}
+.nav-user-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--cream);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.nav-user-name span{color:var(--gold);font-size:.6rem;font-style:normal;font-family:'Montserrat',sans-serif;letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:1px;}
+.btn-keluar{background:transparent;border:1px solid rgba(192,57,43,.3);color:#c0392b;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:8px 14px;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.btn-keluar:hover{border-color:#c0392b;background:rgba(192,57,43,.08);}
+
+/* PENGUMUMAN BANNER */
+.pengumuman-bar{display:none;background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.06));border-bottom:1px solid rgba(201,168,76,.25);padding:14px 60px;position:relative;z-index:999;}
+.pengumuman-bar.show{display:flex;align-items:center;gap:16px;padding-top:80px;}
+.pg-icon{font-size:1rem;flex-shrink:0;}
+.pg-label{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;flex-shrink:0;}
+.pg-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);flex:1;line-height:1.5;}
+.pg-close{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0;flex-shrink:0;transition:color .2s;cursor:pointer;}
+.pg-close:hover{color:var(--gold);}
+
+/* SECTION */
+.sec{padding:110px 60px;}
+.sec-label{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:18px;margin-bottom:16px;}
+.sec-label::before{content:'';width:44px;height:1px;background:var(--gold);flex-shrink:0;}
+.sec-h{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:700;line-height:1.1;}
+.sec-h em{font-style:italic;color:var(--gold);}
+
+/* WELCOME HERO */
+.welcome-hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;padding:140px 60px 80px;text-align:center;}
+.welcome-hero .hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 50% 55%,rgba(201,168,76,.055) 0%,transparent 70%);}
+.welcome-hero .hero-ring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,.055);}
+.r1{width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);animation:rp 7s ease-in-out infinite;}
+.r2{width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);animation:rp 7s ease-in-out infinite 2.5s;}
+@keyframes rp{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(1)}50%{opacity:.07;transform:translate(-50%,-50%) scale(1.04)}}
+.welcome-label{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fu .9s ease forwards .2s;}
+.welcome-name{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;line-height:1;opacity:0;animation:fu .9s ease forwards .4s;}
+.welcome-name .gg{background:linear-gradient(135deg,var(--gold-pale),var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.welcome-sub{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;color:var(--muted);margin-top:18px;opacity:0;animation:fu .9s ease forwards .65s;}
+.welcome-line{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:28px auto;opacity:0;animation:fu .9s ease forwards .85s;}
+@keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* COUNTDOWN */
+.countdown-wrap{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);border-bottom:1px solid rgba(201,168,76,.09);padding:70px 60px;display:none;}
+.countdown-wrap.visible{display:block;}
+.cd-inner{max-width:900px;margin:0 auto;text-align:center;}
+.cd-label{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.cd-label::before,.cd-label::after{content:'';width:40px;height:1px;background:var(--gold);opacity:.5;}
+.cd-event-name{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.5rem);font-weight:700;color:var(--white);margin-bottom:6px;}
+.cd-event-date{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:44px;}
+.cd-boxes{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.cd-box{background:var(--dark3);border:1px solid rgba(201,168,76,.15);padding:28px 32px;min-width:110px;}
+.cd-box::before{content:'';display:block;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.35;margin-bottom:14px;}
+.cd-num{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;display:block;}
+.cd-unit{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--muted);text-transform:uppercase;margin-top:10px;display:block;}
+.cd-done{font-family:'Playfair Display',serif;font-size:1.6rem;font-style:italic;color:var(--gold);padding:28px 0 0;text-align:center;}
+
+/* PROFIL ANGGOTA */
+.profil-wrap{background:var(--dark);}
+.profil-search-bar{display:flex;gap:10px;margin:40px 0 50px;flex-wrap:wrap;}
+.profil-search{flex:1;min-width:220px;background:var(--dark3);border:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.1rem;padding:14px 20px;outline:none;transition:border-color .3s;}
+.profil-search:focus{border-color:rgba(201,168,76,.45);}
+.profil-search::placeholder{color:var(--muted2);}
+.pfbtn{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;padding:14px 18px;transition:all .3s;white-space:nowrap;cursor:pointer;}
+.pfbtn:hover,.pfbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
+.anggota-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:2px;}
+.ac{position:relative;background:var(--dark3);overflow:hidden;transition:transform .5s cubic-bezier(.25,.46,.45,.94);}
+.ac:hover{transform:translateY(-4px);}
+.ac-top{padding:36px 30px 28px;display:flex;align-items:center;gap:20px;border-bottom:1px solid rgba(201,168,76,.07);}
+.ac-av{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--dark4),var(--dark2));border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Playfair Display',serif;font-size:1.4rem;color:rgba(201,168,76,.5);overflow:hidden;}
+.ac-av img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.ac-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);}
+.ac-bot{padding:20px 30px 28px;}
+.ac-kelas{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
+.ac-motto{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);line-height:1.6;}
+.ac-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.ac-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(201,168,76,.22);color:var(--muted);}
+.ac-badge.sekolah{border-color:rgba(201,168,76,.35);color:rgba(201,168,76,.7);}
+.ac-corner{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 32px 32px 0;border-color:transparent rgba(201,168,76,0) transparent transparent;transition:border-color .3s;}
+.ac:hover .ac-corner{border-color:transparent rgba(201,168,76,.5) transparent transparent;}
+.profil-empty{text-align:center;padding:80px 20px;color:var(--muted);font-style:italic;font-size:1.1rem;display:none;}
+
+/* DAFTAR FORM */
+.daftar-toggle{display:flex;align-items:center;gap:14px;margin-top:50px;}
+.btn-daftar{background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;padding:13px 28px;transition:all .3s;cursor:pointer;}
+.btn-daftar:hover{background:rgba(201,168,76,.07);border-color:var(--gold);}
+.daftar-form-wrap{display:none;background:var(--dark3);border:1px solid rgba(201,168,76,.12);padding:36px 40px;margin-top:20px;position:relative;}
+.daftar-form-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:.5;}
+.daftar-form-wrap.show{display:block;}
+.daftar-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.daftar-title em{font-style:italic;color:var(--gold);}
+.daftar-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);margin-bottom:30px;}
+.daftar-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.daftar-field{display:flex;flex-direction:column;gap:8px;}
+.daftar-field.full{grid-column:1/-1;}
+.daftar-label{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;}
+.daftar-input,.daftar-select{width:100%;background:var(--dark2);border:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:12px 16px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.daftar-input:focus,.daftar-select:focus{border-color:rgba(201,168,76,.5);}
+.daftar-input::placeholder{color:var(--muted2);}
+.daftar-select option{background:var(--dark3);}
+.foto-upload-area{border:1px dashed rgba(201,168,76,.25);padding:24px;text-align:center;transition:border-color .3s;position:relative;cursor:pointer;}
+.foto-upload-area:hover{border-color:rgba(201,168,76,.5);}
+.foto-preview{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid rgba(201,168,76,.3);margin:0 auto 12px;display:none;}
+.foto-placeholder{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;}
+.foto-placeholder span{display:block;font-size:1.8rem;margin-bottom:8px;opacity:.5;}
+.foto-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.daftar-actions{display:flex;gap:12px;margin-top:24px;}
+.btn-submit-daftar{flex:1;padding:14px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:opacity .3s;cursor:pointer;}
+.btn-submit-daftar:hover{opacity:.85;}
+.btn-cancel-daftar{padding:14px 20px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;transition:all .3s;cursor:pointer;}
+.btn-cancel-daftar:hover{border-color:rgba(201,168,76,.4);color:var(--gold);}
+.nama-err{display:none;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.2em;color:#c0392b;margin-top:5px;text-transform:uppercase;}
+.daftar-info{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.1);padding:10px 14px;margin-bottom:18px;line-height:1.6;}
+
+/* REQUEST ACARA */
+.request-wrap{background:var(--dark2);}
+.acara-types{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:48px 0 44px;}
+.atb{position:relative;border:1px solid rgba(201,168,76,.14);background:var(--dark3);padding:30px 22px;text-align:center;transition:all .4s;overflow:hidden;cursor:pointer;}
+.atb::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.07),transparent);opacity:0;transition:opacity .4s;}
+.atb:hover::before,.atb.active::before{opacity:1;}
+.atb:hover,.atb.active{border-color:var(--gold);}
+.atb-check{position:absolute;top:14px;right:14px;width:18px;height:18px;border:1px solid rgba(201,168,76,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .3s;font-size:.55rem;color:var(--black);font-weight:700;}
+.atb.active .atb-check{background:var(--gold);border-color:var(--gold);}
+.atb-icon{font-size:2.2rem;display:block;margin-bottom:14px;}
+.atb-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);transition:color .3s;}
+.atb:hover .atb-name,.atb.active .atb-name{color:var(--gold);}
+.atb-desc{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);margin-top:8px;line-height:1.5;}
+.req-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;margin-top:8px;}
+.req-form-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:28px;}
+.fg{margin-bottom:18px;}
+.fl{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:10px;}
+.fi,.fs{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:13px 18px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.fi:focus,.fs:focus{border-color:rgba(201,168,76,.5);}
+.fi::placeholder{color:var(--muted2);}
+.fs option{background:var(--dark3);color:var(--white);}
+.date-row{display:grid;grid-template-columns:2fr 2fr 3fr;gap:10px;}
+.lokasi-pills{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;}
+.lp{border:1px solid rgba(201,168,76,.15);background:transparent;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;padding:13px 12px;text-align:center;transition:all .3s;cursor:pointer;}
+.lp:hover{border-color:rgba(201,168,76,.4);color:var(--cream);}
+.lp.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
+.btn-req{width:100%;padding:16px;margin-top:10px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:all .35s;position:relative;overflow:hidden;cursor:pointer;}
+.btn-req::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .3s;}
+.btn-req:hover::before{opacity:1;}
+.btn-req span{position:relative;z-index:1;}
+.req-ok{display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.28);padding:18px 22px;margin-top:14px;}
+.req-ok p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);line-height:1.6;}
+.req-ok p strong{color:var(--gold);}
+.rl-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.rl-title{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;}
+.rl-count{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.req-entries{max-height:510px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;}
+.req-entries::-webkit-scrollbar{width:3px;}
+.req-entries::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);}
+.re{border:1px solid rgba(201,168,76,.12);background:var(--dark3);margin-bottom:10px;position:relative;overflow:hidden;transition:border-color .3s;}
+.re::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);opacity:.55;}
+.re.already-voted{border-color:rgba(201,168,76,.35);}
+.re-body{padding:18px 22px 14px 26px;}
+.re-headline{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.re-detail-row{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--muted);margin-top:3px;line-height:1.5;}
+.re-catatan{font-style:italic;color:var(--muted2);}
+.re-bar-section{padding:0 22px 0 26px;}
+.re-bar-track{width:100%;height:2px;background:rgba(201,168,76,.1);}
+.re-bar-fill{height:100%;background:linear-gradient(90deg,rgba(201,168,76,.3),var(--gold),var(--gold-light));transition:width 1.2s cubic-bezier(.25,.46,.45,.94);min-width:0;}
+.re-foot{display:flex;align-items:center;justify-content:space-between;padding:10px 22px 16px 26px;gap:12px;}
+.re-foot-meta{display:flex;align-items:center;gap:14px;}
+.re-suara-count{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.28em;color:var(--muted2);text-transform:uppercase;}
+.re-bar-pct{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:rgba(201,168,76,.7);}
+.re-vote-btn{flex-shrink:0;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:8px 18px;cursor:pointer;transition:all .3s;}
+.re-vote-btn:hover{background:rgba(201,168,76,.1);border-color:var(--gold);}
+.re-vote-btn.sudah-dipilih{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4);color:rgba(201,168,76,.6);cursor:default;}
+.re-sudah-label{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.18em;color:rgba(201,168,76,.45);text-transform:uppercase;}
+.req-empty{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;}
+.req-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px;}
+.req-sum-item{background:var(--dark3);border:1px solid rgba(201,168,76,.09);padding:14px 12px;text-align:center;position:relative;overflow:hidden;}
+.req-sum-item.top{border-color:rgba(201,168,76,.45);}
+.req-sum-item.top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
+.req-sum-icon{font-size:1.3rem;display:block;margin-bottom:4px;}
+.req-sum-type{font-family:'Montserrat',sans-serif;font-size:.45rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+.req-sum-pct{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-top:4px;}
+.req-sum-votes{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.2em;color:var(--muted2);margin-top:3px;}
+.top-badge{position:absolute;top:6px;right:6px;font-family:'Montserrat',sans-serif;font-size:.38rem;letter-spacing:.15em;color:var(--black);background:var(--gold);padding:2px 6px;text-transform:uppercase;}
+
+/* BUKU KENANGAN */
+.buku-wrap{background:var(--dark);}
+.buku-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;margin-top:60px;}
+.buku-form-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:28px;}
+.buku-textarea{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.1rem;padding:16px 18px;outline:none;resize:none;min-height:130px;transition:border-color .3s;line-height:1.7;}
+.buku-textarea:focus{border-color:rgba(201,168,76,.5);}
+.buku-textarea::placeholder{color:var(--muted2);}
+.buku-options{display:flex;gap:12px;margin:14px 0 6px;flex-wrap:wrap;}
+.buku-mood-btn{background:transparent;border:1px solid rgba(201,168,76,.15);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.75rem;padding:8px 14px;transition:all .3s;cursor:pointer;}
+.buku-mood-btn:hover,.buku-mood-btn.active{border-color:var(--gold);background:rgba(201,168,76,.07);}
+.btn-buku{width:100%;padding:15px;margin-top:12px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;position:relative;overflow:hidden;transition:opacity .3s;cursor:pointer;}
+.btn-buku::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .3s;}
+.btn-buku:hover::before{opacity:1;}
+.btn-buku span{position:relative;z-index:1;}
+.buku-entries-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.buku-entries-title{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;}
+.buku-count{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.buku-list{max-height:520px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;display:flex;flex-direction:column;gap:12px;}
+.buku-entry{background:var(--dark3);border:1px solid rgba(201,168,76,.09);padding:22px 24px;position:relative;overflow:hidden;}
+.buku-entry::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,.3),transparent);}
+.be-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.be-mood{font-size:1.1rem;}
+.be-meta{display:flex;align-items:center;gap:10px;}
+.be-author{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;}
+.be-time{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.2em;color:var(--muted2);}
+.be-msg{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream);line-height:1.75;font-style:italic;}
+.buku-empty{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;}
+
+/* VOTE MODAL */
+.vote-overlay{position:fixed;inset:0;z-index:9100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);}
+.vote-overlay.show{display:flex;}
+.vote-box{position:relative;width:380px;background:var(--dark2);border:1px solid rgba(201,168,76,.2);overflow:hidden;animation:pin-box-in .4s cubic-bezier(.25,.46,.45,.94);}
+.vote-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);}
+@keyframes pin-box-in{from{opacity:0;transform:translateY(32px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.vote-header{padding:30px 32px 22px;border-bottom:1px solid rgba(201,168,76,.08);}
+.vote-icon{font-size:1.8rem;margin-bottom:12px;display:block;}
+.vote-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.vote-title em{font-style:italic;color:var(--gold);}
+.vote-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);line-height:1.55;}
+.vote-body{padding:24px 32px;}
+.vote-label{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:10px;}
+.vote-info{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);padding:12px 14px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);}
+.vote-info span{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:4px;}
+.vote-err{display:none;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.2em;color:#c0392b;text-transform:uppercase;margin-top:8px;}
+.vote-footer{padding:0 32px 28px;display:grid;grid-template-columns:1fr auto;gap:10px;}
+.vote-btn-confirm{padding:13px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;font-weight:600;cursor:pointer;transition:opacity .3s;}
+.vote-btn-confirm:hover{opacity:.85;}
+.vote-btn-cancel{padding:13px 18px;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.vote-btn-cancel:hover{border-color:rgba(201,168,76,.4);color:var(--gold);}
+
+/* NOTIF */
+.notif-sukses{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.4);padding:16px 32px;z-index:9999;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--gold);text-align:center;backdrop-filter:blur(12px);animation:notif-in .4s ease;white-space:nowrap;}
+@keyframes notif-in{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* FOOTER */
+footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:55px 60px;display:flex;justify-content:space-between;align-items:center;}
+.foot-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);}
+.foot-brand span{display:block;font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;color:var(--muted);font-weight:300;text-transform:uppercase;margin-top:4px;}
+.foot-mid-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:var(--muted);}
+.foot-links{display:flex;gap:30px;list-style:none;}
+.foot-links a{font-family:'Montserrat',sans-serif;font-size:.56rem;letter-spacing:.28em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .3s;}
+.foot-links a:hover{color:var(--gold-light);}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(36px);transition:opacity .85s ease,transform .85s ease;}
+.rv.on{opacity:1;transform:translateY(0);}
+.rv.d1{transition-delay:.1s;}.rv.d2{transition-delay:.2s;}.rv.d3{transition-delay:.3s;}
+
+@media(max-width:960px){
+  nav{padding:18px 24px;}
+  .nav-links{display:none;}
+  .sec{padding:80px 24px;}
+  .req-layout,.buku-layout{grid-template-columns:1fr;}
+  .acara-types{grid-template-columns:1fr;}
+  .daftar-grid{grid-template-columns:1fr;}
+  .date-row{grid-template-columns:1fr 1fr;}
+  footer{flex-direction:column;gap:28px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- PENGUMUMAN BANNER -->
+<div class="pengumuman-bar" id="pgBar">
+  <span class="pg-icon">📢</span>
+  <span class="pg-label">Pengumuman</span>
+  <span class="pg-text" id="pgText"></span>
+  <button class="pg-close" id="pgClose">✕</button>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-brand">
+    <div class="nav-brand-name">ANTITHESIS</div>
+    <div class="nav-brand-sub">Al Muayyad Surakarta · 2018–2020</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#profil">Anggota</a></li>
+    <li><a href="#request">Request Acara</a></li>
+    <li><a href="#buku">Kenangan</a></li>
+  </ul>
+  <div class="nav-auth">
+    <div class="nav-user-name">
+      <span>Anggota</span>
+      <span id="navUserName">—</span>
+    </div>
+    <button class="btn-keluar" id="btnKeluar">Keluar</button>
+  </div>
+</nav>
+
+<!-- WELCOME HERO -->
+<div class="welcome-hero">
+  <div class="hero-glow"></div>
+  <div class="hero-ring r1"></div>
+  <div class="hero-ring r2"></div>
+  <p class="welcome-label">Portal Anggota · ANTITHESIS</p>
+  <h1 class="welcome-name">Selamat Datang, <br><span class="gg" id="heroName">—</span></h1>
+  <p class="welcome-sub">Kamu resmi masuk ke dalam lingkaran ANTITHESIS.</p>
+  <div class="welcome-line"></div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown-wrap" id="countdownWrap">
+  <div class="cd-inner">
+    <div class="cd-label rv">Acara Mendatang</div>
+    <div class="cd-event-name rv" id="cdEventName">—</div>
+    <div class="cd-event-date rv" id="cdEventDate">—</div>
+    <div class="cd-boxes rv d1">
+      <div class="cd-box"><span class="cd-num" id="cdH">00</span><span class="cd-unit">Hari</span></div>
+      <div class="cd-box"><span class="cd-num" id="cdJ">00</span><span class="cd-unit">Jam</span></div>
+      <div class="cd-box"><span class="cd-num" id="cdM">00</span><span class="cd-unit">Menit</span></div>
+      <div class="cd-box"><span class="cd-num" id="cdD">00</span><span class="cd-unit">Detik</span></div>
+    </div>
+    <div class="cd-done" id="cdDone" style="display:none;">🌟 Waktunya Berkumpul! 🌟</div>
+  </div>
+</div>
+
+<!-- PROFIL -->
+<section class="sec profil-wrap" id="profil">
+  <div class="sec-label rv">Direktori</div>
+  <h2 class="sec-h rv">Anggota <em>ANTITHESIS</em></h2>
+  <div class="profil-search-bar rv d1">
+    <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama atau kelas..."/>
+    <button class="pfbtn active" data-filter="semua">Semua</button>
+    <button class="pfbtn" data-filter="SMA">SMA</button>
+    <button class="pfbtn" data-filter="MA">MA</button>
+  </div>
+  <div class="anggota-grid rv d2" id="anggotaGrid"></div>
+  <div class="profil-empty" id="profilEmpty">Anggota tidak ditemukan. ✦</div>
+  <div class="daftar-toggle rv d3">
+    <button class="btn-daftar" id="btnShowDaftar">+ Daftarkan Dirimu</button>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted2);">Belum terdaftar? Tambahkan profilmu.</span>
+  </div>
+  <div class="daftar-form-wrap" id="daftarFormWrap">
+    <div class="daftar-title">Daftarkan <em>Profilmu</em></div>
+    <div class="daftar-sub">Isi data di bawah ini. Nama dan sekolah wajib diisi.</div>
+    <div class="daftar-info">✦ Hanya anggota ANTITHESIS yang namanya telah terdaftar yang dapat mengisi profil ini.</div>
+    <div class="daftar-grid">
+      <div class="daftar-field full">
+        <label class="daftar-label">Nama Lengkap *</label>
+        <input type="text" class="daftar-input" id="dfNama" placeholder="Tulis nama sesuai data anggota..."/>
+        <div class="nama-err" id="namaErr">✕ &nbsp;Nama tidak ditemukan dalam daftar anggota</div>
+      </div>
+      <div class="daftar-field">
+        <label class="daftar-label">Kelas</label>
+        <select class="daftar-select" id="dfKelas"><option value="">— Pilih Kelas —</option><option value="IPA">IPA</option><option value="IPS">IPS</option></select>
+      </div>
+      <div class="daftar-field">
+        <label class="daftar-label">Sekolah *</label>
+        <select class="daftar-select" id="dfSekolah"><option value="">— Pilih Sekolah —</option><option value="SMA">SMA Al Muayyad</option><option value="MA">MA Al Muayyad</option></select>
+      </div>
+      <div class="daftar-field full">
+        <label class="daftar-label">Motto / Quote Hidup (opsional)</label>
+        <input type="text" class="daftar-input" id="dfMotto" placeholder="Contoh: Terus bergerak, walau perlahan..."/>
+      </div>
+      <div class="daftar-field full">
+        <label class="daftar-label">Foto Profil (opsional)</label>
+        <div class="foto-upload-area">
+          <img class="foto-preview" id="fotoPreview" src="" alt=""/>
+          <div class="foto-placeholder" id="fotoPlaceholder"><span>📷</span>Klik untuk unggah foto</div>
+          <input type="file" class="foto-input" id="dfFoto" accept="image/*"/>
+        </div>
+      </div>
+    </div>
+    <div class="daftar-actions">
+      <button class="btn-submit-daftar" id="btnSubmitDaftar">Daftar Sekarang →</button>
+      <button class="btn-cancel-daftar" id="btnCancelDaftar">Batal</button>
+    </div>
+  </div>
+</section>
+
+<!-- REQUEST ACARA -->
+<section class="sec request-wrap" id="request">
+  <div class="sec-label rv">Usulan Komunitas</div>
+  <h2 class="sec-h rv">Request <em>Acara Selanjutnya</em></h2>
+  <div class="acara-types rv d2">
+    <button class="atb" data-type="HBH"><div class="atb-check">✓</div><span class="atb-icon">🌙</span><div class="atb-name">HBH</div><div class="atb-desc">Halal Bihalal — Reuni penuh kehangatan pasca Lebaran</div></button>
+    <button class="atb" data-type="Bukber"><div class="atb-check">✓</div><span class="atb-icon">🍽️</span><div class="atb-name">Bukber</div><div class="atb-desc">Buka Bersama — Kumpul seru di bulan Ramadan</div></button>
+    <button class="atb" data-type="Temu Kangen"><div class="atb-check">✓</div><span class="atb-icon">🤝</span><div class="atb-name">Temu Kangen</div><div class="atb-desc">Reuni bebas — Kumpul kapan saja, di mana saja</div></button>
+  </div>
+  <div class="req-layout">
+    <div class="rv d2">
+      <div class="req-form-title">Detail Usulanmu</div>
+      <div id="reqForm">
+        <div class="fg">
+          <label class="fl">Nama</label>
+          <div class="fi" id="reqNamaDisplay" style="padding:13px 18px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);">—</div>
+        </div>
+        <div class="fg">
+          <label class="fl">Tanggal Acara yang Diusulkan</label>
+          <div class="date-row">
+            <select class="fs" id="reqTgl"><option value="">Tgl</option></select>
+            <select class="fs" id="reqBulan"><option value="">Bulan</option><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select>
+            <select class="fs" id="reqTahun"><option value="">Tahun</option></select>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Pilih Lokasi (Jawa Tengah)</label>
+          <div class="lokasi-pills">
+            <button class="lp" data-lokasi="Surakarta / Solo">📍 Surakarta / Solo</button>
+            <button class="lp" data-lokasi="Semarang">📍 Semarang</button>
+            <button class="lp" data-lokasi="Yogyakarta">📍 Yogyakarta</button>
+            <button class="lp" data-lokasi="Boyolali / Klaten / Salatiga">📍 Boyolali / Klaten / Salatiga</button>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Ide Tempat / Catatan (opsional)</label>
+          <input type="text" class="fi" id="reqCatatan" placeholder="Contoh: restoran tepi sawah..."/>
+        </div>
+        <button class="btn-req" id="btnReq"><span>Kirim Request →</span></button>
+        <div class="req-ok" id="reqOk"><p>Request <strong id="reqTypeConf">—</strong> berhasil dikirim! ✦</p></div>
+      </div>
+    </div>
+    <div class="rv d3">
+      <div class="rl-head">
+        <div class="rl-title">Usulan Masuk</div>
+        <div class="rl-count" id="reqCount">0</div>
+      </div>
+      <div class="req-summary" id="reqSummary" style="display:none;">
+        <div class="req-sum-item" id="sumHBH"><span class="req-sum-icon">🌙</span><div class="req-sum-type">HBH</div><div class="req-sum-pct" id="sumHBHpct">0%</div><div class="req-sum-votes" id="sumHBHvotes">0 suara</div></div>
+        <div class="req-sum-item" id="sumBukber"><span class="req-sum-icon">🍽️</span><div class="req-sum-type">Bukber</div><div class="req-sum-pct" id="sumBukberpct">0%</div><div class="req-sum-votes" id="sumBukbervotes">0 suara</div></div>
+        <div class="req-sum-item" id="sumTemu"><span class="req-sum-icon">🤝</span><div class="req-sum-type">Temu Kangen</div><div class="req-sum-pct" id="sumTemupct">0%</div><div class="req-sum-votes" id="sumTemuvotes">0 suara</div></div>
+      </div>
+      <div class="req-entries" id="reqEntries"><div class="req-empty">Belum ada usulan. ✦</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BUKU KENANGAN -->
+<section class="sec buku-wrap" id="buku">
+  <div class="sec-label rv">Buku Kenangan</div>
+  <h2 class="sec-h rv">Tuliskan <em>Kesanmu</em></h2>
+  <div class="buku-layout">
+    <div class="rv d1">
+      <div class="buku-form-title">Tinggalkan Pesanmu</div>
+      <div id="bukuForm">
+        <textarea class="buku-textarea" id="bukuMsg" placeholder="Tulis kenangan, pesan, atau kesan kamu..."></textarea>
+        <div class="buku-options">
+          <span style="font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;align-self:center;">Mood :</span>
+          <button class="buku-mood-btn active" data-mood="🌟">🌟 Bangga</button>
+          <button class="buku-mood-btn" data-mood="🥹">🥹 Haru</button>
+          <button class="buku-mood-btn" data-mood="😄">😄 Bahagia</button>
+          <button class="buku-mood-btn" data-mood="💛">💛 Rindu</button>
+        </div>
+        <button class="btn-buku" id="btnBuku"><span>Kirim Pesan Anonim →</span></button>
+      </div>
+    </div>
+    <div class="rv d2">
+      <div class="buku-entries-head">
+        <div class="buku-entries-title">Pesan Masuk</div>
+        <div class="buku-count" id="bukuCount">0</div>
+      </div>
+      <div class="buku-list" id="bukuList"><div class="buku-empty">Belum ada pesan. ✦</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOTE MODAL -->
+<div class="vote-overlay" id="voteOverlay">
+  <div class="vote-box">
+    <div class="vote-header">
+      <span class="vote-icon">🗳️</span>
+      <div class="vote-title">Berikan <em>Suaramu</em></div>
+      <div class="vote-sub" id="voteSubText">Konfirmasi pilihanmu untuk usulan acara ini.</div>
+    </div>
+    <div class="vote-body">
+      <label class="vote-label">Memilih sebagai</label>
+      <div class="vote-info"><span>Anggota Terverifikasi</span><span id="voteNamaConfirm">—</span></div>
+      <div class="vote-err" id="voteErr"></div>
+    </div>
+    <div class="vote-footer">
+      <button class="vote-btn-confirm" id="voteBtnConfirm">Kirim Suara →</button>
+      <button class="vote-btn-cancel" id="voteBtnCancel">Batal</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-brand">ANTITHESIS<span>SMA & MA Al Muayyad Surakarta · 2018–2020</span></div>
+  <div><div class="foot-mid-text">Selamanya Bersama, Selamanya Bangga.</div></div>
+  <ul class="foot-links"><li><a href="#">Instagram</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">YouTube</a></li></ul>
+</footer>
+
+<script>
+// ══ CEK SESSION — redirect ke login jika belum masuk ══
+const currentUser = (function(){
+  const nama     = sessionStorage.getItem('antithesis_member');
+  const username = sessionStorage.getItem('antithesis_username');
+  if(!nama || !username){
+    window.location.href = 'login.html';
+    return null;
+  }
+  return { nama, username };
+})();
+if(!currentUser) throw new Error('redirect');
+
+// Set nama di hero & nav
+document.getElementById('heroName').textContent  = currentUser.nama.split(' ')[0];
+document.getElementById('navUserName').textContent = currentUser.nama.split(' ')[0];
+document.getElementById('reqNamaDisplay').textContent = currentUser.nama;
+
+// ══ KELUAR ══
+document.getElementById('btnKeluar').addEventListener('click',()=>{
+  if(confirm('Keluar dari portal ANTITHESIS?')){
+    sessionStorage.removeItem('antithesis_member');
+    sessionStorage.removeItem('antithesis_username');
+    window.location.href='login.html';
+  }
+});
+
+// ══ TAHUN / TGL DINAMIS ══
+(()=>{
+  const s=document.getElementById('reqTahun');
+  const y=new Date().getFullYear();
+  for(let i=0;i<=2;i++){ const o=document.createElement('option'); o.value=y+i; o.textContent=y+i; s.appendChild(o); }
+  const t=document.getElementById('reqTgl');
+  for(let i=1;i<=31;i++){ const o=document.createElement('option'); o.value=String(i).padStart(2,'0'); o.textContent=String(i).padStart(2,'0'); t.appendChild(o); }
+})();
+
+// ══ NAV SCROLL ══
+window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',scrollY>80));
+
+// ══ REVEAL ══
+const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); }),{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+
+// ══ ANGGOTA ══
+let anggotaFirebase=[], whitelistData={};
+function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+function renderAnggota(data){
+  const g=document.getElementById('anggotaGrid');
+  const e=document.getElementById('profilEmpty');
+  if(!g) return;
+  if(!data.length){g.innerHTML='';e.style.display='block';return;}
+  e.style.display='none';
+  g.innerHTML=data.map(a=>{
+    const av=a.foto?`<div class="ac-av"><img src="${a.foto}" alt="${a.nama}"/></div>`:`<div class="ac-av">${getInit(a.nama)}</div>`;
+    const motto=a.motto?`<div class="ac-motto">"${a.motto}"</div>`:'';
+    const sekolahBadge=a.sekolah?`<div class="ac-badge sekolah">${a.sekolah}</div>`:'';
+    return `<div class="ac rv on" data-s="${a.sekolah||''}">
+      <div class="ac-corner"></div>
+      <div class="ac-top">${av}<div><div class="ac-name">${a.nama}</div></div></div>
+      <div class="ac-bot"><div class="ac-kelas">${a.kelas||''}</div>${motto}<div class="ac-badges">${sekolahBadge}</div></div>
+    </div>`;
+  }).join('');
+}
+renderAnggota([]);
+
+let af='semua';
+document.querySelectorAll('.pfbtn').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.pfbtn').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active'); af=this.dataset.filter; doFilter();
+}));
+document.getElementById('searchAnggota').addEventListener('input',doFilter);
+function doFilter(){
+  const q=document.getElementById('searchAnggota').value.toLowerCase();
+  renderAnggota(anggotaFirebase.filter(a=>(a.nama.toLowerCase().includes(q)||(a.kelas||'').toLowerCase().includes(q))&&(af==='semua'||a.sekolah===af)));
+}
+
+// ══ FORM DAFTAR PROFIL ══
+let fotoBase64='';
+document.getElementById('btnShowDaftar').addEventListener('click',function(){
+  const wrap=document.getElementById('daftarFormWrap');
+  wrap.classList.toggle('show'); this.classList.toggle('active');
+  if(wrap.classList.contains('show')) wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  if(document.getElementById('dfNama').value==='') document.getElementById('dfNama').value=currentUser.nama;
+});
+document.getElementById('btnCancelDaftar').addEventListener('click',()=>{
+  document.getElementById('daftarFormWrap').classList.remove('show');
+  document.getElementById('btnShowDaftar').classList.remove('active');
+  resetDaftarForm();
+});
+document.getElementById('dfFoto').addEventListener('change',function(){
+  const file=this.files[0]; if(!file) return;
+  if(file.size>2*1024*1024){alert('Foto terlalu besar. Maks 2MB.');this.value='';return;}
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const img=new Image();
+    img.onload=function(){
+      const canvas=document.createElement('canvas');
+      const max=150; let w=img.width,h=img.height;
+      if(w>h){if(w>max){h=Math.round(h*(max/w));w=max;}}else{if(h>max){w=Math.round(w*(max/h));h=max;}}
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      fotoBase64=canvas.toDataURL('image/jpeg',.5);
+      if(fotoBase64.length>50000){fotoBase64='';alert('Foto masih terlalu besar. Coba foto lain.');return;}
+      document.getElementById('fotoPreview').src=fotoBase64;
+      document.getElementById('fotoPreview').style.display='block';
+      document.getElementById('fotoPlaceholder').style.display='none';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('btnSubmitDaftar').addEventListener('click',function(){
+  const nama=document.getElementById('dfNama').value.trim();
+  const kelas=document.getElementById('dfKelas').value;
+  const sekolah=document.getElementById('dfSekolah').value;
+  const motto=document.getElementById('dfMotto').value.trim();
+  const namaEl=document.getElementById('dfNama');
+  const namaErr=document.getElementById('namaErr');
+  if(!nama){namaEl.style.borderColor='rgba(201,168,76,.7)';namaEl.focus();return;}
+  if(!isNamaDiizinkan(nama)){namaEl.style.borderColor='rgba(192,57,43,.7)';namaErr.style.display='block';namaEl.focus();return;}
+  const sudahDaftar=anggotaFirebase.some(a=>a.nama.toLowerCase()===nama.toLowerCase());
+  if(sudahDaftar){namaEl.style.borderColor='rgba(192,57,43,.7)';namaErr.textContent='✕  Nama ini sudah terdaftar';namaErr.style.display='block';namaEl.focus();return;}
+  namaErr.style.display='none';
+  if(!sekolah){document.getElementById('dfSekolah').style.borderColor='rgba(201,168,76,.7)';document.getElementById('dfSekolah').focus();return;}
+  if(window.__submitAnggota) window.__submitAnggota({nama,kelas,sekolah,motto,foto:fotoBase64});
+});
+function resetDaftarForm(){
+  ['dfNama','dfMotto'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor='';}});
+  ['dfSekolah','dfKelas'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.style.borderColor='';}});
+  fotoBase64='';
+  document.getElementById('fotoPreview').style.display='none';
+  document.getElementById('fotoPlaceholder').style.display='';
+  document.getElementById('dfFoto').value='';
+}
+document.getElementById('dfNama').addEventListener('input',()=>{document.getElementById('dfNama').style.borderColor='';document.getElementById('namaErr').style.display='none';});
+function isNamaDiizinkan(nama){return Object.values(whitelistData).some(n=>n===nama.trim().toLowerCase());}
+
+// ══ REQUEST ACARA ══
+let selType=null, selLokasi=null, reqData=[];
+const icons={HBH:'🌙',Bukber:'🍽️','Temu Kangen':'🤝'};
+const bln=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+document.querySelectorAll('.atb').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.atb').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active'); selType=this.dataset.type;
+}));
+document.querySelectorAll('.lp').forEach(p=>p.addEventListener('click',function(){
+  document.querySelectorAll('.lp').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active'); selLokasi=this.dataset.lokasi;
+}));
+
+function renderReq(){
+  const el=document.getElementById('reqEntries');
+  document.getElementById('reqCount').textContent=reqData.length;
+  if(!reqData.length){el.innerHTML='<div class="req-empty">Belum ada usulan. ✦</div>';document.getElementById('reqSummary').style.display='none';return;}
+  const tipeMap={HBH:0,Bukber:0,'Temu Kangen':0};
+  reqData.forEach(r=>{if(tipeMap[r.type]!==undefined)tipeMap[r.type]+=(r.votes||0);});
+  const totalVotes=Object.values(tipeMap).reduce((a,b)=>a+b,0);
+  const topType=Object.entries(tipeMap).sort((a,b)=>b[1]-a[1])[0][0];
+  const sumEl=document.getElementById('reqSummary'); sumEl.style.display='grid';
+  const sumMap={HBH:'HBH',Bukber:'Bukber','Temu Kangen':'Temu'};
+  Object.entries(tipeMap).forEach(([type,votes])=>{
+    const key=sumMap[type];
+    const pct=totalVotes>0?Math.round(votes/totalVotes*100):0;
+    const pctEl=document.getElementById('sum'+key+'pct');
+    const votesEl=document.getElementById('sum'+key+'votes');
+    const boxEl=document.getElementById('sum'+key);
+    if(pctEl) pctEl.textContent=pct+'%';
+    if(votesEl) votesEl.textContent=votes+' suara';
+    if(boxEl){
+      boxEl.classList.toggle('top',type===topType&&totalVotes>0);
+      const ob=boxEl.querySelector('.top-badge');if(ob)ob.remove();
+      if(type===topType&&totalVotes>0){const badge=document.createElement('div');badge.className='top-badge';badge.textContent='🏆 Terpopuler';boxEl.appendChild(badge);}
+    }
+  });
+  const maxV=Math.max(...reqData.map(x=>x.votes||0),1);
+  el.innerHTML=[...reqData].sort((a,b)=>(b.votes||0)-(a.votes||0)).map(r=>{
+    const votes=r.votes||0;
+    const pct=Math.round(votes/maxV*100);
+    const votedTypeKey='voted_type_'+r.type;
+    const votedId=sessionStorage.getItem(votedTypeKey);
+    const isMyVote=votedId===r.id;
+    const sudahVote=!!votedId;
+    let btnHtml;
+    if(isMyVote) btnHtml=`<span class="re-sudah-label">✦ Pilihanmu</span>`;
+    else if(sudahVote) btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>Sudah memilih ${r.type}</button>`;
+    else btnHtml=`<button class="re-vote-btn" onclick="openVote('${r.id}','${r.type}')">♡ Pilih ini</button>`;
+    return `<div class="re${isMyVote?' already-voted':''}" id="re-card-${r.id}">
+      <div class="re-body">
+        <div class="re-headline">${icons[r.type]||'📅'} ${r.type}</div>
+        <div class="re-detail-row">📍 ${r.lokasi}</div>
+        <div class="re-detail-row">📅 ${r.tgl} ${bln[+r.bulan]||''} ${r.tahun}</div>
+        ${r.catatan?`<div class="re-detail-row re-catatan">"${r.catatan}"</div>`:''}
+      </div>
+      <div class="re-bar-section"><div class="re-bar-track"><div class="re-bar-fill" style="width:${pct}%"></div></div></div>
+      <div class="re-foot">
+        <div class="re-foot-meta">
+          <span class="re-suara-count">${votes} suara</span>
+          <span class="re-bar-pct">${pct}%</span>
+        </div>
+        ${btnHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+renderReq();
+
+function openVote(id,type){
+  const overlay=document.getElementById('voteOverlay');
+  document.getElementById('voteNamaConfirm').textContent=currentUser.nama;
+  document.getElementById('voteSubText').innerHTML=`Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${type}</strong>. Setiap anggota hanya bisa memilih satu kali per jenis acara.`;
+  document.getElementById('voteErr').style.display='none';
+  overlay.classList.add('show');
+  overlay.dataset.reqId=id; overlay.dataset.reqType=type;
+}
+
+// ══ BUKU KENANGAN ══
+let bukuData=[], selMood='🌟';
+document.querySelectorAll('.buku-mood-btn').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.buku-mood-btn').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active'); selMood=this.dataset.mood;
+}));
+function renderBuku(){
+  const list=document.getElementById('bukuList');
+  document.getElementById('bukuCount').textContent=bukuData.length;
+  if(!bukuData.length){list.innerHTML='<div class="buku-empty">Belum ada pesan. ✦</div>';return;}
+  list.innerHTML=bukuData.map(b=>`<div class="buku-entry"><div class="be-top"><span class="be-mood">${b.mood}</span><div class="be-meta"><span class="be-author">🔒 Anonim</span><span class="be-time">${b.waktu}</span></div></div><div class="be-msg">${b.msg}</div></div>`).join('');
+}
+renderBuku();
+
+// ══ COUNTDOWN ══
+const namaBln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+let cdInterval=null;
+function pad(n){return String(n).padStart(2,'0');}
+function startCountdown(acara){
+  clearInterval(cdInterval);
+  const wrap=document.getElementById('countdownWrap');
+  const dateStr=acara.jam?acara.date+'T'+acara.jam+':00':acara.date+'T00:00:00';
+  const target=new Date(dateStr);
+  let tglStr=target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear();
+  if(acara.jam) tglStr+=' · ⏰ '+acara.jam+' WIB';
+  if(acara.lokasi) tglStr+=' · 📍 '+acara.lokasi;
+  document.getElementById('cdEventName').innerHTML=acara.type;
+  document.getElementById('cdEventDate').textContent=tglStr;
+  wrap.classList.add('visible');
+  document.getElementById('cdDone').style.display='none';
+  function tick(){
+    const diff=target-new Date();
+    if(diff<=0){clearInterval(cdInterval);['cdH','cdJ','cdM','cdD'].forEach(id=>document.getElementById(id).textContent='00');document.getElementById('cdDone').style.display='block';return;}
+    document.getElementById('cdH').textContent=pad(Math.floor(diff/864e5));
+    document.getElementById('cdJ').textContent=pad(Math.floor((diff%864e5)/36e5));
+    document.getElementById('cdM').textContent=pad(Math.floor((diff%36e5)/6e4));
+    document.getElementById('cdD').textContent=pad(Math.floor((diff%6e4)/1e3));
+  }
+  tick(); cdInterval=setInterval(tick,1000);
+}
+
+// ══ FIREBASE INIT ══
+function initFirebase(){
+  const db=window.__db, ref=window.__ref, push=window.__push, onValue=window.__onValue, set=window.__set, remove=window.__remove;
+
+  // Countdown
+  onValue(ref(db,'antithesis/acara'),snap=>{
+    const a=snap.val();
+    if(a&&a.date) startCountdown(a);
+    else{ clearInterval(cdInterval); document.getElementById('countdownWrap').classList.remove('visible'); }
+  });
+
+  // Pengumuman
+  onValue(ref(db,'antithesis/pengumuman'),snap=>{
+    const txt=snap.val()||'';
+    const bar=document.getElementById('pgBar');
+    if(txt){document.getElementById('pgText').textContent=txt;bar.classList.add('show');}
+    else{bar.classList.remove('show');}
+  });
+
+  // Requests
+  const reqRef=ref(db,'antithesis/requests');
+  onValue(reqRef,snap=>{
+    reqData=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));
+    renderReq();
+  });
+  document.getElementById('btnReq').addEventListener('click',()=>{
+    const tgl=document.getElementById('reqTgl').value;
+    const bulan=document.getElementById('reqBulan').value;
+    const tahun=document.getElementById('reqTahun').value;
+    const catatan=document.getElementById('reqCatatan').value.trim();
+    if(!selType){alert('Pilih jenis acara!');return;}
+    if(!tgl||!bulan||!tahun){alert('Lengkapi tanggal!');return;}
+    if(!selLokasi){alert('Pilih lokasi!');return;}
+    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,votes:0,submitter:currentUser.username});
+    document.getElementById('reqTypeConf').textContent=selType;
+    document.getElementById('reqOk').style.display='block';
+    document.getElementById('reqTgl').value='';document.getElementById('reqBulan').value='';
+    document.getElementById('reqTahun').value='';document.getElementById('reqCatatan').value='';
+    document.querySelectorAll('.atb').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.lp').forEach(p=>p.classList.remove('active'));
+    selType=null;selLokasi=null;
+    setTimeout(()=>document.getElementById('reqOk').style.display='none',5000);
+  });
+
+  // Vote confirm
+  document.getElementById('voteBtnCancel').addEventListener('click',()=>document.getElementById('voteOverlay').classList.remove('show'));
+  document.getElementById('voteOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+  document.getElementById('voteBtnConfirm').addEventListener('click',()=>{
+    const id=document.getElementById('voteOverlay').dataset.reqId;
+    const type=document.getElementById('voteOverlay').dataset.reqType;
+    const namaKey=currentUser.username;
+    const reqTarget=reqData.find(r=>r.id===id);
+    const sameTypeReqs=reqData.filter(r=>r.type===type);
+    if(sameTypeReqs.some(r=>r.voters&&r.voters[namaKey])){
+      document.getElementById('voteErr').textContent='✕  Kamu sudah memilih '+type;
+      document.getElementById('voteErr').style.display='block';
+      return;
+    }
+    set(ref(db,'antithesis/requests/'+id+'/voters/'+namaKey),true).then(()=>{
+      const allVoters=Object.keys((reqTarget?.voters||{})).length+1;
+      set(ref(db,'antithesis/requests/'+id+'/votes'),allVoters);
+      sessionStorage.setItem('voted_type_'+type,id);
+      document.getElementById('voteOverlay').classList.remove('show');
+      showNotif('✦ Suaramu untuk '+type+' berhasil dikirim!');
+    });
+  });
+
+  // Buku Kenangan
+  const bukuRef=ref(db,'antithesis/buku');
+  onValue(bukuRef,snap=>{
+    const raw=snap.val()||{};
+    bukuData=Object.values(raw).reverse();
+    renderBuku();
+  });
+  document.getElementById('btnBuku').addEventListener('click',()=>{
+    const msg=document.getElementById('bukuMsg').value.trim();
+    if(!msg){document.getElementById('bukuMsg').style.borderColor='rgba(201,168,76,.6)';document.getElementById('bukuMsg').focus();return;}
+    const now=new Date();
+    const waktu=now.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+    push(bukuRef,{mood:selMood,msg,waktu});
+    document.getElementById('bukuMsg').value='';
+    document.getElementById('bukuMsg').style.borderColor='';
+    showNotif('✦ Pesanmu berhasil dikirim!');
+  });
+
+  // Whitelist
+  onValue(ref(db,'antithesis/whitelist'),snap=>{
+    const raw=snap.val()||{};
+    whitelistData=Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,typeof v==='string'?v.toLowerCase():(v.nama||'').toLowerCase()]));
+  });
+
+  // Anggota
+  const anggotaRef=ref(db,'antithesis/anggota');
+  onValue(anggotaRef,snap=>{
+    anggotaFirebase=Object.values(snap.val()||{});
+    doFilter();
+  });
+  window.__submitAnggota=function(data){
+    push(anggotaRef,data).then(()=>{
+      resetDaftarForm();
+      document.getElementById('daftarFormWrap').classList.remove('show');
+      document.getElementById('btnShowDaftar').classList.remove('active');
+      showNotif('✦ Profilmu berhasil ditambahkan!');
+      document.getElementById('anggotaGrid').scrollIntoView({behavior:'smooth',block:'start'});
+    }).catch(err=>{
+      if(data.foto){
+        push(anggotaRef,{...data,foto:''}).then(()=>{resetDaftarForm();document.getElementById('daftarFormWrap').classList.remove('show');showNotif('✦ Profil ditambahkan (tanpa foto).');}).catch(()=>alert('Gagal menyimpan profil.'));
+      } else alert('Gagal: '+(err.message||err.code||'coba lagi'));
+    });
+  };
+}
+
+if(window.__firebaseReady) initFirebase();
+else window.addEventListener('firebase-ready',initFirebase);
+
+// ══ NOTIF ══
+function showNotif(msg){
+  const old=document.getElementById('notifEl');if(old)old.remove();
+  const el=document.createElement('div');el.className='notif-sukses';el.id='notifEl';el.textContent=msg;
+  document.body.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .5s';setTimeout(()=>el.remove(),500);},3000);
+}
+
+// ══ NAV ACTIVE ══
+const secs=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let c='';secs.forEach(s=>{if(scrollY>=s.offsetTop-200)c=s.id;});
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+c));
+});
+document.getElementById('pgClose').addEventListener('click',()=>document.getElementById('pgBar').classList.remove('show'));
+</script>
+</body>
+</html>
