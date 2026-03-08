@@ -22,13 +22,13 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db  = getDatabase(app);
-window.__db  = db;
-window.__ref = ref;
-window.__push = push;
+window.__db      = db;
+window.__ref     = ref;
+window.__push    = push;
 window.__onValue = onValue;
-window.__set  = set;
-window.__remove = remove;
-window.__get = get;
+window.__set     = set;
+window.__remove  = remove;
+window.__get     = get;
 window.__firebaseReady = true;
 window.dispatchEvent(new Event('firebase-ready'));
 </script>
@@ -55,35 +55,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pg-close{background:none;border:none;color:var(--muted);font-size:1.1rem;padding:0;flex-shrink:0;transition:color .2s;cursor:pointer;}
 .pg-close:hover{color:var(--gold);}
 
-/* ══ TOMBOL ADMIN — hanya muncul saat sudah login ══ */
-.admin-btn-group{
-  position:fixed;bottom:28px;right:28px;z-index:800;
-  display:flex;flex-direction:column;gap:10px;align-items:flex-end;
-}
-.pg-admin-btn,.cd-admin-toggle-right,.admin-logout-btn{
-  background:rgba(10,10,10,.92);
-  border:1px solid rgba(201,168,76,.3);
-  color:var(--gold);
-  font-family:'Montserrat',sans-serif;
-  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
-  padding:12px 20px;
-  transition:all .3s;
-  backdrop-filter:blur(8px);
-  cursor:pointer;
-  white-space:nowrap;
-}
+/* ══ TOMBOL ADMIN ══ */
+.admin-btn-group{position:fixed;bottom:28px;right:28px;z-index:800;display:flex;flex-direction:column;gap:10px;align-items:flex-end;}
+.pg-admin-btn,.cd-admin-toggle-right,.admin-logout-btn{background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;white-space:nowrap;}
 .pg-admin-btn:hover,.cd-admin-toggle-right:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
 .admin-logout-btn{border-color:rgba(180,60,60,.4);color:#c0392b;}
 .admin-logout-btn:hover{border-color:#c0392b;background:rgba(192,57,43,.1);}
 
 /* Tombol Atur Acara di kiri bawah */
-.cd-admin-toggle{
-  position:fixed;bottom:28px;left:28px;z-index:800;
-  background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);
-  color:var(--gold);font-family:'Montserrat',sans-serif;
-  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
-  padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;
-}
+.cd-admin-toggle{position:fixed;bottom:28px;left:28px;z-index:800;background:rgba(10,10,10,.92);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:12px 20px;transition:all .3s;backdrop-filter:blur(8px);cursor:pointer;}
 .cd-admin-toggle:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
 
 /* Admin panels */
@@ -101,164 +81,40 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .pg-btn-del{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:11px;transition:all .3s;cursor:pointer;}
 .pg-btn-del:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
 
-/* ══ ADMIN LOGIN MODAL — BARU & ELEGAN ══ */
-.pin-overlay{
-  position:fixed;inset:0;z-index:9000;
-  display:none;align-items:center;justify-content:center;
-  background:rgba(0,0,0,0);
-  backdrop-filter:blur(0px);
-  transition:background .4s, backdrop-filter .4s;
-}
-.pin-overlay.show{
-  display:flex;
-  background:rgba(0,0,0,.88);
-  backdrop-filter:blur(12px);
-  animation:pin-bg-in .4s ease forwards;
-}
+/* ══ ADMIN LOGIN MODAL ══ */
+.pin-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0);backdrop-filter:blur(0px);transition:background .4s,backdrop-filter .4s;}
+.pin-overlay.show{display:flex;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);animation:pin-bg-in .4s ease forwards;}
 @keyframes pin-bg-in{from{background:rgba(0,0,0,0);backdrop-filter:blur(0)}to{background:rgba(0,0,0,.88);backdrop-filter:blur(12px)}}
-
-.pin-box{
-  position:relative;
-  width:360px;
-  background:var(--dark2);
-  border:1px solid rgba(201,168,76,.18);
-  overflow:hidden;
-  animation:pin-box-in .45s cubic-bezier(.25,.46,.45,.94) forwards;
-}
-@keyframes pin-box-in{
-  from{opacity:0;transform:translateY(32px) scale(.96)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-
-/* Garis emas atas */
-.pin-box::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);
-}
-/* Efek cahaya sudut */
-.pin-box::after{
-  content:'';position:absolute;top:-80px;right:-80px;
-  width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,168,76,.07),transparent 70%);
-  pointer-events:none;
-}
-
-.pin-header{
-  padding:36px 36px 28px;
-  text-align:center;
-  border-bottom:1px solid rgba(201,168,76,.08);
-  position:relative;
-}
-.pin-lock-icon{
-  width:52px;height:52px;
-  border:1px solid rgba(201,168,76,.25);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 18px;
-  font-size:1.3rem;
-  background:rgba(201,168,76,.05);
-  position:relative;
-}
-.pin-lock-icon::before{
-  content:'';position:absolute;inset:-4px;border-radius:50%;
-  border:1px solid rgba(201,168,76,.1);
-}
+.pin-box{position:relative;width:360px;background:var(--dark2);border:1px solid rgba(201,168,76,.18);overflow:hidden;animation:pin-box-in .45s cubic-bezier(.25,.46,.45,.94) forwards;}
+@keyframes pin-box-in{from{opacity:0;transform:translateY(32px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.pin-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);}
+.pin-box::after{content:'';position:absolute;top:-80px;right:-80px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.07),transparent 70%);pointer-events:none;}
+.pin-header{padding:36px 36px 28px;text-align:center;border-bottom:1px solid rgba(201,168,76,.08);position:relative;}
+.pin-lock-icon{width:52px;height:52px;border:1px solid rgba(201,168,76,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.3rem;background:rgba(201,168,76,.05);position:relative;}
+.pin-lock-icon::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(201,168,76,.1);}
 .pin-title{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:700;color:var(--white);margin-bottom:6px;}
 .pin-title em{font-style:italic;color:var(--gold);}
 .pin-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);}
-
-/* Indikator PIN */
-.pin-indicator{
-  padding:24px 36px 20px;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-}
+.pin-indicator{padding:24px 36px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .pin-dots{display:flex;justify-content:center;gap:14px;}
-.pin-dot{
-  width:12px;height:12px;border-radius:50%;
-  border:1px solid rgba(201,168,76,.25);
-  background:transparent;
-  transition:all .25s cubic-bezier(.34,1.56,.64,1);
-}
-.pin-dot.filled{
-  background:var(--gold);
-  border-color:var(--gold);
-  transform:scale(1.15);
-  box-shadow:0 0 8px rgba(201,168,76,.4);
-}
-.pin-dot.error{
-  background:#c0392b;border-color:#c0392b;
-  box-shadow:0 0 8px rgba(192,57,43,.5);
-}
-.pin-hint{
-  font-family:'Montserrat',sans-serif;font-size:.48rem;
-  letter-spacing:.3em;text-transform:uppercase;
-  color:var(--muted2);
-  height:14px;transition:color .2s;
-}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(201,168,76,.25);background:transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);}
+.pin-dot.filled{background:var(--gold);border-color:var(--gold);transform:scale(1.15);box-shadow:0 0 8px rgba(201,168,76,.4);}
+.pin-dot.error{background:#c0392b;border-color:#c0392b;box-shadow:0 0 8px rgba(192,57,43,.5);}
+.pin-hint{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted2);height:14px;transition:color .2s;}
 .pin-hint.err{color:#c0392b;}
-
-/* Numpad */
-.pin-numpad{
-  padding:0 28px 28px;
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-}
-.pin-key{
-  background:var(--dark3);
-  border:1px solid rgba(201,168,76,.08);
-  color:var(--white);
-  font-family:'Playfair Display',serif;
-  font-size:1.35rem;font-weight:700;
-  padding:18px 10px;
-  transition:all .18s ease;
-  cursor:pointer;position:relative;overflow:hidden;
-}
-.pin-key::after{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at center,rgba(201,168,76,.15),transparent 70%);
-  opacity:0;transition:opacity .2s;
-}
-.pin-key:hover{
-  border-color:rgba(201,168,76,.35);
-  background:rgba(201,168,76,.06);
-  color:var(--gold);
-  transform:translateY(-1px);
-}
+.pin-numpad{padding:0 28px 28px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pin-key{background:var(--dark3);border:1px solid rgba(201,168,76,.08);color:var(--white);font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;padding:18px 10px;transition:all .18s ease;cursor:pointer;position:relative;overflow:hidden;}
+.pin-key::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(201,168,76,.15),transparent 70%);opacity:0;transition:opacity .2s;}
+.pin-key:hover{border-color:rgba(201,168,76,.35);background:rgba(201,168,76,.06);color:var(--gold);transform:translateY(-1px);}
 .pin-key:hover::after{opacity:1;}
 .pin-key:active{transform:translateY(0) scale(.96);}
-.pin-key.del{
-  font-family:'Montserrat',sans-serif;
-  font-size:.6rem;letter-spacing:.1em;
-  color:var(--muted);font-weight:400;
-}
+.pin-key.del{font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.1em;color:var(--muted);font-weight:400;}
 .pin-key.del:hover{color:var(--gold);}
-
-/* Footer modal */
-.pin-footer{
-  padding:14px 36px 22px;
-  text-align:center;
-  border-top:1px solid rgba(201,168,76,.07);
-}
-.pin-cancel{
-  background:none;border:none;
-  color:var(--muted);
-  font-family:'Montserrat',sans-serif;
-  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
-  padding:8px 20px;cursor:pointer;
-  transition:color .2s;
-}
+.pin-footer{padding:14px 36px 22px;text-align:center;border-top:1px solid rgba(201,168,76,.07);}
+.pin-cancel{background:none;border:none;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:8px 20px;cursor:pointer;transition:color .2s;}
 .pin-cancel:hover{color:var(--gold);}
-
-/* Shake animation */
 .pin-shake{animation:pin-shake .45s ease;}
-@keyframes pin-shake{
-  0%,100%{transform:translateX(0)}
-  15%{transform:translateX(-9px)}
-  30%{transform:translateX(9px)}
-  45%{transform:translateX(-6px)}
-  60%{transform:translateX(6px)}
-  75%{transform:translateX(-3px)}
-  90%{transform:translateX(3px)}
-}
+@keyframes pin-shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-9px)}30%{transform:translateX(9px)}45%{transform:translateX(-6px)}60%{transform:translateX(6px)}75%{transform:translateX(-3px)}90%{transform:translateX(3px)}}
 
 /* ══ BUKU KENANGAN ══ */
 .buku-wrap{background:var(--dark);}
@@ -352,11 +208,11 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 
 /* ══ PROFIL ANGGOTA ══ */
 .profil-wrap{background:var(--dark);}
-.profil-search-bar{display:flex;gap:12px;margin:40px 0 50px;flex-wrap:wrap;}
+.profil-search-bar{display:flex;gap:10px;margin:40px 0 50px;flex-wrap:wrap;}
 .profil-search{flex:1;min-width:220px;background:var(--dark3);border:1px solid rgba(201,168,76,.15);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.1rem;padding:14px 20px;outline:none;transition:border-color .3s;}
 .profil-search:focus{border-color:rgba(201,168,76,.45);}
 .profil-search::placeholder{color:var(--muted2);}
-.pfbtn{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;padding:14px 22px;transition:all .3s;white-space:nowrap;cursor:pointer;}
+.pfbtn{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;text-transform:uppercase;padding:14px 18px;transition:all .3s;white-space:nowrap;cursor:pointer;}
 .pfbtn:hover,.pfbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
 .anggota-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:2px;}
 .ac{position:relative;background:var(--dark3);overflow:hidden;transition:transform .5s cubic-bezier(.25,.46,.45,.94);}
@@ -370,7 +226,9 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .ac-bot{padding:20px 30px 28px;}
 .ac-kelas{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;}
 .ac-motto{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);line-height:1.6;}
-.ac-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(201,168,76,.22);color:var(--muted);margin-top:12px;transition:all .3s;}
+.ac-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+.ac-badge{display:inline-block;font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(201,168,76,.22);color:var(--muted);transition:all .3s;}
+.ac-badge.sekolah{border-color:rgba(201,168,76,.35);color:rgba(201,168,76,.7);}
 .ac:hover .ac-badge{border-color:rgba(201,168,76,.5);color:var(--gold);}
 .ac-corner{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 32px 32px 0;border-color:transparent rgba(201,168,76,0) transparent transparent;transition:border-color .3s;}
 .ac:hover .ac-corner{border-color:transparent rgba(201,168,76,.5) transparent transparent;}
@@ -506,6 +364,19 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .cd-btn-clear{background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:11px;transition:all .3s;cursor:pointer;}
 .cd-btn-clear:hover{border-color:rgba(201,168,76,.5);color:var(--gold);}
 
+/* ══ NOTIF SUKSES DAFTAR ══ */
+@keyframes notif-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.notif-sukses{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  background:rgba(12,12,12,.97);border:1px solid rgba(201,168,76,.4);
+  padding:16px 32px;z-index:9999;
+  font-family:'Cormorant Garamond',serif;font-size:1.05rem;
+  color:var(--gold);text-align:center;
+  backdrop-filter:blur(12px);
+  animation:notif-in .4s ease forwards;
+  white-space:nowrap;
+}
+
 /* FOOTER */
 footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:55px 60px;display:flex;justify-content:space-between;align-items:center;}
 .foot-brand{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--gold);}
@@ -538,6 +409,8 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   .cd-admin-panel{left:50%;transform:translateX(-50%);bottom:70px;width:calc(100% - 48px);max-width:300px;}
   .admin-btn-group{bottom:16px;right:16px;}
   .pin-box{width:calc(100vw - 40px);max-width:360px;}
+  .profil-search-bar{gap:8px;}
+  .pfbtn{padding:12px 12px;font-size:.48rem;}
 }
 </style>
 </head>
@@ -659,31 +532,56 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--muted);margin-top:12px;font-style:italic;" class="rv d1">
     180 jiwa yang bersatu dalam satu nama, satu semangat, satu kenangan.
   </p>
+
+  <!-- Filter bar: Jurusan + Sekolah -->
   <div class="profil-search-bar rv d1">
-    <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama anggota..."/>
+    <input type="text" class="profil-search" id="searchAnggota" placeholder="Cari nama atau kelas..."/>
     <button class="pfbtn active" data-filter="semua">Semua</button>
     <button class="pfbtn" data-filter="IPA">IPA</button>
     <button class="pfbtn" data-filter="IPS">IPS</button>
     <button class="pfbtn" data-filter="Agama">Agama</button>
+    <button class="pfbtn" data-filter="SMA">SMA</button>
+    <button class="pfbtn" data-filter="MA">MA</button>
   </div>
+
   <div class="anggota-grid rv d2" id="anggotaGrid"></div>
   <div class="profil-empty" id="profilEmpty">Anggota tidak ditemukan. ✦</div>
+
+  <!-- Tombol daftar mandiri -->
   <div class="daftar-toggle rv d3">
     <button class="btn-daftar" id="btnShowDaftar">+ Daftarkan Dirimu</button>
-    <span style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted2);">Belum terdaftar? Tambahkan profilmu secara anonim.</span>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted2);">Belum terdaftar? Tambahkan profilmu.</span>
   </div>
+
+  <!-- Form daftar mandiri -->
   <div class="daftar-form-wrap" id="daftarFormWrap">
     <div class="daftar-title">Daftarkan <em>Profilmu</em></div>
     <div class="daftar-sub">Isi data di bawah ini. Nama dan jurusan wajib diisi.</div>
     <div class="daftar-grid">
+
+      <!-- Nama Lengkap -->
       <div class="daftar-field">
         <label class="daftar-label">Nama Lengkap *</label>
         <input type="text" class="daftar-input" id="dfNama" placeholder="Nama kamu..."/>
       </div>
+
+      <!-- Kelas -->
       <div class="daftar-field">
         <label class="daftar-label">Kelas</label>
         <input type="text" class="daftar-input" id="dfKelas" placeholder="Contoh: XII IPA 1"/>
       </div>
+
+      <!-- Sekolah — BARU -->
+      <div class="daftar-field">
+        <label class="daftar-label">Sekolah *</label>
+        <select class="daftar-select" id="dfSekolah">
+          <option value="">— Pilih Sekolah —</option>
+          <option value="SMA">SMA Al Muayyad</option>
+          <option value="MA">MA Al Muayyad</option>
+        </select>
+      </div>
+
+      <!-- Jurusan -->
       <div class="daftar-field">
         <label class="daftar-label">Jurusan *</label>
         <select class="daftar-select" id="dfJurusan">
@@ -693,14 +591,20 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
           <option value="Agama">Agama</option>
         </select>
       </div>
+
+      <!-- NIS -->
       <div class="daftar-field">
         <label class="daftar-label">NIS (opsional)</label>
         <input type="text" class="daftar-input" id="dfNis" placeholder="Nomor Induk Siswa"/>
       </div>
-      <div class="daftar-field full">
-        <label class="daftar-label">Motto / Quote Hidupmu (opsional)</label>
+
+      <!-- Motto -->
+      <div class="daftar-field">
+        <label class="daftar-label">Motto / Quote Hidup (opsional)</label>
         <input type="text" class="daftar-input" id="dfMotto" placeholder="Contoh: Terus bergerak, walau perlahan..."/>
       </div>
+
+      <!-- Foto Profil -->
       <div class="daftar-field full">
         <label class="daftar-label">Foto Profil (opsional)</label>
         <div class="foto-upload-area">
@@ -712,13 +616,15 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
           <input type="file" class="foto-input" id="dfFoto" accept="image/*"/>
         </div>
       </div>
-    </div>
+
+    </div><!-- /daftar-grid -->
+
     <div class="daftar-actions">
       <button class="btn-submit-daftar" id="btnSubmitDaftar">Daftar Sekarang →</button>
       <button class="btn-cancel-daftar" id="btnCancelDaftar">Batal</button>
     </div>
     <div class="daftar-ok" id="daftarOk">✦ Profilmu berhasil ditambahkan! Selamat datang di ANTITHESIS.</div>
-  </div>
+  </div><!-- /daftar-form-wrap -->
 </section>
 
 <!-- REQUEST ACARA -->
@@ -837,7 +743,7 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </section>
 
-<!-- TOMBOL ADMIN (kanan bawah) — hanya muncul bila sudah login -->
+<!-- TOMBOL ADMIN (kanan bawah) -->
 <div class="admin-btn-group" id="adminBtnGroup" style="display:none;">
   <button class="admin-logout-btn" id="adminLogoutBtn">🔓 Keluar Admin</button>
   <button class="pg-admin-btn" id="pgAdminBtn">📢 Pengumuman</button>
@@ -865,16 +771,14 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   <p class="motto-body rv">ANTITHESIS bukan tentang siapa yang paling menonjol, melainkan tentang bagaimana kita saling melengkapi. Setiap perbedaan adalah warna dalam satu kanvas besar bernama kebersamaan.</p>
 </section>
 
-<!-- ══ PIN MODAL — TAMPILAN BARU ══ -->
+<!-- PIN MODAL -->
 <div class="pin-overlay" id="pinOverlay">
   <div class="pin-box" id="pinBox">
-
     <div class="pin-header">
       <div class="pin-lock-icon">🔐</div>
       <div class="pin-title">Panel <em>Admin</em></div>
       <div class="pin-sub">Masukkan PIN 6 digit untuk melanjutkan</div>
     </div>
-
     <div class="pin-indicator">
       <div class="pin-dots" id="pinDots">
         <div class="pin-dot" id="pd0"></div>
@@ -886,7 +790,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       </div>
       <div class="pin-hint" id="pinHint">Ketuk angka di bawah</div>
     </div>
-
     <div class="pin-numpad">
       <button class="pin-key" data-n="1">1</button>
       <button class="pin-key" data-n="2">2</button>
@@ -901,11 +804,9 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       <button class="pin-key" data-n="0">0</button>
       <button class="pin-key del" id="pinClearAll">Reset</button>
     </div>
-
     <div class="pin-footer">
       <button class="pin-cancel" id="pinCancel">✕ &nbsp;Batalkan</button>
     </div>
-
   </div>
 </div>
 
@@ -923,169 +824,244 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 <script>
 // ══ TAHUN DINAMIS ══
 (()=>{
-  const s=document.getElementById('reqTahun');
-  const y=new Date().getFullYear();
-  for(let i=0;i<=2;i++){
-    const o=document.createElement('option');
-    o.value=y+i; o.textContent=y+i; s.appendChild(o);
+  const s = document.getElementById('reqTahun');
+  const y = new Date().getFullYear();
+  for(let i = 0; i <= 2; i++){
+    const o = document.createElement('option');
+    o.value = y + i; o.textContent = y + i; s.appendChild(o);
   }
 })();
 
 // ══ NAV SCROLL ══
-window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',scrollY>80));
+window.addEventListener('scroll', () =>
+  document.getElementById('mainNav').classList.toggle('scrolled', scrollY > 80));
 
 // ══ REVEAL on scroll ══
-const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{
+const rvObs = new IntersectionObserver(entries => entries.forEach(e => {
   if(e.isIntersecting) e.target.classList.add('on');
-}),{threshold:.1});
-document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+}), {threshold: .1});
+document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
 
 // ══ COUNTER ANIMASI ══
-function animCount(el,target){
-  let c=0;
-  const step=target/80;
-  const t=setInterval(()=>{
-    c=Math.min(c+step,target);
-    el.textContent=Math.floor(c);
-    if(c>=target) clearInterval(t);
-  },20);
+function animCount(el, target){
+  let c = 0;
+  const step = target / 80;
+  const t = setInterval(() => {
+    c = Math.min(c + step, target);
+    el.textContent = Math.floor(c);
+    if(c >= target) clearInterval(t);
+  }, 20);
 }
-const cntObs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
+const cntObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
     if(e.isIntersecting){
-      e.target.querySelectorAll('.stat-n').forEach(n=>animCount(n,+n.dataset.target));
+      e.target.querySelectorAll('.stat-n').forEach(n => animCount(n, +n.dataset.target));
       cntObs.unobserve(e.target);
     }
   });
-},{threshold:.5});
-document.querySelector('.stats-inner')&&cntObs.observe(document.querySelector('.stats-inner'));
+}, {threshold: .5});
+document.querySelector('.stats-inner') && cntObs.observe(document.querySelector('.stats-inner'));
 
-// ══ ANGGOTA DATA ══
-const anggotaData=[];
-let anggotaFirebase=[];
-function getAllAnggota(){return [...anggotaData,...anggotaFirebase];}
-function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+// ══ ANGGOTA DATA (data statis bisa ditambah di sini) ══
+const anggotaData = [];
+let anggotaFirebase = [];
+function getAllAnggota(){ return [...anggotaData, ...anggotaFirebase]; }
+function getInit(n){ return n.split(' ').slice(0, 2).map(w => w[0] || '').join('').toUpperCase(); }
 
+// ── Render kartu anggota ──
 function renderAnggota(data){
-  const g=document.getElementById('anggotaGrid');
-  const e=document.getElementById('profilEmpty');
+  const g = document.getElementById('anggotaGrid');
+  const e = document.getElementById('profilEmpty');
   if(!g) return;
-  if(!data.length){g.innerHTML='';e.style.display='block';return;}
-  e.style.display='none';
-  g.innerHTML=data.map(a=>{
-    const av=a.foto
-      ? `<div class="ac-av"><img src="${a.foto}" alt="${a.nama}"/></div>`
+  if(!data.length){ g.innerHTML = ''; e.style.display = 'block'; return; }
+  e.style.display = 'none';
+
+  g.innerHTML = data.map(a => {
+    // Avatar: foto atau inisial
+    const av = a.foto
+      ? `<div class="ac-av"><img src="${a.foto}" alt="${a.nama}" loading="lazy"/></div>`
       : `<div class="ac-av">${getInit(a.nama)}</div>`;
-    const nis=a.nis?`<div class="ac-nis">NIS · ${a.nis}</div>`:'';
-    const jabatan=a.jabatan?` · ${a.jabatan}`:'';
-    const motto=a.motto?`<div class="ac-motto">"${a.motto}"</div>`:'';
-    return `<div class="ac rv on" data-j="${a.jurusan||''}">
+
+    const nis    = a.nis    ? `<div class="ac-nis">NIS · ${a.nis}</div>` : '';
+    const jabatan = a.jabatan ? ` · ${a.jabatan}` : '';
+    const motto  = a.motto  ? `<div class="ac-motto">"${a.motto}"</div>` : '';
+
+    // Badge sekolah (SMA / MA) + badge jurusan
+    const sekolahBadge = a.sekolah
+      ? `<div class="ac-badge sekolah">${a.sekolah}</div>` : '';
+    const jurusanBadge = a.jurusan
+      ? `<div class="ac-badge">${a.jurusan}</div>` : '';
+
+    return `<div class="ac rv on" data-j="${a.jurusan||''}" data-s="${a.sekolah||''}">
       <div class="ac-corner"></div>
-      <div class="ac-top">${av}
-        <div><div class="ac-name">${a.nama}</div>${nis}</div>
+      <div class="ac-top">
+        ${av}
+        <div>
+          <div class="ac-name">${a.nama}</div>
+          ${nis}
+        </div>
       </div>
       <div class="ac-bot">
-        <div class="ac-kelas">${a.kelas||''}${jabatan}</div>
+        <div class="ac-kelas">${a.kelas || ''}${jabatan}</div>
         ${motto}
-        <div class="ac-badge">${a.jurusan||''}</div>
+        <div class="ac-badges">${sekolahBadge}${jurusanBadge}</div>
       </div>
     </div>`;
   }).join('');
 }
 renderAnggota(getAllAnggota());
 
-// Filter & Search
-let af='semua';
-document.querySelectorAll('.pfbtn').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.pfbtn').forEach(x=>x.classList.remove('active'));
+// ── Filter & Search ──
+let af = 'semua';
+document.querySelectorAll('.pfbtn').forEach(b => b.addEventListener('click', function(){
+  document.querySelectorAll('.pfbtn').forEach(x => x.classList.remove('active'));
   this.classList.add('active');
-  af=this.dataset.filter;
+  af = this.dataset.filter;
   doFilter();
 }));
-document.getElementById('searchAnggota').addEventListener('input',doFilter);
+document.getElementById('searchAnggota').addEventListener('input', doFilter);
+
 function doFilter(){
-  const q=document.getElementById('searchAnggota').value.toLowerCase();
-  renderAnggota(getAllAnggota().filter(a=>
-    (a.nama.toLowerCase().includes(q)||(a.kelas||'').toLowerCase().includes(q))&&
-    (af==='semua'||a.jurusan===af)
+  const q = document.getElementById('searchAnggota').value.toLowerCase();
+  renderAnggota(getAllAnggota().filter(a =>
+    // Cari nama atau kelas
+    (a.nama.toLowerCase().includes(q) || (a.kelas || '').toLowerCase().includes(q)) &&
+    // Filter: semua / jurusan / sekolah
+    (af === 'semua' || a.jurusan === af || a.sekolah === af)
   ));
 }
 
 // ══ FORM DAFTAR MANDIRI ══
-let fotoBase64='';
-document.getElementById('btnShowDaftar').addEventListener('click',function(){
-  const wrap=document.getElementById('daftarFormWrap');
+let fotoBase64 = '';
+
+document.getElementById('btnShowDaftar').addEventListener('click', function(){
+  const wrap = document.getElementById('daftarFormWrap');
   wrap.classList.toggle('show');
   this.classList.toggle('active');
+  if(wrap.classList.contains('show'))
+    wrap.scrollIntoView({behavior:'smooth', block:'start'});
 });
-document.getElementById('btnCancelDaftar').addEventListener('click',()=>{
+
+document.getElementById('btnCancelDaftar').addEventListener('click', () => {
   document.getElementById('daftarFormWrap').classList.remove('show');
   document.getElementById('btnShowDaftar').classList.remove('active');
+  resetDaftarForm();
 });
-document.getElementById('dfFoto').addEventListener('change',function(){
-  const file=this.files[0];
+
+// Preview foto
+document.getElementById('dfFoto').addEventListener('change', function(){
+  const file = this.files[0];
   if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    const img=new Image();
-    img.onload=function(){
-      const canvas=document.createElement('canvas');
-      const max=300;
-      let w=img.width,h=img.height;
-      if(w>h){if(w>max){h=h*(max/w);w=max;}}
-      else{if(h>max){w=w*(max/h);h=max;}}
-      canvas.width=w; canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      fotoBase64=canvas.toDataURL('image/jpeg',0.75);
-      const prev=document.getElementById('fotoPreview');
-      const ph=document.getElementById('fotoPlaceholder');
-      prev.src=fotoBase64;
-      prev.style.display='block';
-      ph.style.display='none';
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const max = 300;
+      let w = img.width, h = img.height;
+      if(w > h){ if(w > max){ h = h*(max/w); w = max; }}
+      else{ if(h > max){ w = w*(max/h); h = max; }}
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      fotoBase64 = canvas.toDataURL('image/jpeg', 0.75);
+      document.getElementById('fotoPreview').src = fotoBase64;
+      document.getElementById('fotoPreview').style.display = 'block';
+      document.getElementById('fotoPlaceholder').style.display = 'none';
     };
-    img.src=ev.target.result;
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 });
-document.getElementById('btnSubmitDaftar').addEventListener('click',function(){
-  const nama=document.getElementById('dfNama').value.trim();
-  const kelas=document.getElementById('dfKelas').value.trim();
-  const jurusan=document.getElementById('dfJurusan').value;
-  const nis=document.getElementById('dfNis').value.trim();
-  const motto=document.getElementById('dfMotto').value.trim();
+
+// Submit daftar
+document.getElementById('btnSubmitDaftar').addEventListener('click', function(){
+  const nama    = document.getElementById('dfNama').value.trim();
+  const kelas   = document.getElementById('dfKelas').value.trim();
+  const sekolah = document.getElementById('dfSekolah').value;
+  const jurusan = document.getElementById('dfJurusan').value;
+  const nis     = document.getElementById('dfNis').value.trim();
+  const motto   = document.getElementById('dfMotto').value.trim();
+
+  // Validasi nama
   if(!nama){
-    document.getElementById('dfNama').style.borderColor='rgba(201,168,76,.6)';
+    document.getElementById('dfNama').style.borderColor = 'rgba(201,168,76,.7)';
     document.getElementById('dfNama').focus();
     return;
   }
-  if(window.__submitAnggota) window.__submitAnggota({nama,kelas,jurusan,nis,motto,foto:fotoBase64});
+  // Validasi sekolah
+  if(!sekolah){
+    document.getElementById('dfSekolah').style.borderColor = 'rgba(201,168,76,.7)';
+    document.getElementById('dfSekolah').focus();
+    return;
+  }
+  // Validasi jurusan
+  if(!jurusan){
+    document.getElementById('dfJurusan').style.borderColor = 'rgba(201,168,76,.7)';
+    document.getElementById('dfJurusan').focus();
+    return;
+  }
+
+  if(window.__submitAnggota)
+    window.__submitAnggota({nama, kelas, sekolah, jurusan, nis, motto, foto: fotoBase64});
 });
 
-// ══ REQUEST ACARA ══
-let selType=null, selLokasi=null, reqData=[];
-const icons={HBH:'🌙',Bukber:'🍽️','Temu Kangen':'🤝'};
-const bln=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function resetDaftarForm(){
+  ['dfNama','dfKelas','dfNis','dfMotto'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.value = ''; el.style.borderColor = ''; }
+  });
+  ['dfSekolah','dfJurusan'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.value = ''; el.style.borderColor = ''; }
+  });
+  fotoBase64 = '';
+  document.getElementById('fotoPreview').style.display = 'none';
+  document.getElementById('fotoPlaceholder').style.display = '';
+  document.getElementById('dfFoto').value = '';
+  document.getElementById('daftarOk').style.display = 'none';
+}
 
-document.querySelectorAll('.atb').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.atb').forEach(x=>x.classList.remove('active'));
+// Notifikasi sukses floating
+function showNotifSukses(msg){
+  const old = document.getElementById('notifSukses');
+  if(old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'notif-sukses';
+  el.id = 'notifSukses';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transition = 'opacity .5s';
+    setTimeout(() => el.remove(), 500);
+  }, 3000);
+}
+
+// ══ REQUEST ACARA ══
+let selType = null, selLokasi = null, reqData = [];
+const icons = {HBH: '🌙', Bukber: '🍽️', 'Temu Kangen': '🤝'};
+const bln = ['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+document.querySelectorAll('.atb').forEach(b => b.addEventListener('click', function(){
+  document.querySelectorAll('.atb').forEach(x => x.classList.remove('active'));
   this.classList.add('active');
-  selType=this.dataset.type;
+  selType = this.dataset.type;
 }));
-document.querySelectorAll('.lp').forEach(p=>p.addEventListener('click',function(){
-  document.querySelectorAll('.lp').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.lp').forEach(p => p.addEventListener('click', function(){
+  document.querySelectorAll('.lp').forEach(x => x.classList.remove('active'));
   this.classList.add('active');
-  selLokasi=this.dataset.lokasi;
+  selLokasi = this.dataset.lokasi;
 }));
 
 function renderReq(){
-  const el=document.getElementById('reqEntries');
-  document.getElementById('reqCount').textContent=reqData.length;
+  const el = document.getElementById('reqEntries');
+  document.getElementById('reqCount').textContent = reqData.length;
   if(!reqData.length){
-    el.innerHTML='<div class="req-empty">Belum ada usulan. Jadilah yang pertama! ✦</div>';
+    el.innerHTML = '<div class="req-empty">Belum ada usulan. Jadilah yang pertama! ✦</div>';
     return;
   }
-  el.innerHTML=[...reqData].map(r=>{
-    const liked=sessionStorage.getItem('liked_'+r.id);
+  el.innerHTML = [...reqData].map(r => {
+    const liked = sessionStorage.getItem('liked_' + r.id);
     return `<div class="re">
       <div class="re-top">
         <div class="re-type">${icons[r.type]||'📅'} ${r.type}</div>
@@ -1093,7 +1069,7 @@ function renderReq(){
       </div>
       <div class="re-bot">
         <div>
-          <div class="re-info">oleh <strong>🔒 Anonim</strong>${r.catatan?' · "'+r.catatan+'"':''}</div>
+          <div class="re-info">oleh <strong>🔒 Anonim</strong>${r.catatan ? ' · "' + r.catatan + '"' : ''}</div>
           <div class="re-loc">📍 ${r.lokasi}</div>
         </div>
         <div class="re-vote-wrap">
@@ -1103,224 +1079,224 @@ function renderReq(){
       </div>
     </div>`;
   }).join('');
-  document.querySelectorAll('.re-vbtn').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.re-vbtn').forEach(b => b.addEventListener('click', function(){
     if(window.__voteReq) window.__voteReq(this.dataset.id, +this.dataset.votes);
   }));
 }
 renderReq();
 
 // ══ HITUNG MUNDUR ══
-const namaBln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-let cdInterval=null;
-function pad(n){return String(n).padStart(2,'0');}
+const namaBln = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+let cdInterval = null;
+function pad(n){ return String(n).padStart(2, '0'); }
+
 function startCountdown(acara){
   clearInterval(cdInterval);
-  const wrap=document.getElementById('countdownWrap');
-  const dateStr=acara.jam ? acara.date+'T'+acara.jam+':00' : acara.date+'T00:00:00';
-  const target=new Date(dateStr);
-  let tglStr=target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear();
-  if(acara.jam) tglStr+=' · ⏰ '+acara.jam+' WIB';
-  if(acara.lokasi) tglStr+=' · 📍 '+acara.lokasi;
-  document.getElementById('cdEventName').innerHTML=acara.type;
-  document.getElementById('cdEventDate').textContent=tglStr;
+  const wrap = document.getElementById('countdownWrap');
+  const dateStr = acara.jam ? acara.date + 'T' + acara.jam + ':00' : acara.date + 'T00:00:00';
+  const target = new Date(dateStr);
+  let tglStr = target.getDate() + ' ' + namaBln[target.getMonth()] + ' ' + target.getFullYear();
+  if(acara.jam) tglStr += ' · ⏰ ' + acara.jam + ' WIB';
+  if(acara.lokasi) tglStr += ' · 📍 ' + acara.lokasi;
+  document.getElementById('cdEventName').innerHTML = acara.type;
+  document.getElementById('cdEventDate').textContent = tglStr;
   wrap.classList.add('visible');
-  document.getElementById('cdDone').style.display='none';
+  document.getElementById('cdDone').style.display = 'none';
+
   function tick(){
-    const now=new Date();
-    const diff=target-now;
-    if(diff<=0){
+    const now = new Date();
+    const diff = target - now;
+    if(diff <= 0){
       clearInterval(cdInterval);
-      document.getElementById('cdHariNum').textContent='00';
-      document.getElementById('cdJamNum').textContent='00';
-      document.getElementById('cdMenitNum').textContent='00';
-      document.getElementById('cdDetikNum').textContent='00';
-      document.getElementById('cdDone').style.display='block';
+      ['cdHariNum','cdJamNum','cdMenitNum','cdDetikNum'].forEach(id =>
+        document.getElementById(id).textContent = '00');
+      document.getElementById('cdDone').style.display = 'block';
       return;
     }
-    const d=Math.floor(diff/864e5);
-    const h=Math.floor((diff%864e5)/36e5);
-    const m=Math.floor((diff%36e5)/6e4);
-    const s=Math.floor((diff%6e4)/1e3);
-    document.getElementById('cdHariNum').textContent=pad(d);
-    document.getElementById('cdJamNum').textContent=pad(h);
-    document.getElementById('cdMenitNum').textContent=pad(m);
-    document.getElementById('cdDetikNum').textContent=pad(s);
+    const d = Math.floor(diff / 864e5);
+    const h = Math.floor((diff % 864e5) / 36e5);
+    const m = Math.floor((diff % 36e5) / 6e4);
+    const s = Math.floor((diff % 6e4) / 1e3);
+    document.getElementById('cdHariNum').textContent  = pad(d);
+    document.getElementById('cdJamNum').textContent   = pad(h);
+    document.getElementById('cdMenitNum').textContent = pad(m);
+    document.getElementById('cdDetikNum').textContent = pad(s);
   }
   tick();
-  cdInterval=setInterval(tick,1000);
+  cdInterval = setInterval(tick, 1000);
 }
 
 // ══ FIREBASE INTEGRATION ══
 function initFirebase(){
-  const db=window.__db, ref=window.__ref, push=window.__push,
-        onValue=window.__onValue, set=window.__set, remove=window.__remove;
+  const db      = window.__db;
+  const ref     = window.__ref;
+  const push    = window.__push;
+  const onValue = window.__onValue;
+  const set     = window.__set;
+  const remove  = window.__remove;
 
-  // Hitung Mundur
-  const cdRef=ref(db,'antithesis/acara');
-  onValue(cdRef,snap=>{
-    const acara=snap.val();
+  // ── Hitung Mundur ──
+  const cdRef = ref(db, 'antithesis/acara');
+  onValue(cdRef, snap => {
+    const acara = snap.val();
     if(acara && acara.date){
       startCountdown(acara);
-      document.getElementById('cdType').value=acara.type||'';
-      document.getElementById('cdDateInput').value=acara.date||'';
-      document.getElementById('cdJamInput').value=acara.jam||'';
-      document.getElementById('cdLokasiInput').value=acara.lokasi||'';
+      document.getElementById('cdType').value       = acara.type   || '';
+      document.getElementById('cdDateInput').value  = acara.date   || '';
+      document.getElementById('cdJamInput').value   = acara.jam    || '';
+      document.getElementById('cdLokasiInput').value = acara.lokasi || '';
     } else {
       clearInterval(cdInterval);
       document.getElementById('countdownWrap').classList.remove('visible');
     }
   });
 
-  document.getElementById('cdBtnSet').addEventListener('click',function(){
-    const type=document.getElementById('cdType').value.trim();
-    const date=document.getElementById('cdDateInput').value;
-    const jam=document.getElementById('cdJamInput').value.trim();
-    const lokasi=document.getElementById('cdLokasiInput').value.trim();
-    if(!type||!date){alert('Pilih jenis acara dan tanggal!');return;}
-    set(ref(db,'antithesis/acara'),{type,date,jam,lokasi});
+  document.getElementById('cdBtnSet').addEventListener('click', function(){
+    const type   = document.getElementById('cdType').value.trim();
+    const date   = document.getElementById('cdDateInput').value;
+    const jam    = document.getElementById('cdJamInput').value.trim();
+    const lokasi = document.getElementById('cdLokasiInput').value.trim();
+    if(!type || !date){ alert('Pilih jenis acara dan tanggal!'); return; }
+    set(ref(db, 'antithesis/acara'), {type, date, jam, lokasi});
     document.getElementById('cdAdminPanel').classList.remove('open');
   });
 
-  document.getElementById('cdBtnClear').addEventListener('click',function(){
-    remove(ref(db,'antithesis/acara'));
-    document.getElementById('cdType').value='';
-    document.getElementById('cdDateInput').value='';
-    document.getElementById('cdJamInput').value='';
-    document.getElementById('cdLokasiInput').value='';
+  document.getElementById('cdBtnClear').addEventListener('click', function(){
+    remove(ref(db, 'antithesis/acara'));
+    ['cdType','cdDateInput','cdJamInput','cdLokasiInput'].forEach(id =>
+      document.getElementById(id).value = '');
     document.getElementById('cdAdminPanel').classList.remove('open');
   });
 
-  // Pengumuman
-  const pgRef=ref(db,'antithesis/pengumuman');
-  onValue(pgRef,snap=>{
-    const txt=snap.val()||'';
-    document.getElementById('pgInput').value=txt;
+  // ── Pengumuman ──
+  const pgRef = ref(db, 'antithesis/pengumuman');
+  onValue(pgRef, snap => {
+    const txt = snap.val() || '';
+    document.getElementById('pgInput').value = txt;
     showPg(txt);
   });
-  document.getElementById('pgBtnPost').addEventListener('click',()=>{
-    const v=document.getElementById('pgInput').value.trim();
-    if(!v){alert('Tulis isi pengumuman dulu!');return;}
-    set(ref(db,'antithesis/pengumuman'),v);
+  document.getElementById('pgBtnPost').addEventListener('click', () => {
+    const v = document.getElementById('pgInput').value.trim();
+    if(!v){ alert('Tulis isi pengumuman dulu!'); return; }
+    set(ref(db, 'antithesis/pengumuman'), v);
     document.getElementById('pgAdminPanel').classList.remove('open');
   });
-  document.getElementById('pgBtnDel').addEventListener('click',()=>{
-    remove(ref(db,'antithesis/pengumuman'));
-    document.getElementById('pgInput').value='';
+  document.getElementById('pgBtnDel').addEventListener('click', () => {
+    remove(ref(db, 'antithesis/pengumuman'));
+    document.getElementById('pgInput').value = '';
     document.getElementById('pgAdminPanel').classList.remove('open');
   });
 
-  // Request Acara
-  const reqRef=ref(db,'antithesis/requests');
-  onValue(reqRef,snap=>{
-    const raw=snap.val()||{};
-    reqData=Object.entries(raw).map(([id,v])=>({id,...v}));
+  // ── Request Acara ──
+  const reqRef = ref(db, 'antithesis/requests');
+  onValue(reqRef, snap => {
+    const raw = snap.val() || {};
+    reqData = Object.entries(raw).map(([id, v]) => ({id, ...v}));
     renderReq();
   });
-  document.getElementById('btnReq').addEventListener('click',function(){
-    const tgl=document.getElementById('reqTgl').value;
-    const bulan=document.getElementById('reqBulan').value;
-    const tahun=document.getElementById('reqTahun').value;
-    const catatan=document.getElementById('reqCatatan').value.trim();
-    if(!selType){alert('Pilih jenis acara terlebih dahulu!');return;}
-    if(!tgl||!bulan||!tahun){alert('Lengkapi tanggal acara!');return;}
-    if(!selLokasi){alert('Pilih lokasi terlebih dahulu!');return;}
-    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,votes:0});
-    document.getElementById('reqTypeConf').textContent=selType;
-    document.getElementById('reqOk').style.display='block';
-    document.getElementById('reqTgl').value='';
-    document.getElementById('reqBulan').value='';
-    document.getElementById('reqTahun').value='';
-    document.getElementById('reqCatatan').value='';
-    document.querySelectorAll('.atb').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.lp').forEach(p=>p.classList.remove('active'));
-    selType=null; selLokasi=null;
-    setTimeout(()=>document.getElementById('reqOk').style.display='none',5000);
+  document.getElementById('btnReq').addEventListener('click', function(){
+    const tgl    = document.getElementById('reqTgl').value;
+    const bulan  = document.getElementById('reqBulan').value;
+    const tahun  = document.getElementById('reqTahun').value;
+    const catatan = document.getElementById('reqCatatan').value.trim();
+    if(!selType)  { alert('Pilih jenis acara terlebih dahulu!'); return; }
+    if(!tgl || !bulan || !tahun){ alert('Lengkapi tanggal acara!'); return; }
+    if(!selLokasi){ alert('Pilih lokasi terlebih dahulu!'); return; }
+    push(reqRef, {type: selType, tgl, bulan, tahun, lokasi: selLokasi, catatan, votes: 0});
+    document.getElementById('reqTypeConf').textContent = selType;
+    document.getElementById('reqOk').style.display = 'block';
+    document.getElementById('reqTgl').value   = '';
+    document.getElementById('reqBulan').value = '';
+    document.getElementById('reqTahun').value = '';
+    document.getElementById('reqCatatan').value = '';
+    document.querySelectorAll('.atb').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.lp').forEach(p => p.classList.remove('active'));
+    selType = null; selLokasi = null;
+    setTimeout(() => document.getElementById('reqOk').style.display = 'none', 5000);
   });
 
-  window.__voteReq=function(id,currentVotes){
-    const likedKey='liked_'+id;
-    const liked=sessionStorage.getItem(likedKey);
-    const newVotes=liked ? Math.max(0,currentVotes-1) : currentVotes+1;
-    set(ref(db,'antithesis/requests/'+id+'/votes'),newVotes);
+  window.__voteReq = function(id, currentVotes){
+    const likedKey = 'liked_' + id;
+    const liked    = sessionStorage.getItem(likedKey);
+    const newVotes = liked ? Math.max(0, currentVotes - 1) : currentVotes + 1;
+    set(ref(db, 'antithesis/requests/' + id + '/votes'), newVotes);
     if(liked) sessionStorage.removeItem(likedKey);
-    else sessionStorage.setItem(likedKey,'1');
+    else sessionStorage.setItem(likedKey, '1');
   };
 
-  // Buku Kenangan
-  const bukuRef=ref(db,'antithesis/buku');
-  onValue(bukuRef,snap=>{
-    const raw=snap.val()||{};
-    bukuData=Object.values(raw).reverse();
+  // ── Buku Kenangan ──
+  const bukuRef = ref(db, 'antithesis/buku');
+  onValue(bukuRef, snap => {
+    const raw = snap.val() || {};
+    bukuData = Object.values(raw).reverse();
     renderBuku();
   });
-  document.getElementById('btnBuku').addEventListener('click',function(){
-    const msg=document.getElementById('bukuMsg').value.trim();
+  document.getElementById('btnBuku').addEventListener('click', function(){
+    const msg = document.getElementById('bukuMsg').value.trim();
     if(!msg){
-      document.getElementById('bukuMsg').style.borderColor='rgba(201,168,76,.6)';
+      document.getElementById('bukuMsg').style.borderColor = 'rgba(201,168,76,.6)';
       document.getElementById('bukuMsg').focus();
       return;
     }
-    const now=new Date();
-    const waktu=now.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
-    push(bukuRef,{mood:selMood,msg,waktu});
-    document.getElementById('bukuMsg').value='';
-    document.getElementById('bukuMsg').style.borderColor='';
+    const now   = new Date();
+    const waktu = now.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+    push(bukuRef, {mood: selMood, msg, waktu});
+    document.getElementById('bukuMsg').value = '';
+    document.getElementById('bukuMsg').style.borderColor = '';
   });
 
-  // Daftar Mandiri
-  const anggotaRef=ref(db,'antithesis/anggota');
-  onValue(anggotaRef,snap=>{
-    const raw=snap.val()||{};
-    anggotaFirebase=Object.values(raw);
-    doFilter();
+  // ── Daftar Mandiri → Firebase ──
+  const anggotaRef = ref(db, 'antithesis/anggota');
+
+  // Pantau perubahan data anggota secara real-time
+  onValue(anggotaRef, snap => {
+    const raw = snap.val() || {};
+    anggotaFirebase = Object.values(raw);
+    doFilter(); // langsung re-render dengan filter aktif
   });
-  window.__submitAnggota=function(data){
-    push(anggotaRef,data).then(()=>{
-      document.getElementById('dfNama').value='';
-      document.getElementById('dfKelas').value='';
-      document.getElementById('dfJurusan').value='';
-      document.getElementById('dfNis').value='';
-      document.getElementById('dfMotto').value='';
-      document.getElementById('dfNama').style.borderColor='';
-      fotoBase64='';
-      document.getElementById('fotoPreview').style.display='none';
-      document.getElementById('fotoPlaceholder').style.display='';
-      document.getElementById('daftarOk').style.display='block';
-      setTimeout(()=>{
-        document.getElementById('daftarOk').style.display='none';
-        document.getElementById('daftarFormWrap').classList.remove('show');
-        document.getElementById('btnShowDaftar').classList.remove('active');
-      },3000);
+
+  // Fungsi submit yang dipanggil dari tombol
+  window.__submitAnggota = function(data){
+    push(anggotaRef, data).then(() => {
+      // Reset form
+      resetDaftarForm();
+      // Tutup form
+      document.getElementById('daftarFormWrap').classList.remove('show');
+      document.getElementById('btnShowDaftar').classList.remove('active');
+      // Tampilkan notifikasi sukses
+      showNotifSukses('✦ Profilmu berhasil ditambahkan! Selamat datang di ANTITHESIS.');
+      // Scroll ke grid anggota agar langsung terlihat
+      document.getElementById('anggotaGrid').scrollIntoView({behavior:'smooth', block:'start'});
+    }).catch(err => {
+      console.error('Gagal mendaftar:', err);
+      alert('Terjadi kesalahan, coba lagi.');
     });
   };
 }
+
 if(window.__firebaseReady) initFirebase();
 else window.addEventListener('firebase-ready', initFirebase);
 
-// ══ PIN ADMIN — PERBAIKAN KEAMANAN ══
-// PIN tidak disimpan di localStorage, hanya di memori sesi
-const ADMIN_PIN = '300105';
-let pinInput = '';
-let pinTarget = null;
-let isAdminSession = false; // status login hanya di memori, bukan localStorage
+// ══ PIN ADMIN ══
+const ADMIN_PIN   = '300105';
+let pinInput      = '';
+let pinTarget     = null;
+let isAdminSession = false;
 
 function isAdmin(){ return isAdminSession; }
 
 function updateAdminUI(){
-  const group = document.getElementById('adminBtnGroup');
-  // Tombol admin HANYA muncul jika sudah login
-  group.style.display = isAdminSession ? 'flex' : 'none';
+  document.getElementById('adminBtnGroup').style.display = isAdminSession ? 'flex' : 'none';
 }
 updateAdminUI();
 
 function updatePinDots(){
-  for(let i=0;i<6;i++){
-    const d=document.getElementById('pd'+i);
+  for(let i = 0; i < 6; i++){
+    const d = document.getElementById('pd' + i);
     if(!d) return;
     d.classList.toggle('filled', i < pinInput.length);
     d.classList.remove('error');
   }
-  // Update hint
   const hint = document.getElementById('pinHint');
   hint.classList.remove('err');
   hint.textContent = pinInput.length === 0 ? 'Ketuk angka di bawah' : `${pinInput.length} / 6 digit`;
@@ -1328,18 +1304,16 @@ function updatePinDots(){
 
 function openPin(target){
   pinTarget = target;
-  pinInput = '';
+  pinInput  = '';
   updatePinDots();
   document.getElementById('pinOverlay').classList.add('show');
 }
-
 function closePin(){
   document.getElementById('pinOverlay').classList.remove('show');
-  pinInput = '';
+  pinInput  = '';
   pinTarget = null;
   updatePinDots();
 }
-
 function pinSuccess(){
   isAdminSession = true;
   closePin();
@@ -1347,38 +1321,37 @@ function pinSuccess(){
   if(pinTarget === 'pg') document.getElementById('pgAdminPanel').classList.add('open');
   if(pinTarget === 'cd') document.getElementById('cdAdminPanel').classList.add('open');
 }
-
 function pinError(){
-  for(let i=0;i<6;i++){
-    const d=document.getElementById('pd'+i);
+  for(let i = 0; i < 6; i++){
+    const d = document.getElementById('pd' + i);
     if(d) d.classList.add('error');
   }
   const hint = document.getElementById('pinHint');
   hint.textContent = '✕  PIN salah, coba lagi';
   hint.classList.add('err');
   document.getElementById('pinBox').classList.add('pin-shake');
-  setTimeout(()=>{
+  setTimeout(() => {
     document.getElementById('pinBox').classList.remove('pin-shake');
     pinInput = '';
     updatePinDots();
   }, 600);
 }
 
-document.querySelectorAll('.pin-key[data-n]').forEach(k=>k.addEventListener('click',function(){
+document.querySelectorAll('.pin-key[data-n]').forEach(k => k.addEventListener('click', function(){
   if(pinInput.length >= ADMIN_PIN.length) return;
   pinInput += this.dataset.n;
   updatePinDots();
   if(pinInput.length === ADMIN_PIN.length){
-    setTimeout(()=>{ if(pinInput === ADMIN_PIN) pinSuccess(); else pinError(); }, 150);
+    setTimeout(() => { if(pinInput === ADMIN_PIN) pinSuccess(); else pinError(); }, 150);
   }
 }));
-document.getElementById('pinDel').addEventListener('click',()=>{ pinInput=pinInput.slice(0,-1); updatePinDots(); });
-document.getElementById('pinClearAll').addEventListener('click',()=>{ pinInput=''; updatePinDots(); });
+document.getElementById('pinDel').addEventListener('click',      () => { pinInput = pinInput.slice(0, -1); updatePinDots(); });
+document.getElementById('pinClearAll').addEventListener('click', () => { pinInput = ''; updatePinDots(); });
 document.getElementById('pinCancel').addEventListener('click', closePin);
-document.getElementById('pinOverlay').addEventListener('click',function(e){ if(e.target===this) closePin(); });
+document.getElementById('pinOverlay').addEventListener('click', function(e){ if(e.target === this) closePin(); });
 
 // Logout
-document.getElementById('adminLogoutBtn').addEventListener('click',()=>{
+document.getElementById('adminLogoutBtn').addEventListener('click', () => {
   if(confirm('Keluar dari mode admin?')){
     isAdminSession = false;
     updateAdminUI();
@@ -1387,22 +1360,22 @@ document.getElementById('adminLogoutBtn').addEventListener('click',()=>{
   }
 });
 
-// Tombol Atur Acara (kiri bawah) — selalu muncul, tapi perlu PIN jika belum login
-document.getElementById('cdAdminToggle').addEventListener('click',()=>{
+// Tombol Atur Acara (kiri bawah)
+document.getElementById('cdAdminToggle').addEventListener('click', () => {
   const panel = document.getElementById('cdAdminPanel');
   if(panel.classList.contains('open')){ panel.classList.remove('open'); return; }
   if(isAdmin()) panel.classList.add('open'); else openPin('cd');
 });
-document.getElementById('cdAdminClose').addEventListener('click',()=>
+document.getElementById('cdAdminClose').addEventListener('click', () =>
   document.getElementById('cdAdminPanel').classList.remove('open'));
 
-// Tombol Pengumuman (hanya muncul jika sudah login)
-document.getElementById('pgAdminBtn').addEventListener('click',()=>{
+// Tombol Pengumuman
+document.getElementById('pgAdminBtn').addEventListener('click', () => {
   const p = document.getElementById('pgAdminPanel');
   if(p.classList.contains('open')){ p.classList.remove('open'); return; }
   p.classList.add('open');
 });
-document.getElementById('pgPanelClose').addEventListener('click',()=>
+document.getElementById('pgPanelClose').addEventListener('click', () =>
   document.getElementById('pgAdminPanel').classList.remove('open'));
 
 // ══ PENGUMUMAN UI ══
@@ -1412,14 +1385,14 @@ function showPg(txt){
   document.getElementById('pgText').textContent = txt;
   pgBar.classList.add('show');
 }
-document.getElementById('pgClose').addEventListener('click',()=>
+document.getElementById('pgClose').addEventListener('click', () =>
   document.getElementById('pgBar').classList.remove('show'));
 
 // ══ BUKU KENANGAN UI ══
 let bukuData = [];
-let selMood = '🌟';
-document.querySelectorAll('.buku-mood-btn').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.buku-mood-btn').forEach(x=>x.classList.remove('active'));
+let selMood  = '🌟';
+document.querySelectorAll('.buku-mood-btn').forEach(b => b.addEventListener('click', function(){
+  document.querySelectorAll('.buku-mood-btn').forEach(x => x.classList.remove('active'));
   this.classList.add('active');
   selMood = this.dataset.mood;
 }));
@@ -1427,10 +1400,10 @@ function renderBuku(){
   const list = document.getElementById('bukuList');
   document.getElementById('bukuCount').textContent = bukuData.length;
   if(!bukuData.length){
-    list.innerHTML='<div class="buku-empty">Belum ada pesan. Jadilah yang pertama menulis! ✦</div>';
+    list.innerHTML = '<div class="buku-empty">Belum ada pesan. Jadilah yang pertama menulis! ✦</div>';
     return;
   }
-  list.innerHTML = bukuData.map(b=>`
+  list.innerHTML = bukuData.map(b => `
     <div class="buku-entry">
       <div class="be-top">
         <span class="be-mood">${b.mood}</span>
@@ -1446,11 +1419,11 @@ renderBuku();
 
 // ══ NAV ACTIVE SECTION ══
 const secs = document.querySelectorAll('section[id]');
-window.addEventListener('scroll',()=>{
+window.addEventListener('scroll', () => {
   let c = '';
-  secs.forEach(s=>{ if(scrollY >= s.offsetTop-200) c = s.id; });
-  document.querySelectorAll('.nav-links a').forEach(a=>
-    a.classList.toggle('active', a.getAttribute('href')==='#'+c));
+  secs.forEach(s => { if(scrollY >= s.offsetTop - 200) c = s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a =>
+    a.classList.toggle('active', a.getAttribute('href') === '#' + c));
 });
 </script>
 </body>
