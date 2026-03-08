@@ -836,24 +836,37 @@ function initFirebase(){
   // Vote confirm
   document.getElementById('voteBtnCancel').addEventListener('click',()=>document.getElementById('voteOverlay').classList.remove('show'));
   document.getElementById('voteOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
-  document.getElementById('voteBtnConfirm').addEventListener('click',()=>{
+  document.getElementById('voteBtnConfirm').addEventListener('click',async()=>{
     const id=document.getElementById('voteOverlay').dataset.reqId;
     const type=document.getElementById('voteOverlay').dataset.reqType;
     const namaKey=currentUser.username;
     const reqTarget=reqData.find(r=>r.id===id);
+    const btnConfirm=document.getElementById('voteBtnConfirm');
+    btnConfirm.disabled=true;
+
+    // Cek langsung ke Firebase — semua request dengan type yang sama
     const sameTypeReqs=reqData.filter(r=>r.type===type);
-    if(sameTypeReqs.some(r=>r.voters&&r.voters[namaKey])){
-      document.getElementById('voteErr').textContent='✕  Kamu sudah memilih '+type;
+    let sudahVoteFirebase=false;
+    for(const r of sameTypeReqs){
+      const snap=await get(ref(db,'antithesis/requests/'+r.id+'/voters/'+namaKey));
+      if(snap.exists()){sudahVoteFirebase=true;break;}
+    }
+
+    if(sudahVoteFirebase){
+      document.getElementById('voteErr').textContent='✕  Kamu sudah memilih '+type+' sebelumnya';
       document.getElementById('voteErr').style.display='block';
+      btnConfirm.disabled=false;
       return;
     }
+
     set(ref(db,'antithesis/requests/'+id+'/voters/'+namaKey),true).then(()=>{
       const allVoters=Object.keys((reqTarget?.voters||{})).length+1;
       set(ref(db,'antithesis/requests/'+id+'/votes'),allVoters);
       sessionStorage.setItem('voted_type_'+type,id);
       document.getElementById('voteOverlay').classList.remove('show');
       showNotif('✦ Suaramu untuk '+type+' berhasil dikirim!');
-    });
+      btnConfirm.disabled=false;
+    }).catch(()=>{btnConfirm.disabled=false;});
   });
 
   // Buku Kenangan
