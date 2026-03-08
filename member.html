@@ -163,19 +163,6 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 
 /* REQUEST ACARA */
 .request-wrap{background:var(--dark2);}
-.acara-types{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:48px 0 44px;}
-.atb{position:relative;border:1px solid rgba(201,168,76,.14);background:var(--dark3);padding:30px 22px;text-align:center;transition:all .4s;overflow:hidden;cursor:pointer;}
-.atb::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.07),transparent);opacity:0;transition:opacity .4s;}
-.atb:hover::before,.atb.active::before{opacity:1;}
-.atb:hover,.atb.active{border-color:var(--gold);}
-.atb-check{position:absolute;top:14px;right:14px;width:18px;height:18px;border:1px solid rgba(201,168,76,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .3s;font-size:.55rem;color:var(--black);font-weight:700;}
-.atb.active .atb-check{background:var(--gold);border-color:var(--gold);}
-.atb-icon{font-size:2.2rem;display:block;margin-bottom:14px;}
-.atb-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);transition:color .3s;}
-.atb:hover .atb-name,.atb.active .atb-name{color:var(--gold);}
-.atb-desc{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);margin-top:8px;line-height:1.5;}
-.req-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;margin-top:8px;}
-.req-form-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:28px;}
 .fg{margin-bottom:18px;}
 .fl{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:10px;}
 .fi,.fs{width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.14);color:var(--white);font-family:'Cormorant Garamond',serif;font-size:1.05rem;padding:13px 18px;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
@@ -187,50 +174,70 @@ nav.scrolled{background:rgba(8,8,8,.98);border-bottom-color:rgba(201,168,76,.15)
 .lp{border:1px solid rgba(201,168,76,.15);background:transparent;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;padding:13px 12px;text-align:center;transition:all .3s;cursor:pointer;}
 .lp:hover{border-color:rgba(201,168,76,.4);color:var(--cream);}
 .lp.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
-.btn-req{width:100%;padding:16px;margin-top:10px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:all .35s;position:relative;overflow:hidden;cursor:pointer;}
-.btn-req::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold-light),var(--gold));opacity:0;transition:opacity .3s;}
-.btn-req:hover::before{opacity:1;}
+.btn-req{padding:16px;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;font-weight:600;transition:opacity .3s;cursor:pointer;}
+.btn-req:hover{opacity:.85;}
 .btn-req span{position:relative;z-index:1;}
-.req-ok{display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.28);padding:18px 22px;margin-top:14px;}
-.req-ok p{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);line-height:1.6;}
+.req-ok{display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.28);padding:14px 18px;margin-top:14px;}
+.req-ok p{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cream);line-height:1.6;}
 .req-ok p strong{color:var(--gold);}
-.rl-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-.rl-title{font-family:'Montserrat',sans-serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;}
-.rl-count{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
-.req-entries{max-height:510px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;}
+.rl-title{font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.38em;color:var(--gold);text-transform:uppercase;}
+.rl-count{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.req-entries{max-height:400px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.2) transparent;margin-top:12px;}
 .req-entries::-webkit-scrollbar{width:3px;}
 .req-entries::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);}
-.re{border:1px solid rgba(201,168,76,.12);background:var(--dark3);margin-bottom:10px;position:relative;overflow:hidden;transition:border-color .3s;}
-.re::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);opacity:.55;}
-.re.already-voted{border-color:rgba(201,168,76,.35);}
-.re-body{padding:18px 22px 14px 26px;}
-.re-headline{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:6px;}
-.re-detail-row{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--muted);margin-top:3px;line-height:1.5;}
+.re{border:1px solid rgba(201,168,76,.1);background:var(--dark3);margin-bottom:8px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.re-body{flex:1;min-width:0;}
+.re-headline{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.re-detail-row{font-family:'Cormorant Garamond',serif;font-size:.85rem;color:var(--muted);line-height:1.5;}
 .re-catatan{font-style:italic;color:var(--muted2);}
-.re-bar-section{padding:0 22px 0 26px;}
-.re-bar-track{width:100%;height:2px;background:rgba(201,168,76,.1);}
-.re-bar-fill{height:100%;background:linear-gradient(90deg,rgba(201,168,76,.3),var(--gold),var(--gold-light));transition:width 1.2s cubic-bezier(.25,.46,.45,.94);min-width:0;}
-.re-foot{display:flex;align-items:center;justify-content:space-between;padding:10px 22px 16px 26px;gap:12px;}
-.re-foot-meta{display:flex;align-items:center;gap:14px;}
-.re-suara-count{font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.28em;color:var(--muted2);text-transform:uppercase;}
-.re-bar-pct{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:rgba(201,168,76,.7);}
-.re-vote-btn{flex-shrink:0;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;padding:8px 18px;cursor:pointer;transition:all .3s;}
-.re-vote-btn:hover{background:rgba(201,168,76,.1);border-color:var(--gold);}
-.re-vote-btn.sudah-dipilih{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4);color:rgba(201,168,76,.6);cursor:default;}
-.re-sudah-label{font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.18em;color:rgba(201,168,76,.45);text-transform:uppercase;}
-.req-empty{text-align:center;padding:50px 20px;color:var(--muted);font-style:italic;}
-.req-summary{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
-.rsj-item{background:var(--dark3);border:1px solid rgba(201,168,76,.09);padding:14px 16px;position:relative;transition:border-color .3s;}
-.rsj-item.top{border-color:rgba(201,168,76,.4);}
-.rsj-item.top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
-.rsj-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.rsj-icon{font-size:1.2rem;flex-shrink:0;}
-.rsj-name{font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;flex:1;}
-.rsj-votes{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--white);}
-.rsj-bar-wrap{height:4px;background:rgba(201,168,76,.1);border-radius:2px;margin-bottom:8px;}
-.rsj-bar{height:100%;background:linear-gradient(to right,var(--gold),var(--gold-light));border-radius:2px;transition:width .6s ease;}
-.rsj-detail{font-family:'Cormorant Garamond',serif;font-size:.82rem;font-style:italic;color:var(--muted);min-height:16px;line-height:1.5;}
-.rsj-detail span{display:inline-block;margin-right:10px;}
+.re-foot{flex-shrink:0;text-align:right;}
+.re-suara-count{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;}
+.req-empty{text-align:center;padding:36px 20px;color:var(--muted);font-style:italic;}
+
+/* VOTE JENIS */
+.vote-section{margin-bottom:60px;}
+.vote-sec-label{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:28px;}
+.vote-locked-banner{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);padding:12px 18px;font-family:'Montserrat',sans-serif;font-size:.52rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;text-align:center;}
+.vote-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:20px;}
+.vc{position:relative;border:1px solid rgba(201,168,76,.14);background:var(--dark3);padding:32px 24px 24px;text-align:center;cursor:pointer;transition:all .35s;overflow:hidden;}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,168,76,.08),transparent);opacity:0;transition:opacity .4s;}
+.vc:hover::before{opacity:1;}
+.vc:hover{border-color:rgba(201,168,76,.45);transform:translateY(-2px);}
+.vc.voted{border-color:var(--gold);cursor:default;transform:none;}
+.vc.voted::before{opacity:1;}
+.vc.voted::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.vc.terkunci{cursor:default;opacity:.7;}
+.vc.terkunci:hover{transform:none;border-color:rgba(201,168,76,.14);}
+.vc-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border:1px solid rgba(201,168,76,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:transparent;transition:all .3s;}
+.vc.voted .vc-check{background:var(--gold);border-color:var(--gold);color:var(--black);}
+.vc-icon{font-size:2.4rem;display:block;margin-bottom:12px;}
+.vc-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--white);transition:color .3s;}
+.vc:hover .vc-name,.vc.voted .vc-name{color:var(--gold);}
+.vc-desc{font-family:'Cormorant Garamond',serif;font-size:.88rem;font-style:italic;color:var(--muted);margin-top:4px;margin-bottom:18px;}
+.vc-bar-wrap{height:3px;background:rgba(201,168,76,.1);border-radius:2px;margin-bottom:10px;}
+.vc-bar{height:100%;background:linear-gradient(to right,var(--gold),var(--gold-light));border-radius:2px;transition:width .8s cubic-bezier(.25,.46,.45,.94);}
+.vc-result{display:flex;align-items:baseline;justify-content:center;gap:5px;}
+.vc-votes{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--white);}
+.vc.voted .vc-votes{color:var(--gold);}
+.vc-label{font-family:'Montserrat',sans-serif;font-size:.44rem;letter-spacing:.25em;color:var(--muted2);text-transform:uppercase;}
+.vote-status{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--muted);text-align:center;min-height:22px;}
+.vote-status.sudah{color:var(--gold);}
+
+/* USULAN DETAIL */
+.usulan-section{border-top:1px solid rgba(201,168,76,.1);padding-top:48px;}
+.usulan-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px;flex-wrap:wrap;}
+.usulan-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--white);}
+.usulan-title em{font-style:italic;color:var(--gold);}
+.usulan-sub{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);margin-top:4px;}
+.btn-toggle-usulan{background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.28em;text-transform:uppercase;padding:12px 20px;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.btn-toggle-usulan:hover{background:rgba(201,168,76,.07);border-color:var(--gold);}
+.usulan-form-wrap{display:none;background:var(--dark3);border:1px solid rgba(201,168,76,.1);padding:28px;margin-bottom:28px;}
+.usulan-form-wrap.show{display:block;}
+.acara-types-sm{display:flex;gap:10px;flex-wrap:wrap;}
+.atb-sm{border:1px solid rgba(201,168,76,.15);background:transparent;color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:all .3s;}
+.atb-sm:hover{border-color:rgba(201,168,76,.4);color:var(--cream);}
+.atb-sm.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.07);}
+.usulan-list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .top-badge{position:absolute;top:10px;right:12px;font-family:'Montserrat',sans-serif;font-size:.36rem;letter-spacing:.15em;color:var(--black);background:var(--gold);padding:2px 7px;text-transform:uppercase;}
 
 /* BUKU KENANGAN */
@@ -462,23 +469,63 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 
 <!-- REQUEST ACARA -->
 <section class="sec request-wrap" id="request">
-  <div class="sec-label rv">Usulan Komunitas</div>
-  <h2 class="sec-h rv">Request <em>Acara Selanjutnya</em></h2>
-  <div class="acara-types rv d2">
-    <button class="atb" data-type="HBH"><div class="atb-check">✓</div><span class="atb-icon">🌙</span><div class="atb-name">HBH</div><div class="atb-desc">Halal Bihalal — Reuni penuh kehangatan pasca Lebaran</div></button>
-    <button class="atb" data-type="Bukber"><div class="atb-check">✓</div><span class="atb-icon">🍽️</span><div class="atb-name">Bukber</div><div class="atb-desc">Buka Bersama — Kumpul seru di bulan Ramadan</div></button>
-    <button class="atb" data-type="Temu Kangen"><div class="atb-check">✓</div><span class="atb-icon">🤝</span><div class="atb-name">Temu Kangen</div><div class="atb-desc">Reuni bebas — Kumpul kapan saja, di mana saja</div></button>
+  <div class="sec-label rv">Suara Komunitas</div>
+  <h2 class="sec-h rv">Pilih <em>Acara Selanjutnya</em></h2>
+
+  <!-- BAGIAN 1: VOTING JENIS -->
+  <div class="vote-section rv d1">
+    <div class="vote-sec-label">Pilih jenis acara yang kamu inginkan — 1 suara per anggota</div>
+    <div id="voteTerkunci" style="display:none;" class="vote-locked-banner">🔒 Voting ditutup — acara telah ditetapkan admin</div>
+    <div class="vote-cards" id="voteCards">
+      <div class="vc" id="vc-HBH" onclick="kirimVote('HBH')">
+        <div class="vc-check" id="vcheck-HBH"></div>
+        <div class="vc-icon">🌙</div>
+        <div class="vc-name">HBH</div>
+        <div class="vc-desc">Halal Bihalal</div>
+        <div class="vc-bar-wrap"><div class="vc-bar" id="vbar-HBH" style="width:0%"></div></div>
+        <div class="vc-result"><span class="vc-votes" id="vvotes-HBH">0</span><span class="vc-label">suara</span></div>
+      </div>
+      <div class="vc" id="vc-Bukber" onclick="kirimVote('Bukber')">
+        <div class="vc-check" id="vcheck-Bukber"></div>
+        <div class="vc-icon">🍽️</div>
+        <div class="vc-name">Bukber</div>
+        <div class="vc-desc">Buka Bersama</div>
+        <div class="vc-bar-wrap"><div class="vc-bar" id="vbar-Bukber" style="width:0%"></div></div>
+        <div class="vc-result"><span class="vc-votes" id="vvotes-Bukber">0</span><span class="vc-label">suara</span></div>
+      </div>
+      <div class="vc" id="vc-Temu" onclick="kirimVote('Temu Kangen')">
+        <div class="vc-check" id="vcheck-Temu"></div>
+        <div class="vc-icon">🤝</div>
+        <div class="vc-name">Temu Kangen</div>
+        <div class="vc-desc">Reuni Bebas</div>
+        <div class="vc-bar-wrap"><div class="vc-bar" id="vbar-Temu" style="width:0%"></div></div>
+        <div class="vc-result"><span class="vc-votes" id="vvotes-Temu">0</span><span class="vc-label">suara</span></div>
+      </div>
+    </div>
+    <div class="vote-status" id="voteStatus"></div>
   </div>
-  <div class="req-layout">
-    <div class="rv d2">
-      <div class="req-form-title">Detail Usulanmu</div>
-      <div id="reqForm">
+
+  <!-- BAGIAN 2: USULAN DETAIL -->
+  <div class="usulan-section rv d2">
+    <div class="usulan-toggle-row">
+      <div>
+        <div class="usulan-title">Usulan Detail <em>(opsional)</em></div>
+        <div class="usulan-sub">Punya ide lokasi atau tanggal? Bagikan ke angkatan.</div>
+      </div>
+      <button class="btn-toggle-usulan" id="btnToggleUsulan">+ Tambah Usulan</button>
+    </div>
+    <div class="usulan-form-wrap" id="usulanFormWrap">
+      <div class="usulan-form-inner">
         <div class="fg">
-          <label class="fl">Nama</label>
-          <div class="fi" id="reqNamaDisplay" style="padding:13px 18px;background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);">—</div>
+          <label class="fl">Jenis Acara yang Diusulkan</label>
+          <div class="acara-types-sm">
+            <button class="atb-sm" data-type="HBH">🌙 HBH</button>
+            <button class="atb-sm" data-type="Bukber">🍽️ Bukber</button>
+            <button class="atb-sm" data-type="Temu Kangen">🤝 Temu Kangen</button>
+          </div>
         </div>
         <div class="fg">
-          <label class="fl">Tanggal Acara yang Diusulkan</label>
+          <label class="fl">Tanggal yang Diusulkan</label>
           <div class="date-row">
             <select class="fs" id="reqTgl"><option value="">Tgl</option></select>
             <select class="fs" id="reqBulan"><option value="">Bulan</option><option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option><option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option><option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option></select>
@@ -486,7 +533,7 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
           </div>
         </div>
         <div class="fg">
-          <label class="fl">Pilih Lokasi (Jawa Tengah)</label>
+          <label class="fl">Lokasi (Jawa Tengah)</label>
           <div class="lokasi-pills">
             <button class="lp" data-lokasi="Surakarta / Solo">📍 Surakarta / Solo</button>
             <button class="lp" data-lokasi="Semarang">📍 Semarang</button>
@@ -495,38 +542,23 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
           </div>
         </div>
         <div class="fg">
-          <label class="fl">Ide Tempat / Catatan (opsional)</label>
+          <label class="fl">Catatan (opsional)</label>
           <input type="text" class="fi" id="reqCatatan" placeholder="Contoh: restoran tepi sawah..."/>
         </div>
-        <button class="btn-req" id="btnReq"><span>Kirim Request →</span></button>
-        <div class="req-ok" id="reqOk"><p>Request <strong id="reqTypeConf">—</strong> berhasil dikirim! ✦</p></div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-req" id="btnReq" style="flex:1;"><span>Kirim Usulan →</span></button>
+          <button class="btn-cancel-daftar" id="btnCancelUsulan" style="padding:14px 18px;">Batal</button>
+        </div>
+        <div class="req-ok" id="reqOk"><p>Usulan <strong id="reqTypeConf">—</strong> berhasil dikirim! ✦</p></div>
       </div>
     </div>
-    <div class="rv d3">
-      <div class="rl-head">
-        <div class="rl-title">Usulan Masuk</div>
-        <div class="rl-count" id="reqCount">0</div>
-      </div>
-      <!-- RINGKASAN PER JENIS -->
-      <div class="req-summary" id="reqSummary" style="display:none;">
-        <div class="rsj-item" id="sumHBH">
-          <div class="rsj-top"><span class="rsj-icon">🌙</span><div class="rsj-name">HBH</div><div class="rsj-votes" id="sumHBHvotes">0 suara</div></div>
-          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumHBHbar" style="width:0%"></div></div>
-          <div class="rsj-detail" id="sumHBHdetail"></div>
-        </div>
-        <div class="rsj-item" id="sumBukber">
-          <div class="rsj-top"><span class="rsj-icon">🍽️</span><div class="rsj-name">Bukber</div><div class="rsj-votes" id="sumBukbervotes">0 suara</div></div>
-          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumBukberbar" style="width:0%"></div></div>
-          <div class="rsj-detail" id="sumBukberdetail"></div>
-        </div>
-        <div class="rsj-item" id="sumTemu">
-          <div class="rsj-top"><span class="rsj-icon">🤝</span><div class="rsj-name">Temu Kangen</div><div class="rsj-votes" id="sumTemuvotes">0 suara</div></div>
-          <div class="rsj-bar-wrap"><div class="rsj-bar" id="sumTemubar" style="width:0%"></div></div>
-          <div class="rsj-detail" id="sumTemudetail"></div>
-        </div>
-      </div>
-      <div class="req-entries" id="reqEntries"><div class="req-empty">Belum ada usulan. ✦</div></div>
+
+    <!-- DAFTAR USULAN MASUK -->
+    <div class="usulan-list-head">
+      <span class="rl-title">Usulan Masuk</span>
+      <span class="rl-count" id="reqCount">0</span>
     </div>
+    <div class="req-entries" id="reqEntries"><div class="req-empty">Belum ada usulan detail. ✦</div></div>
   </div>
 </section>
 
@@ -559,25 +591,7 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </section>
 
-<!-- VOTE MODAL -->
-<div class="vote-overlay" id="voteOverlay">
-  <div class="vote-box">
-    <div class="vote-header">
-      <span class="vote-icon">🗳️</span>
-      <div class="vote-title">Berikan <em>Suaramu</em></div>
-      <div class="vote-sub" id="voteSubText">Konfirmasi pilihanmu untuk usulan acara ini.</div>
-    </div>
-    <div class="vote-body">
-      <label class="vote-label">Memilih sebagai</label>
-      <div class="vote-info"><span>Anggota Terverifikasi</span><span id="voteNamaConfirm">—</span></div>
-      <div class="vote-err" id="voteErr"></div>
-    </div>
-    <div class="vote-footer">
-      <button class="vote-btn-confirm" id="voteBtnConfirm">Kirim Suara →</button>
-      <button class="vote-btn-cancel" id="voteBtnCancel">Batal</button>
-    </div>
-  </div>
-</div>
+
 
 <footer>
   <div class="foot-brand">ANTITHESIS<span>SMA & MA Al Muayyad Surakarta · 2018–2020</span></div>
@@ -729,8 +743,21 @@ function isNamaDiizinkan(nama){return Object.values(whitelistData).some(n=>n===n
 let selType=null, selLokasi=null, reqData=[];
 const icons={HBH:'🌙',Bukber:'🍽️','Temu Kangen':'🤝'};
 const bln=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-document.querySelectorAll('.atb').forEach(b=>b.addEventListener('click',function(){
-  document.querySelectorAll('.atb').forEach(x=>x.classList.remove('active'));
+
+// Toggle form usulan
+document.getElementById('btnToggleUsulan').addEventListener('click',function(){
+  const w=document.getElementById('usulanFormWrap');
+  w.classList.toggle('show');
+  this.textContent=w.classList.contains('show')?'✕ Tutup':'+ Tambah Usulan';
+});
+document.getElementById('btnCancelUsulan').addEventListener('click',function(){
+  document.getElementById('usulanFormWrap').classList.remove('show');
+  document.getElementById('btnToggleUsulan').textContent='+ Tambah Usulan';
+});
+
+// Pilih jenis di form usulan
+document.querySelectorAll('.atb-sm').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.atb-sm').forEach(x=>x.classList.remove('active'));
   this.classList.add('active'); selType=this.dataset.type;
 }));
 document.querySelectorAll('.lp').forEach(p=>p.addEventListener('click',function(){
@@ -741,97 +768,81 @@ document.querySelectorAll('.lp').forEach(p=>p.addEventListener('click',function(
 function renderReq(){
   const el=document.getElementById('reqEntries');
   document.getElementById('reqCount').textContent=reqData.length;
-  if(!reqData.length){el.innerHTML='<div class="req-empty">Belum ada usulan. ✦</div>';document.getElementById('reqSummary').style.display='none';return;}
+  if(!reqData.length){el.innerHTML='<div class="req-empty">Belum ada usulan detail. ✦</div>';return;}
 
-  // ── Ringkasan per jenis ──
-  const tipeMap={HBH:0,Bukber:0,'Temu Kangen':0};
-  const tipeReqs={HBH:[],Bukber:[],'Temu Kangen':[]};
-  reqData.forEach(r=>{
-    if(tipeMap[r.type]!==undefined){
-      tipeMap[r.type]+=(r.votes||0);
-      tipeReqs[r.type].push(r);
-    }
-  });
-  const maxSuara=Math.max(...Object.values(tipeMap),1);
-  const topType=Object.entries(tipeMap).sort((a,b)=>b[1]-a[1])[0][0];
-  const sumMap={HBH:'HBH',Bukber:'Bukber','Temu Kangen':'Temu'};
-  const blnSingkat=['',...'Jan Feb Mar Apr Mei Jun Jul Ags Sep Okt Nov Des'.split(' ')];
-
-  document.getElementById('reqSummary').style.display='flex';
-
-  Object.entries(tipeMap).forEach(([type,votes])=>{
-    const key=sumMap[type];
-    const barPct=Math.round(votes/maxSuara*100);
-    const votesEl=document.getElementById('sum'+key+'votes');
-    const barEl=document.getElementById('sum'+key+'bar');
-    const detailEl=document.getElementById('sum'+key+'detail');
-    const boxEl=document.getElementById('sum'+key);
-    if(votesEl) votesEl.textContent=votes+' suara';
-    if(barEl) setTimeout(()=>barEl.style.width=barPct+'%',50);
-    // Detail: lokasi & tanggal dari semua request jenis ini (top vote)
-    if(detailEl){
-      const sorted=[...tipeReqs[type]].sort((a,b)=>(b.votes||0)-(a.votes||0));
-      if(sorted.length){
-        const best=sorted[0];
-        detailEl.innerHTML=`<span>📍 ${best.lokasi}</span><span>📅 ${best.tgl} ${blnSingkat[+best.bulan]||''} ${best.tahun}</span>${sorted.length>1?`<span style="color:var(--muted2)">+${sorted.length-1} usulan lain</span>`:''}`;
-      } else {
-        detailEl.innerHTML='<span style="color:var(--muted2)">Belum ada usulan</span>';
-      }
-    }
-    if(boxEl){
-      boxEl.classList.toggle('top',type===topType&&votes>0);
-      const ob=boxEl.querySelector('.top-badge');if(ob)ob.remove();
-      if(type===topType&&votes>0){const badge=document.createElement('div');badge.className='top-badge';badge.textContent='🏆 Terfavorit';boxEl.appendChild(badge);}
-    }
-  });
-
-  const maxV=Math.max(...reqData.map(x=>x.votes||0),1);
-  el.innerHTML=[...reqData].sort((a,b)=>(b.votes||0)-(a.votes||0)).map(r=>{
-    const votes=r.votes||0;
-    const pct=Math.round(votes/maxV*100);
-    const votedTypeKey='voted_type_'+r.type;
-    const votedId=sessionStorage.getItem(votedTypeKey);
-    const isMyVote=votedId===r.id;
-    const sudahVote=!!votedId;
-    let btnHtml;
-    if(isMyVote) btnHtml=`<span class="re-sudah-label">✦ Pilihanmu</span>`;
-    else if(sudahVote) btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>✕ Sudah vote ${r.type}</button>`;
-    else btnHtml=`<button class="re-vote-btn" onclick="openVote('${r.id}','${r.type}')">♡ Pilih ini</button>`;
+  el.innerHTML=[...reqData].sort((a,b)=>(b.submitter||'').localeCompare(b.submitter||'')).map(r=>{
     const isOwner=r.submitter===currentUser.username;
-    const hapusReqBtn=isOwner?`<button class="re-hapus-btn" onclick="hapusRequest('${r.id}')">🗑</button>`:'';
-    return `<div class="re${isMyVote?' already-voted':''}" id="re-card-${r.id}">
+    const hapusBtn=isOwner?`<button class="re-hapus-btn" onclick="hapusRequest('${r.id}')">🗑</button>`:'';
+    return `<div class="re" id="re-card-${r.id}">
       <div class="re-body">
-        <div class="re-headline" style="display:flex;align-items:center;justify-content:space-between;">${icons[r.type]||'📅'} ${r.type}${hapusReqBtn}</div>
-        <div class="re-detail-row">📍 ${r.lokasi}</div>
-        <div class="re-detail-row">📅 ${r.tgl} ${bln[+r.bulan]||''} ${r.tahun}</div>
+        <div class="re-headline">${icons[r.type]||'📅'} ${r.type} ${hapusBtn}</div>
+        <div class="re-detail-row">📍 ${r.lokasi} &nbsp;·&nbsp; 📅 ${r.tgl} ${bln[+r.bulan]||''} ${r.tahun}</div>
         ${r.catatan?`<div class="re-detail-row re-catatan">"${r.catatan}"</div>`:''}
       </div>
-      <div class="re-bar-section"><div class="re-bar-track"><div class="re-bar-fill" style="width:${pct}%"></div></div></div>
-      <div class="re-foot">
-        <div class="re-foot-meta">
-          <span class="re-suara-count">${votes} suara</span>
-          <span class="re-bar-pct">${pct}%</span>
-        </div>
-        ${btnHtml}
-      </div>
+      <div class="re-foot"><span class="re-suara-count">dari @${r.submitter||'?'}</span></div>
     </div>`;
   }).join('');
 }
 renderReq();
 
 function hapusRequest(id){
-  if(!confirm('Hapus request ini? Tidak bisa dibatalkan.')) return;
-  const db=window.__db, ref=window.__ref, remove=window.__remove;
-  remove(ref(db,'antithesis/requests/'+id)).then(()=>showNotif('✦ Request berhasil dihapus.'));
+  if(!confirm('Hapus usulan ini?')) return;
+  const db=window.__db,ref=window.__ref,remove=window.__remove;
+  remove(ref(db,'antithesis/requests/'+id)).then(()=>showNotif('✦ Usulan dihapus.'));
 }
-function openVote(id,type){
-  const overlay=document.getElementById('voteOverlay');
-  document.getElementById('voteNamaConfirm').textContent=currentUser.nama;
-  document.getElementById('voteSubText').innerHTML=`Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${type}</strong>. Kamu hanya bisa memilih <strong style="color:var(--gold)">1 kali per jenis acara</strong> — setelah ini tidak bisa vote ${type} lagi.`;
-  document.getElementById('voteErr').style.display='none';
-  overlay.classList.add('show');
-  overlay.dataset.reqId=id; overlay.dataset.reqType=type;
+
+// ── Render vote jenis acara ──
+window.__acaraAktif=false;
+function renderVoteJenis(voteData, acaraAktif){
+  const types=['HBH','Bukber','Temu Kangen'];
+  const keyMap={'HBH':'HBH','Bukber':'Bukber','Temu Kangen':'Temu'};
+  const myVote=voteData[currentUser.username]||null;
+  const tally={HBH:0,Bukber:0,'Temu Kangen':0};
+  Object.values(voteData).forEach(v=>{if(v&&tally[v]!==undefined)tally[v]++;});
+  const totalVotes=Object.values(tally).reduce((a,b)=>a+b,0);
+  const maxV=Math.max(...Object.values(tally),1);
+  window.__acaraAktif=acaraAktif;
+  document.getElementById('voteTerkunci').style.display=acaraAktif?'block':'none';
+  types.forEach(type=>{
+    const key=keyMap[type];
+    const votes=tally[type];
+    const pct=totalVotes>0?Math.round(votes/totalVotes*100):0;
+    const card=document.getElementById('vc-'+key);
+    const bar=document.getElementById('vbar-'+key);
+    const vvotes=document.getElementById('vvotes-'+key);
+    const check=document.getElementById('vcheck-'+key);
+    if(!card) return;
+    card.classList.toggle('voted', myVote===type);
+    card.classList.toggle('terkunci', acaraAktif);
+    if(check) check.textContent=myVote===type?'✓':'';
+    if(vvotes) vvotes.textContent=votes;
+    if(bar) setTimeout(()=>bar.style.width=(totalVotes>0?Math.round(votes/maxV*100):0)+'%',80);
+  });
+  const statusEl=document.getElementById('voteStatus');
+  if(acaraAktif){
+    statusEl.textContent='Voting ditutup — acara telah ditetapkan.';
+    statusEl.className='vote-status';
+  } else if(myVote){
+    statusEl.textContent='✦ Kamu sudah memilih '+myVote+'. Suaramu tercatat permanen.';
+    statusEl.className='vote-status sudah';
+  } else {
+    statusEl.textContent=totalVotes>0?totalVotes+' anggota sudah memilih. Giliranmu!':'Jadilah yang pertama memilih!';
+    statusEl.className='vote-status';
+  }
 }
+async function kirimVote(type){
+  const db=window.__db,ref=window.__ref,set=window.__set,get=window.__get;
+  if(window.__acaraAktif){showNotif('Voting ditutup — acara sudah ditetapkan.');return;}
+  const snap=await get(ref(db,'antithesis/votes/'+currentUser.username));
+  if(snap.exists()){showNotif('Kamu sudah memilih '+snap.val()+'. Vote tidak bisa diubah.');return;}
+  if(!confirm('Pilih '+type+'?
+
+Suara tidak bisa diubah setelah dikonfirmasi.')) return;
+  set(ref(db,'antithesis/votes/'+currentUser.username),type)
+    .then(()=>showNotif('✦ Suaramu untuk '+type+' berhasil dicatat!'))
+    .catch(()=>alert('Gagal. Coba lagi.'));
+}
+window.kirimVote=kirimVote;
 
 // ══ BUKU KENANGAN ══
 let bukuData=[], selMood='🌟';
@@ -886,14 +897,22 @@ function startCountdown(acara){
 }
 
 // ══ FIREBASE INIT ══
+let voteDataGlobal={};
 function initFirebase(){
   const db=window.__db, ref=window.__ref, push=window.__push, onValue=window.__onValue, set=window.__set, remove=window.__remove;
 
   // Countdown
   onValue(ref(db,'antithesis/acara'),snap=>{
     const a=snap.val();
-    if(a&&a.date) startCountdown(a);
-    else{ clearInterval(cdInterval); document.getElementById('countdownWrap').classList.remove('visible'); }
+    if(a&&a.date){
+      startCountdown(a);
+      window.__acaraAktif=true;
+    } else {
+      clearInterval(cdInterval);
+      document.getElementById('countdownWrap').classList.remove('visible');
+      window.__acaraAktif=false;
+    }
+    renderVoteJenis(voteDataGlobal||{}, window.__acaraAktif);
   });
 
   // Pengumuman
@@ -904,7 +923,7 @@ function initFirebase(){
     else{bar.classList.remove('show');}
   });
 
-  // Requests
+  // Requests (usulan detail)
   const reqRef=ref(db,'antithesis/requests');
   onValue(reqRef,snap=>{
     reqData=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));
@@ -915,54 +934,28 @@ function initFirebase(){
     const bulan=document.getElementById('reqBulan').value;
     const tahun=document.getElementById('reqTahun').value;
     const catatan=document.getElementById('reqCatatan').value.trim();
-    if(!selType){alert('Pilih jenis acara!');return;}
-    if(!tgl||!bulan||!tahun){alert('Lengkapi tanggal!');return;}
-    if(!selLokasi){alert('Pilih lokasi!');return;}
-    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,votes:0,submitter:currentUser.username});
+    if(!selType){showNotif('Pilih jenis acara dulu!');return;}
+    if(!tgl||!bulan||!tahun){showNotif('Lengkapi tanggal!');return;}
+    if(!selLokasi){showNotif('Pilih lokasi!');return;}
+    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,submitter:currentUser.username});
     document.getElementById('reqTypeConf').textContent=selType;
     document.getElementById('reqOk').style.display='block';
     document.getElementById('reqTgl').value='';document.getElementById('reqBulan').value='';
     document.getElementById('reqTahun').value='';document.getElementById('reqCatatan').value='';
-    document.querySelectorAll('.atb').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.atb-sm').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.lp').forEach(p=>p.classList.remove('active'));
     selType=null;selLokasi=null;
-    setTimeout(()=>document.getElementById('reqOk').style.display='none',5000);
+    setTimeout(()=>{document.getElementById('reqOk').style.display='none';
+      document.getElementById('usulanFormWrap').classList.remove('show');
+      document.getElementById('btnToggleUsulan').textContent='+ Tambah Usulan';
+    },3000);
   });
 
-  // Vote confirm
-  document.getElementById('voteBtnCancel').addEventListener('click',()=>document.getElementById('voteOverlay').classList.remove('show'));
-  document.getElementById('voteOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
-  document.getElementById('voteBtnConfirm').addEventListener('click',async()=>{
-    const id=document.getElementById('voteOverlay').dataset.reqId;
-    const type=document.getElementById('voteOverlay').dataset.reqType;
-    const namaKey=currentUser.username;
-    const reqTarget=reqData.find(r=>r.id===id);
-    const btnConfirm=document.getElementById('voteBtnConfirm');
-    btnConfirm.disabled=true;
-
-    // Cek langsung ke Firebase — semua request dengan type yang sama
-    const sameTypeReqs=reqData.filter(r=>r.type===type);
-    let sudahVoteFirebase=false;
-    for(const r of sameTypeReqs){
-      const snap=await get(ref(db,'antithesis/requests/'+r.id+'/voters/'+namaKey));
-      if(snap.exists()){sudahVoteFirebase=true;break;}
-    }
-
-    if(sudahVoteFirebase){
-      document.getElementById('voteErr').textContent='✕  Kamu sudah memilih '+type+' sebelumnya';
-      document.getElementById('voteErr').style.display='block';
-      btnConfirm.disabled=false;
-      return;
-    }
-
-    set(ref(db,'antithesis/requests/'+id+'/voters/'+namaKey),true).then(()=>{
-      const allVoters=Object.keys((reqTarget?.voters||{})).length+1;
-      set(ref(db,'antithesis/requests/'+id+'/votes'),allVoters);
-      sessionStorage.setItem('voted_type_'+type,id);
-      document.getElementById('voteOverlay').classList.remove('show');
-      showNotif('✦ Suaramu untuk '+type+' berhasil dikirim!');
-      btnConfirm.disabled=false;
-    }).catch(()=>{btnConfirm.disabled=false;});
+  // Vote jenis acara
+  let voteDataGlobal={};
+  onValue(ref(db,'antithesis/votes'),snap=>{
+    voteDataGlobal=snap.val()||{};
+    renderVoteJenis(voteDataGlobal, window.__acaraAktif);
   });
 
   // Buku Kenangan
