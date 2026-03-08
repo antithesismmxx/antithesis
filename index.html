@@ -565,7 +565,11 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
       <!-- Kelas -->
       <div class="daftar-field">
         <label class="daftar-label">Kelas</label>
-        <input type="text" class="daftar-input" id="dfKelas" placeholder="Contoh: XII IPA 1"/>
+        <select class="daftar-select" id="dfKelas">
+          <option value="">— Pilih Kelas —</option>
+          <option value="IPA">IPA</option>
+          <option value="IPS">IPS</option>
+        </select>
       </div>
 
       <!-- Sekolah — BARU -->
@@ -580,11 +584,7 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 
 
 
-      <!-- NIS -->
-      <div class="daftar-field">
-        <label class="daftar-label">NIS (opsional)</label>
-        <input type="text" class="daftar-input" id="dfNis" placeholder="Nomor Induk Siswa"/>
-      </div>
+
 
       <!-- Motto -->
       <div class="daftar-field">
@@ -870,7 +870,6 @@ function renderAnggota(data){
       ? `<div class="ac-av"><img src="${a.foto}" alt="${a.nama}" loading="lazy"/></div>`
       : `<div class="ac-av">${getInit(a.nama)}</div>`;
 
-    const nis    = a.nis    ? `<div class="ac-nis">NIS · ${a.nis}</div>` : '';
     const jabatan = a.jabatan ? ` · ${a.jabatan}` : '';
     const motto  = a.motto  ? `<div class="ac-motto">"${a.motto}"</div>` : '';
 
@@ -885,7 +884,6 @@ function renderAnggota(data){
         ${av}
         <div>
           <div class="ac-name">${a.nama}</div>
-          ${nis}
         </div>
       </div>
       <div class="ac-bot">
@@ -981,7 +979,6 @@ document.getElementById('btnSubmitDaftar').addEventListener('click', function(){
   const nama    = document.getElementById('dfNama').value.trim();
   const kelas   = document.getElementById('dfKelas').value.trim();
   const sekolah = document.getElementById('dfSekolah').value;
-  const nis     = document.getElementById('dfNis').value.trim();
   const motto   = document.getElementById('dfMotto').value.trim();
 
   // Validasi nama
@@ -998,16 +995,18 @@ document.getElementById('btnSubmitDaftar').addEventListener('click', function(){
   }
 
   if(window.__submitAnggota)
-    window.__submitAnggota({nama, kelas, sekolah, nis, motto, foto: fotoBase64});
+    window.__submitAnggota({nama, kelas, sekolah, motto, foto: fotoBase64});
 });
 
 function resetDaftarForm(){
-  ['dfNama','dfKelas','dfNis','dfMotto'].forEach(id => {
+  ['dfNama','dfMotto'].forEach(id => {
     const el = document.getElementById(id);
     if(el){ el.value = ''; el.style.borderColor = ''; }
   });
   const dfSekolah = document.getElementById('dfSekolah');
   if(dfSekolah){ dfSekolah.value = ''; dfSekolah.style.borderColor = ''; }
+  const dfKelas = document.getElementById('dfKelas');
+  if(dfKelas){ dfKelas.value = ''; dfKelas.style.borderColor = ''; }
   fotoBase64 = '';
   document.getElementById('fotoPreview').style.display = 'none';
   document.getElementById('fotoPlaceholder').style.display = '';
