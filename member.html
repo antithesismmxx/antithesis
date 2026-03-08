@@ -717,7 +717,7 @@ function renderReq(){
     const sudahVote=!!votedId;
     let btnHtml;
     if(isMyVote) btnHtml=`<span class="re-sudah-label">✦ Pilihanmu</span>`;
-    else if(sudahVote) btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>Sudah memilih ${r.type}</button>`;
+    else if(sudahVote) btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>✕ Sudah vote ${r.type}</button>`;
     else btnHtml=`<button class="re-vote-btn" onclick="openVote('${r.id}','${r.type}')">♡ Pilih ini</button>`;
     return `<div class="re${isMyVote?' already-voted':''}" id="re-card-${r.id}">
       <div class="re-body">
@@ -742,7 +742,7 @@ renderReq();
 function openVote(id,type){
   const overlay=document.getElementById('voteOverlay');
   document.getElementById('voteNamaConfirm').textContent=currentUser.nama;
-  document.getElementById('voteSubText').innerHTML=`Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${type}</strong>. Setiap anggota hanya bisa memilih satu kali per jenis acara.`;
+  document.getElementById('voteSubText').innerHTML=`Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${type}</strong>. Kamu hanya bisa memilih <strong style="color:var(--gold)">1 kali per jenis acara</strong> — setelah ini tidak bisa vote ${type} lagi.`;
   document.getElementById('voteErr').style.display='none';
   overlay.classList.add('show');
   overlay.dataset.reqId=id; overlay.dataset.reqType=type;
@@ -922,16 +922,6 @@ window.addEventListener('scroll',()=>{
 document.getElementById('pgClose').addEventListener('click',()=>document.getElementById('pgBar').classList.remove('show'));
 
 </script>
-
-    <div style="font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--muted);margin-bottom:28px;">Masukkan PIN admin untuk mengaktifkan mode hapus anggota.</div>
-    <input type="password" id="adminPinInput" maxlength="6" placeholder="PIN Admin" style="width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,.2);color:var(--white);font-family:'Montserrat',sans-serif;font-size:1.1rem;padding:14px 18px;text-align:center;letter-spacing:.3em;outline:none;margin-bottom:12px;"/>
-    <div id="adminPinErr" style="color:#c0392b;font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.15em;margin-bottom:16px;display:none;">✕ &nbsp;PIN salah</div>
-    <div style="display:flex;gap:12px;">
-      <button onclick="document.getElementById('modalAdminPin').style.display='none';document.getElementById('adminPinInput').value='';document.getElementById('adminPinErr').style.display='none';" style="flex:1;background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;padding:14px;cursor:pointer;">Batal</button>
-      <button onclick="cekPinAdmin()" style="flex:1;background:var(--gold);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;padding:14px;cursor:pointer;font-weight:600;">Masuk</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
