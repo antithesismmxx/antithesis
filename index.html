@@ -1024,25 +1024,55 @@ document.getElementById('btnSubmitDaftar').addEventListener('click', function(){
   const kelas   = document.getElementById('dfKelas').value.trim();
   const sekolah = document.getElementById('dfSekolah').value;
   const motto   = document.getElementById('dfMotto').value.trim();
+  const namaEl  = document.getElementById('dfNama');
+  const namaErr = document.getElementById('namaErr');
 
-  // Validasi nama
+  // 1. Nama wajib diisi
   if(!nama){
-    document.getElementById('dfNama').style.borderColor = 'rgba(201,168,76,.7)';
-    document.getElementById('dfNama').focus();
+    namaEl.style.borderColor = 'rgba(201,168,76,.7)';
+    namaEl.focus();
     return;
   }
-  // Cek whitelist — hanya izinkan jika nama ada di daftar admin
-  if(Object.keys(whitelistData).length > 0 && !isNamaDiizinkan(nama)){
-    const namaEl = document.getElementById('dfNama');
+
+  // 2. Jika whitelist belum diisi admin → tolak semua
+  if(Object.keys(whitelistData).length === 0){
     namaEl.style.borderColor = 'rgba(192,57,43,.7)';
     namaEl.classList.add('wl-denied');
-    document.getElementById('namaErr').style.display = 'block';
+    namaErr.textContent = '✕  Pendaftaran belum dibuka oleh admin';
+    namaErr.style.display = 'block';
     setTimeout(() => namaEl.classList.remove('wl-denied'), 500);
     namaEl.focus();
     return;
   }
-  document.getElementById('namaErr').style.display = 'none';
-  // Validasi sekolah
+
+  // 3. Nama harus ada di whitelist
+  if(!isNamaDiizinkan(nama)){
+    namaEl.style.borderColor = 'rgba(192,57,43,.7)';
+    namaEl.classList.add('wl-denied');
+    namaErr.textContent = '✕  Nama tidak ditemukan dalam daftar anggota';
+    namaErr.style.display = 'block';
+    setTimeout(() => namaEl.classList.remove('wl-denied'), 500);
+    namaEl.focus();
+    return;
+  }
+
+  // 4. Cegah daftar ganda — nama yang sudah ada di direktori tidak bisa daftar lagi
+  const sudahDaftar = getAllAnggota().some(
+    a => a.nama.toLowerCase() === nama.toLowerCase()
+  );
+  if(sudahDaftar){
+    namaEl.style.borderColor = 'rgba(192,57,43,.7)';
+    namaEl.classList.add('wl-denied');
+    namaErr.textContent = '✕  Nama ini sudah terdaftar di direktori';
+    namaErr.style.display = 'block';
+    setTimeout(() => namaEl.classList.remove('wl-denied'), 500);
+    namaEl.focus();
+    return;
+  }
+
+  namaErr.style.display = 'none';
+
+  // 5. Sekolah wajib dipilih
   if(!sekolah){
     document.getElementById('dfSekolah').style.borderColor = 'rgba(201,168,76,.7)';
     document.getElementById('dfSekolah').focus();
