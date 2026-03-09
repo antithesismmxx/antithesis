@@ -305,7 +305,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 .re-hapus-btn:hover{color:#e74c3c;}
 .btn-edit-profil{margin-top:12px;width:100%;background:transparent;border:1px solid rgba(201,168,76,.25);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;padding:9px;cursor:pointer;transition:all .3s;}
 .btn-edit-profil:hover{background:rgba(201,168,76,.07);border-color:var(--gold);}
-.re-hapus-btn:hover{color:#e74c3c;}
 @media(max-width:960px){
   nav{padding:14px 18px;}
   .nav-brand-sub{display:none;}
@@ -507,7 +506,6 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
         <div class="rl-title">Usulan Masuk</div>
         <div class="rl-count" id="reqCount">0</div>
       </div>
-      <!-- RINGKASAN PER JENIS -->
       <div class="req-summary" id="reqSummary" style="display:none;">
         <div class="rsj-item" id="sumHBH">
           <div class="rsj-top"><span class="rsj-icon">🌙</span><div class="rsj-name">HBH</div><div class="rsj-votes" id="sumHBHvotes">0 suara</div></div>
@@ -579,6 +577,43 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
   </div>
 </div>
 
+<!-- MODAL EDIT PROFIL -->
+<div id="modalEditProfil" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.88);align-items:center;justify-content:center;backdrop-filter:blur(8px);overflow-y:auto;padding:24px;">
+  <div style="background:var(--dark2);border:1px solid rgba(201,168,76,.2);max-width:480px;width:100%;margin:auto;">
+    <div style="height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+    <div style="padding:28px 30px 20px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);">Edit <em style="font-style:italic;color:var(--gold);">Profilku</em></div>
+      <button id="btnTutupEditProfil" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 8px;">✕</button>
+    </div>
+    <div style="padding:24px 30px 28px;">
+      <div style="margin-bottom:16px;">
+        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Foto Profil</label>
+        <div class="foto-upload-area" style="cursor:pointer;" id="editFotoArea">
+          <img class="foto-preview" id="editFotoPreview" src="" alt="" style="display:none;"/>
+          <div class="foto-placeholder" id="editFotoPlaceholder"><span>📷</span>Klik untuk ganti foto</div>
+          <input type="file" class="foto-input" id="editFotoInput" accept="image/*"/>
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Kelas</label>
+        <select class="daftar-select" id="editKelas"><option value="">— Pilih Kelas —</option><option value="IPA">IPA</option><option value="IPS">IPS</option></select>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Sekolah</label>
+        <select class="daftar-select" id="editSekolah"><option value="">— Pilih Sekolah —</option><option value="SMA">SMA Al Muayyad</option><option value="MA">MA Al Muayyad</option></select>
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Motto / Quote (opsional)</label>
+        <input type="text" class="daftar-input" id="editMotto" placeholder="Motto hidupmu..."/>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button id="btnSimpanEditProfil" style="flex:1;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;padding:14px;cursor:pointer;">Simpan →</button>
+        <button id="btnBatalEditProfil" style="background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;padding:14px 20px;cursor:pointer;">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="foot-brand">ANTITHESIS<span>SMA & MA Al Muayyad Surakarta · 2018–2020</span></div>
   <div><div class="foot-mid-text">Selamanya Bersama, Selamanya Bangga.</div></div>
@@ -586,30 +621,66 @@ footer{background:var(--dark);border-top:1px solid rgba(201,168,76,.09);padding:
 </footer>
 
 <script>
-// ══ CEK SESSION — redirect ke login jika belum masuk ══
+// ══════════════════════════════════════════════
+// [FIX 1] SESSION — localStorage + auto-logout 5 menit
+// ══════════════════════════════════════════════
 const currentUser = (function(){
-  const nama     = sessionStorage.getItem('antithesis_member');
-  const username = sessionStorage.getItem('antithesis_username');
-  if(!nama || !username){
-    window.location.href = 'login.html';
-    return null;
-  }
-  return { nama, username };
+  try {
+    const raw = localStorage.getItem('antithesis_session');
+    if (!raw) { window.location.href = 'login.html'; return null; }
+    const s = JSON.parse(raw);
+    if (!s.nama || !s.username) { window.location.href = 'login.html'; return null; }
+    if (Date.now() - s.lastSeen > 5 * 60 * 1000) {
+      localStorage.removeItem('antithesis_session');
+      sessionStorage.setItem('antithesis_logout_msg', 'Sesi berakhir karena tidak aktif.');
+      window.location.href = 'login.html';
+      return null;
+    }
+    s.lastSeen = Date.now();
+    localStorage.setItem('antithesis_session', JSON.stringify(s));
+    return s;
+  } catch(e) { window.location.href = 'login.html'; return null; }
 })();
-if(!currentUser) throw new Error('redirect');
+if (!currentUser) throw new Error('redirect');
+
+// Activity tracking — perbarui lastSeen setiap ada interaksi
+function touchSession(){
+  try {
+    const raw = localStorage.getItem('antithesis_session');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    s.lastSeen = Date.now();
+    localStorage.setItem('antithesis_session', JSON.stringify(s));
+  } catch(e) {}
+}
+['click','keydown','mousemove','scroll','touchstart'].forEach(ev =>
+  document.addEventListener(ev, touchSession, { passive: true })
+);
+
+// Cek inaktivitas setiap 30 detik
+setInterval(()=>{
+  try {
+    const raw = localStorage.getItem('antithesis_session');
+    if (!raw) { logout('Sesi berakhir.'); return; }
+    const s = JSON.parse(raw);
+    if (Date.now() - s.lastSeen > 5 * 60 * 1000) logout('Sesi berakhir karena tidak aktif.');
+  } catch(e) {}
+}, 30000);
+
+function logout(msg){
+  localStorage.removeItem('antithesis_session');
+  if (msg) sessionStorage.setItem('antithesis_logout_msg', msg);
+  window.location.href = 'login.html';
+}
 
 // Set nama di hero & nav
-document.getElementById('heroName').textContent  = currentUser.nama.split(' ')[0];
+document.getElementById('heroName').textContent   = currentUser.nama.split(' ')[0];
 document.getElementById('navUserName').textContent = currentUser.nama.split(' ')[0];
 document.getElementById('reqNamaDisplay').textContent = currentUser.nama;
 
 // ══ KELUAR ══
 document.getElementById('btnKeluar').addEventListener('click',()=>{
-  if(confirm('Keluar dari portal ANTITHESIS?')){
-    sessionStorage.removeItem('antithesis_member');
-    sessionStorage.removeItem('antithesis_username');
-    window.location.href='login.html';
-  }
+  if(confirm('Keluar dari portal ANTITHESIS?')) logout('Kamu telah logout.');
 });
 
 // ══ TAHUN / TGL DINAMIS ══
@@ -628,28 +699,41 @@ window.addEventListener('scroll',()=>document.getElementById('mainNav').classLis
 const rvObs=new IntersectionObserver(entries=>entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('on'); }),{threshold:.1});
 document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
 
-// ══ ANGGOTA ══
+// ══════════════════════════════════════════════
+// ANGGOTA
+// ══════════════════════════════════════════════
 let anggotaFirebase=[], whitelistData={};
 function getInit(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+
 function renderAnggota(data){
   const g=document.getElementById('anggotaGrid');
   const e=document.getElementById('profilEmpty');
   if(!g) return;
   if(!data.length){g.innerHTML='';e.style.display='block';return;}
   e.style.display='none';
+  // [FIX 5] Pakai data-key, bukan onclick string — cegah XSS
   g.innerHTML=data.map(a=>{
-    const av=a.foto?`<div class="ac-av"><img src="${a.foto}" alt="${a.nama}"/></div>`:`<div class="ac-av">${getInit(a.nama)}</div>`;
-    const motto=a.motto?`<div class="ac-motto">"${a.motto}"</div>`:'';
-    const sekolahBadge=a.sekolah?`<div class="ac-badge sekolah">${a.sekolah}</div>`:'';
+    const av=a.foto
+      ? `<div class="ac-av"><img src="${escHtml(a.foto)}" alt="${escHtml(a.nama)}"/></div>`
+      : `<div class="ac-av">${escHtml(getInit(a.nama))}</div>`;
+    const motto=a.motto?`<div class="ac-motto">"${escHtml(a.motto)}"</div>`:'';
+    const sekolahBadge=a.sekolah?`<div class="ac-badge sekolah">${escHtml(a.sekolah)}</div>`:'';
     const isMe=a.nama.toLowerCase()===currentUser.nama.toLowerCase();
-    const editBtn=isMe?`<button class="btn-edit-profil" onclick="bukaEditProfil('${a.__key}')">✎ Edit Profilku</button>`:'';
-    return `<div class="ac rv on" data-s="${a.sekolah||''}">
+    const editBtn=isMe?`<button class="btn-edit-profil" data-key="${escHtml(a.__key)}">✎ Edit Profilku</button>`:'';
+    return `<div class="ac rv on" data-s="${escHtml(a.sekolah||'')}">
       <div class="ac-corner"></div>
-      <div class="ac-top">${av}<div><div class="ac-name">${a.nama}</div></div></div>
-      <div class="ac-bot"><div class="ac-kelas">${a.kelas||''}</div>${motto}<div class="ac-badges">${sekolahBadge}</div>${editBtn}</div>
+      <div class="ac-top">${av}<div><div class="ac-name">${escHtml(a.nama)}</div></div></div>
+      <div class="ac-bot"><div class="ac-kelas">${escHtml(a.kelas||'')}</div>${motto}<div class="ac-badges">${sekolahBadge}</div>${editBtn}</div>
     </div>`;
   }).join('');
 }
+
+// Delegasi event untuk tombol edit profil
+document.getElementById('anggotaGrid').addEventListener('click', function(e){
+  const btn = e.target.closest('.btn-edit-profil');
+  if (btn) bukaEditProfil(btn.dataset.key);
+});
+
 renderAnggota([]);
 
 let af='semua';
@@ -663,13 +747,23 @@ function doFilter(){
   renderAnggota(anggotaFirebase.filter(a=>(a.nama.toLowerCase().includes(q)||(a.kelas||'').toLowerCase().includes(q))&&(af==='semua'||a.sekolah===af)));
 }
 
+// Helper: escape HTML untuk cegah XSS
+function escHtml(str){
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ══ FORM DAFTAR PROFIL ══
 let fotoBase64='';
 document.getElementById('btnShowDaftar').addEventListener('click',function(){
   const wrap=document.getElementById('daftarFormWrap');
   wrap.classList.toggle('show'); this.classList.toggle('active');
   if(wrap.classList.contains('show')) wrap.scrollIntoView({behavior:'smooth',block:'start'});
-  const dfNamaEl=document.getElementById('dfNama'); dfNamaEl.value=currentUser.nama; dfNamaEl.setAttribute('readonly','true'); dfNamaEl.style.opacity='0.7'; dfNamaEl.style.cursor='not-allowed';
+  const dfNamaEl=document.getElementById('dfNama');
+  dfNamaEl.value=currentUser.nama;
+  dfNamaEl.setAttribute('readonly','true');
+  dfNamaEl.style.opacity='0.7';
+  dfNamaEl.style.cursor='not-allowed';
 });
 document.getElementById('btnCancelDaftar').addEventListener('click',()=>{
   document.getElementById('daftarFormWrap').classList.remove('show');
@@ -706,10 +800,22 @@ document.getElementById('btnSubmitDaftar').addEventListener('click',function(){
   const namaEl=document.getElementById('dfNama');
   const namaErr=document.getElementById('namaErr');
   if(!nama){namaEl.style.borderColor='rgba(201,168,76,.7)';namaEl.focus();return;}
-  if(nama.toLowerCase()!==currentUser.nama.toLowerCase()){namaEl.style.borderColor='rgba(192,57,43,.7)';namaErr.textContent='✕  Nama harus sesuai dengan akun Anda ('+currentUser.nama+')';namaErr.style.display='block';namaEl.focus();return;}
-  if(!isNamaDiizinkan(nama)){namaEl.style.borderColor='rgba(192,57,43,.7)';namaErr.textContent='✕  Nama tidak ada dalam daftar anggota';namaErr.style.display='block';namaEl.focus();return;}
+  if(nama.toLowerCase()!==currentUser.nama.toLowerCase()){
+    namaEl.style.borderColor='rgba(192,57,43,.7)';
+    namaErr.textContent='✕  Nama harus sesuai dengan akun Anda ('+currentUser.nama+')';
+    namaErr.style.display='block';namaEl.focus();return;
+  }
+  if(!isNamaDiizinkan(nama)){
+    namaEl.style.borderColor='rgba(192,57,43,.7)';
+    namaErr.textContent='✕  Nama tidak ada dalam daftar anggota';
+    namaErr.style.display='block';namaEl.focus();return;
+  }
   const sudahDaftar=anggotaFirebase.some(a=>a.nama.toLowerCase()===nama.toLowerCase());
-  if(sudahDaftar){namaEl.style.borderColor='rgba(192,57,43,.7)';namaErr.textContent='✕  Nama ini sudah terdaftar';namaErr.style.display='block';namaEl.focus();return;}
+  if(sudahDaftar){
+    namaEl.style.borderColor='rgba(192,57,43,.7)';
+    namaErr.textContent='✕  Nama ini sudah terdaftar';
+    namaErr.style.display='block';namaEl.focus();return;
+  }
   namaErr.style.display='none';
   if(!sekolah){document.getElementById('dfSekolah').style.borderColor='rgba(201,168,76,.7)';document.getElementById('dfSekolah').focus();return;}
   if(window.__submitAnggota) window.__submitAnggota({nama,kelas,sekolah,motto,foto:fotoBase64});
@@ -722,13 +828,21 @@ function resetDaftarForm(){
   document.getElementById('fotoPlaceholder').style.display='';
   document.getElementById('dfFoto').value='';
 }
-document.getElementById('dfNama').addEventListener('input',()=>{document.getElementById('dfNama').style.borderColor='';document.getElementById('namaErr').style.display='none';});
-function isNamaDiizinkan(nama){return Object.values(whitelistData).some(n=>n===nama.trim().toLowerCase());}
+document.getElementById('dfNama').addEventListener('input',()=>{
+  document.getElementById('dfNama').style.borderColor='';
+  document.getElementById('namaErr').style.display='none';
+});
+function isNamaDiizinkan(nama){
+  return Object.values(whitelistData).some(n=>n===nama.trim().toLowerCase());
+}
 
-// ══ REQUEST ACARA ══
+// ══════════════════════════════════════════════
+// REQUEST ACARA
+// ══════════════════════════════════════════════
 let selType=null, selLokasi=null, reqData=[];
 const icons={HBH:'🌙',Bukber:'🍽️','Temu Kangen':'🤝'};
 const bln=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
 document.querySelectorAll('.atb').forEach(b=>b.addEventListener('click',function(){
   document.querySelectorAll('.atb').forEach(x=>x.classList.remove('active'));
   this.classList.add('active'); selType=this.dataset.type;
@@ -741,17 +855,24 @@ document.querySelectorAll('.lp').forEach(p=>p.addEventListener('click',function(
 function renderReq(){
   const el=document.getElementById('reqEntries');
   document.getElementById('reqCount').textContent=reqData.length;
-  if(!reqData.length){el.innerHTML='<div class="req-empty">Belum ada usulan. ✦</div>';document.getElementById('reqSummary').style.display='none';return;}
+  if(!reqData.length){
+    el.innerHTML='<div class="req-empty">Belum ada usulan. ✦</div>';
+    document.getElementById('reqSummary').style.display='none';
+    return;
+  }
 
-  // ── Ringkasan per jenis ──
+  // Ringkasan per jenis — [FIX 2] hitung suara dari voters Firebase
   const tipeMap={HBH:0,Bukber:0,'Temu Kangen':0};
   const tipeReqs={HBH:[],Bukber:[],'Temu Kangen':[]};
   reqData.forEach(r=>{
+    // [FIX 3] Hitung votes dari jumlah voters, bukan field votes yg stale
+    const voteCount = r.voters ? Object.keys(r.voters).length : 0;
     if(tipeMap[r.type]!==undefined){
-      tipeMap[r.type]+=(r.votes||0);
-      tipeReqs[r.type].push(r);
+      tipeMap[r.type] += voteCount;
+      tipeReqs[r.type].push({...r, _voteCount: voteCount});
     }
   });
+
   const maxSuara=Math.max(...Object.values(tipeMap),1);
   const topType=Object.entries(tipeMap).sort((a,b)=>b[1]-a[1])[0][0];
   const sumMap={HBH:'HBH',Bukber:'Bukber','Temu Kangen':'Temu'};
@@ -768,12 +889,11 @@ function renderReq(){
     const boxEl=document.getElementById('sum'+key);
     if(votesEl) votesEl.textContent=votes+' suara';
     if(barEl) setTimeout(()=>barEl.style.width=barPct+'%',50);
-    // Detail: lokasi & tanggal dari semua request jenis ini (top vote)
     if(detailEl){
-      const sorted=[...tipeReqs[type]].sort((a,b)=>(b.votes||0)-(a.votes||0));
+      const sorted=[...tipeReqs[type]].sort((a,b)=>b._voteCount-a._voteCount);
       if(sorted.length){
         const best=sorted[0];
-        detailEl.innerHTML=`<span>📍 ${best.lokasi}</span><span>📅 ${best.tgl} ${blnSingkat[+best.bulan]||''} ${best.tahun}</span>${sorted.length>1?`<span style="color:var(--muted2)">+${sorted.length-1} usulan lain</span>`:''}`;
+        detailEl.innerHTML=`<span>📍 ${escHtml(best.lokasi)}</span><span>📅 ${escHtml(best.tgl)} ${blnSingkat[+best.bulan]||''} ${escHtml(best.tahun)}</span>${sorted.length>1?`<span style="color:var(--muted2)">+${sorted.length-1} usulan lain</span>`:''}`;
       } else {
         detailEl.innerHTML='<span style="color:var(--muted2)">Belum ada usulan</span>';
       }
@@ -781,30 +901,51 @@ function renderReq(){
     if(boxEl){
       boxEl.classList.toggle('top',type===topType&&votes>0);
       const ob=boxEl.querySelector('.top-badge');if(ob)ob.remove();
-      if(type===topType&&votes>0){const badge=document.createElement('div');badge.className='top-badge';badge.textContent='🏆 Terfavorit';boxEl.appendChild(badge);}
+      if(type===topType&&votes>0){
+        const badge=document.createElement('div');
+        badge.className='top-badge';badge.textContent='🏆 Terfavorit';
+        boxEl.appendChild(badge);
+      }
     }
   });
 
-  const maxV=Math.max(...reqData.map(x=>x.votes||0),1);
-  el.innerHTML=[...reqData].sort((a,b)=>(b.votes||0)-(a.votes||0)).map(r=>{
-    const votes=r.votes||0;
+  // Render kartu request
+  // [FIX 2] Deteksi vote dari voters Firebase, bukan sessionStorage
+  const sortedReqs=[...reqData].sort((a,b)=>{
+    const va = a.voters ? Object.keys(a.voters).length : 0;
+    const vb = b.voters ? Object.keys(b.voters).length : 0;
+    return vb - va;
+  });
+  const maxV=Math.max(...sortedReqs.map(x=> x.voters ? Object.keys(x.voters).length : 0),1);
+
+  el.innerHTML=sortedReqs.map(r=>{
+    // [FIX 3] Gunakan voters untuk hitung suara
+    const votes = r.voters ? Object.keys(r.voters).length : 0;
     const pct=Math.round(votes/maxV*100);
-    const votedTypeKey='voted_type_'+r.type;
-    const votedId=sessionStorage.getItem(votedTypeKey);
-    const isMyVote=votedId===r.id;
-    const sudahVote=!!votedId;
+
+    // [FIX 2] Cek status vote dari data Firebase, bukan sessionStorage
+    const isMyVote  = r.voters && r.voters[currentUser.username];
+    const sudahVote = reqData.some(x => x.type === r.type && x.voters && x.voters[currentUser.username]);
+
     let btnHtml;
-    if(isMyVote) btnHtml=`<span class="re-sudah-label">✦ Pilihanmu</span>`;
-    else if(sudahVote) btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>✕ Sudah vote ${r.type}</button>`;
-    else btnHtml=`<button class="re-vote-btn" onclick="openVote('${r.id}','${r.type}')">♡ Pilih ini</button>`;
+    if(isMyVote)
+      btnHtml=`<span class="re-sudah-label">✦ Pilihanmu</span>`;
+    else if(sudahVote)
+      btnHtml=`<button class="re-vote-btn sudah-dipilih" disabled>✕ Sudah vote ${escHtml(r.type)}</button>`;
+    else
+      btnHtml=`<button class="re-vote-btn" data-vote-id="${escHtml(r.id)}" data-vote-type="${escHtml(r.type)}">♡ Pilih ini</button>`;
+
     const isOwner=r.submitter===currentUser.username;
-    const hapusReqBtn=isOwner?`<button class="re-hapus-btn" onclick="hapusRequest('${r.id}')">🗑</button>`:'';
-    return `<div class="re${isMyVote?' already-voted':''}" id="re-card-${r.id}">
+    const hapusBtn=isOwner?`<button class="re-hapus-btn" data-hapus-id="${escHtml(r.id)}">🗑</button>`:'';
+
+    return `<div class="re${isMyVote?' already-voted':''}" id="re-card-${escHtml(r.id)}">
       <div class="re-body">
-        <div class="re-headline" style="display:flex;align-items:center;justify-content:space-between;">${icons[r.type]||'📅'} ${r.type}${hapusReqBtn}</div>
-        <div class="re-detail-row">📍 ${r.lokasi}</div>
-        <div class="re-detail-row">📅 ${r.tgl} ${bln[+r.bulan]||''} ${r.tahun}</div>
-        ${r.catatan?`<div class="re-detail-row re-catatan">"${r.catatan}"</div>`:''}
+        <div class="re-headline" style="display:flex;align-items:center;justify-content:space-between;">
+          <span>${icons[r.type]||'📅'} ${escHtml(r.type)}</span>${hapusBtn}
+        </div>
+        <div class="re-detail-row">📍 ${escHtml(r.lokasi)}</div>
+        <div class="re-detail-row">📅 ${escHtml(r.tgl)} ${bln[+r.bulan]||''} ${escHtml(r.tahun)}</div>
+        ${r.catatan?`<div class="re-detail-row re-catatan">"${escHtml(r.catatan)}"</div>`:''}
       </div>
       <div class="re-bar-section"><div class="re-bar-track"><div class="re-bar-fill" style="width:${pct}%"></div></div></div>
       <div class="re-foot">
@@ -819,18 +960,30 @@ function renderReq(){
 }
 renderReq();
 
+// Delegasi event untuk tombol vote & hapus request
+document.getElementById('reqEntries').addEventListener('click',function(e){
+  const vBtn=e.target.closest('.re-vote-btn');
+  if(vBtn && !vBtn.disabled) openVote(vBtn.dataset.voteId, vBtn.dataset.voteType);
+  const hBtn=e.target.closest('.re-hapus-btn');
+  if(hBtn) hapusRequest(hBtn.dataset.hapusId);
+});
+
 function hapusRequest(id){
   if(!confirm('Hapus request ini? Tidak bisa dibatalkan.')) return;
   const db=window.__db, ref=window.__ref, remove=window.__remove;
-  remove(ref(db,'antithesis/requests/'+id)).then(()=>showNotif('✦ Request berhasil dihapus.'));
+  remove(ref(db,'antithesis/requests/'+id))
+    .then(()=>showNotif('✦ Request berhasil dihapus.'));
 }
+
 function openVote(id,type){
   const overlay=document.getElementById('voteOverlay');
   document.getElementById('voteNamaConfirm').textContent=currentUser.nama;
-  document.getElementById('voteSubText').innerHTML=`Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${type}</strong>. Kamu hanya bisa memilih <strong style="color:var(--gold)">1 kali per jenis acara</strong> — setelah ini tidak bisa vote ${type} lagi.`;
+  document.getElementById('voteSubText').innerHTML=
+    `Konfirmasi pilihanmu untuk <strong style="color:var(--cream)">${escHtml(type)}</strong>. Kamu hanya bisa memilih <strong style="color:var(--gold)">1 kali per jenis acara</strong> — setelah ini tidak bisa vote ${escHtml(type)} lagi.`;
   document.getElementById('voteErr').style.display='none';
   overlay.classList.add('show');
-  overlay.dataset.reqId=id; overlay.dataset.reqType=type;
+  overlay.dataset.reqId=id;
+  overlay.dataset.reqType=type;
 }
 
 // ══ BUKU KENANGAN ══
@@ -843,7 +996,17 @@ function renderBuku(){
   const list=document.getElementById('bukuList');
   document.getElementById('bukuCount').textContent=bukuData.length;
   if(!bukuData.length){list.innerHTML='<div class="buku-empty">Belum ada pesan. ✦</div>';return;}
-  list.innerHTML=bukuData.map(b=>`<div class="buku-entry"><div class="be-top"><span class="be-mood">${b.mood}</span><div class="be-meta"><span class="be-author">🔒 Anonim</span><span class="be-time">${b.waktu}</span></div></div><div class="be-msg">${b.msg}</div></div>`).join('');
+  list.innerHTML=bukuData.map(b=>`
+    <div class="buku-entry">
+      <div class="be-top">
+        <span class="be-mood">${escHtml(b.mood)}</span>
+        <div class="be-meta">
+          <span class="be-author">🔒 Anonim</span>
+          <span class="be-time">${escHtml(b.waktu)}</span>
+        </div>
+      </div>
+      <div class="be-msg">${escHtml(b.msg)}</div>
+    </div>`).join('');
 }
 renderBuku();
 
@@ -859,7 +1022,7 @@ function startCountdown(acara){
   let tglStr=target.getDate()+' '+namaBln[target.getMonth()]+' '+target.getFullYear();
   if(acara.jam) tglStr+=' · ⏰ '+acara.jam+' WIB';
   if(acara.lokasi) tglStr+=' · 📍 '+acara.lokasi;
-  document.getElementById('cdEventName').innerHTML=acara.type;
+  document.getElementById('cdEventName').textContent=acara.type;
   document.getElementById('cdEventDate').textContent=tglStr;
   wrap.classList.add('visible');
   document.getElementById('cdDone').style.display='none';
@@ -869,12 +1032,8 @@ function startCountdown(acara){
       clearInterval(cdInterval);
       ['cdH','cdJ','cdM','cdD'].forEach(id=>document.getElementById(id).textContent='00');
       document.getElementById('cdDone').style.display='block';
-      // Reset semua requests otomatis
-      const db=window.__db,ref=window.__ref,remove=window.__remove,set=window.__set;
-      if(db&&ref&&remove&&set){
-        remove(ref(db,'antithesis/requests')).catch(()=>{});
-        remove(ref(db,'antithesis/acara')).catch(()=>{});
-      }
+      // [FIX 4] Reset data dihapus dari member.html
+      // Hanya admin yang boleh reset — dilakukan dari admin.html
       return;
     }
     document.getElementById('cdH').textContent=pad(Math.floor(diff/864e5));
@@ -885,9 +1044,13 @@ function startCountdown(acara){
   tick(); cdInterval=setInterval(tick,1000);
 }
 
-// ══ FIREBASE INIT ══
+// ══════════════════════════════════════════════
+// FIREBASE INIT
+// ══════════════════════════════════════════════
 function initFirebase(){
-  const db=window.__db, ref=window.__ref, push=window.__push, onValue=window.__onValue, set=window.__set, remove=window.__remove;
+  const db=window.__db, ref=window.__ref, push=window.__push,
+        onValue=window.__onValue, set=window.__set,
+        remove=window.__remove, get=window.__get;
 
   // Countdown
   onValue(ref(db,'antithesis/acara'),snap=>{
@@ -918,11 +1081,13 @@ function initFirebase(){
     if(!selType){alert('Pilih jenis acara!');return;}
     if(!tgl||!bulan||!tahun){alert('Lengkapi tanggal!');return;}
     if(!selLokasi){alert('Pilih lokasi!');return;}
-    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,votes:0,submitter:currentUser.username});
+    push(reqRef,{type:selType,tgl,bulan,tahun,lokasi:selLokasi,catatan,submitter:currentUser.username});
     document.getElementById('reqTypeConf').textContent=selType;
     document.getElementById('reqOk').style.display='block';
-    document.getElementById('reqTgl').value='';document.getElementById('reqBulan').value='';
-    document.getElementById('reqTahun').value='';document.getElementById('reqCatatan').value='';
+    document.getElementById('reqTgl').value='';
+    document.getElementById('reqBulan').value='';
+    document.getElementById('reqTahun').value='';
+    document.getElementById('reqCatatan').value='';
     document.querySelectorAll('.atb').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.lp').forEach(p=>p.classList.remove('active'));
     selType=null;selLokasi=null;
@@ -930,24 +1095,25 @@ function initFirebase(){
   });
 
   // Vote confirm
-  document.getElementById('voteBtnCancel').addEventListener('click',()=>document.getElementById('voteOverlay').classList.remove('show'));
-  document.getElementById('voteOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
+  document.getElementById('voteBtnCancel').addEventListener('click',()=>
+    document.getElementById('voteOverlay').classList.remove('show'));
+  document.getElementById('voteOverlay').addEventListener('click',function(e){
+    if(e.target===this) this.classList.remove('show');
+  });
   document.getElementById('voteBtnConfirm').addEventListener('click',async()=>{
-    const id=document.getElementById('voteOverlay').dataset.reqId;
-    const type=document.getElementById('voteOverlay').dataset.reqType;
-    const namaKey=currentUser.username;
-    const reqTarget=reqData.find(r=>r.id===id);
+    const id   = document.getElementById('voteOverlay').dataset.reqId;
+    const type = document.getElementById('voteOverlay').dataset.reqType;
+    const namaKey = currentUser.username;
     const btnConfirm=document.getElementById('voteBtnConfirm');
     btnConfirm.disabled=true;
 
-    // Cek langsung ke Firebase — semua request dengan type yang sama
+    // Cek langsung ke Firebase — anti double vote per jenis acara
     const sameTypeReqs=reqData.filter(r=>r.type===type);
     let sudahVoteFirebase=false;
     for(const r of sameTypeReqs){
       const snap=await get(ref(db,'antithesis/requests/'+r.id+'/voters/'+namaKey));
       if(snap.exists()){sudahVoteFirebase=true;break;}
     }
-
     if(sudahVoteFirebase){
       document.getElementById('voteErr').textContent='✕  Kamu sudah memilih '+type+' sebelumnya';
       document.getElementById('voteErr').style.display='block';
@@ -955,14 +1121,14 @@ function initFirebase(){
       return;
     }
 
-    set(ref(db,'antithesis/requests/'+id+'/voters/'+namaKey),true).then(()=>{
-      const allVoters=Object.keys((reqTarget?.voters||{})).length+1;
-      set(ref(db,'antithesis/requests/'+id+'/votes'),allVoters);
-      sessionStorage.setItem('voted_type_'+type,id);
-      document.getElementById('voteOverlay').classList.remove('show');
-      showNotif('✦ Suaramu untuk '+type+' berhasil dikirim!');
-      btnConfirm.disabled=false;
-    }).catch(()=>{btnConfirm.disabled=false;});
+    // Simpan voter — [FIX 3] votes dihitung dari jumlah voters, tidak perlu set field votes
+    set(ref(db,'antithesis/requests/'+id+'/voters/'+namaKey),true)
+      .then(()=>{
+        document.getElementById('voteOverlay').classList.remove('show');
+        showNotif('✦ Suaramu untuk '+type+' berhasil dikirim!');
+        btnConfirm.disabled=false;
+      })
+      .catch(()=>{ btnConfirm.disabled=false; });
   });
 
   // Buku Kenangan
@@ -974,7 +1140,11 @@ function initFirebase(){
   });
   document.getElementById('btnBuku').addEventListener('click',()=>{
     const msg=document.getElementById('bukuMsg').value.trim();
-    if(!msg){document.getElementById('bukuMsg').style.borderColor='rgba(201,168,76,.6)';document.getElementById('bukuMsg').focus();return;}
+    if(!msg){
+      document.getElementById('bukuMsg').style.borderColor='rgba(201,168,76,.6)';
+      document.getElementById('bukuMsg').focus();
+      return;
+    }
     const now=new Date();
     const waktu=now.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
     push(bukuRef,{mood:selMood,msg,waktu});
@@ -986,7 +1156,9 @@ function initFirebase(){
   // Whitelist
   onValue(ref(db,'antithesis/whitelist'),snap=>{
     const raw=snap.val()||{};
-    whitelistData=Object.fromEntries(Object.entries(raw).map(([k,v])=>[k,typeof v==='string'?v.toLowerCase():(v.nama||'').toLowerCase()]));
+    whitelistData=Object.fromEntries(
+      Object.entries(raw).map(([k,v])=>[k, typeof v==='string'?v.toLowerCase():(v.nama||'').toLowerCase()])
+    );
   });
 
   // Anggota
@@ -1005,8 +1177,16 @@ function initFirebase(){
       document.getElementById('anggotaGrid').scrollIntoView({behavior:'smooth',block:'start'});
     }).catch(err=>{
       if(data.foto){
-        push(anggotaRef,{...data,foto:''}).then(()=>{resetDaftarForm();document.getElementById('daftarFormWrap').classList.remove('show');showNotif('✦ Profil ditambahkan (tanpa foto).');}).catch(()=>alert('Gagal menyimpan profil.'));
-      } else alert('Gagal: '+(err.message||err.code||'coba lagi'));
+        push(anggotaRef,{...data,foto:''})
+          .then(()=>{
+            resetDaftarForm();
+            document.getElementById('daftarFormWrap').classList.remove('show');
+            showNotif('✦ Profil ditambahkan (tanpa foto).');
+          })
+          .catch(()=>alert('Gagal menyimpan profil.'));
+      } else {
+        alert('Gagal: '+(err.message||err.code||'coba lagi'));
+      }
     });
   };
 }
@@ -1017,14 +1197,22 @@ else window.addEventListener('firebase-ready',initFirebase);
 // ══ NOTIF ══
 function showNotif(msg){
   const old=document.getElementById('notifEl');if(old)old.remove();
-  const el=document.createElement('div');el.className='notif-sukses';el.id='notifEl';el.textContent=msg;
+  const el=document.createElement('div');
+  el.className='notif-sukses';el.id='notifEl';
+  el.textContent=msg;
   document.body.appendChild(el);
-  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .5s';setTimeout(()=>el.remove(),500);},3000);
+  setTimeout(()=>{
+    el.style.opacity='0';
+    el.style.transition='opacity .5s';
+    setTimeout(()=>el.remove(),500);
+  },3000);
 }
 
-
-// ══ EDIT PROFIL ══
+// ══════════════════════════════════════════════
+// EDIT PROFIL
+// ══════════════════════════════════════════════
 let editProfilKey=null, editFotoBase64=null;
+
 function bukaEditProfil(key){
   editProfilKey=key;
   const a=anggotaFirebase.find(x=>x.__key===key);
@@ -1059,11 +1247,18 @@ function simpanEditProfil(){
     foto:editFotoBase64||a.foto||''
   };
   const db=window.__db,ref=window.__ref,set=window.__set;
-  set(ref(db,'antithesis/anggota/'+editProfilKey),updated).then(()=>{
-    tutupEditProfil();
-    showNotif('✦ Profilmu berhasil diperbarui!');
-  }).catch(()=>alert('Gagal menyimpan. Coba lagi.'));
+  set(ref(db,'antithesis/anggota/'+editProfilKey),updated)
+    .then(()=>{tutupEditProfil();showNotif('✦ Profilmu berhasil diperbarui!');})
+    .catch(()=>alert('Gagal menyimpan. Coba lagi.'));
 }
+
+// Event listener modal edit profil (pakai id, bukan onclick inline)
+document.getElementById('btnTutupEditProfil').addEventListener('click', tutupEditProfil);
+document.getElementById('btnBatalEditProfil').addEventListener('click', tutupEditProfil);
+document.getElementById('btnSimpanEditProfil').addEventListener('click', simpanEditProfil);
+document.getElementById('editFotoArea').addEventListener('click',()=>
+  document.getElementById('editFotoInput').click());
+
 document.getElementById('editFotoInput').addEventListener('change',function(){
   const file=this.files[0]; if(!file) return;
   if(file.size>2*1024*1024){alert('Foto terlalu besar. Maks 2MB.');this.value='';return;}
@@ -1086,54 +1281,16 @@ document.getElementById('editFotoInput').addEventListener('change',function(){
   };
   reader.readAsDataURL(file);
 });
-window.bukaEditProfil=bukaEditProfil;
 
 // ══ NAV ACTIVE ══
 const secs=document.querySelectorAll('section[id]');
 window.addEventListener('scroll',()=>{
   let c='';secs.forEach(s=>{if(scrollY>=s.offsetTop-200)c=s.id;});
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+c));
+  document.querySelectorAll('.nav-links a').forEach(a=>
+    a.classList.toggle('active',a.getAttribute('href')==='#'+c));
 });
-document.getElementById('pgClose').addEventListener('click',()=>document.getElementById('pgBar').classList.remove('show'));
-
+document.getElementById('pgClose').addEventListener('click',()=>
+  document.getElementById('pgBar').classList.remove('show'));
 </script>
-
-
-<!-- MODAL EDIT PROFIL -->
-<div id="modalEditProfil" style="display:none;position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.88);align-items:center;justify-content:center;backdrop-filter:blur(8px);overflow-y:auto;padding:24px;">
-  <div style="background:var(--dark2);border:1px solid rgba(201,168,76,.2);max-width:480px;width:100%;margin:auto;">
-    <div style="height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-    <div style="padding:28px 30px 20px;border-bottom:1px solid rgba(201,168,76,.08);display:flex;justify-content:space-between;align-items:center;">
-      <div style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);">Edit <em style="font-style:italic;color:var(--gold);">Profilku</em></div>
-      <button onclick="tutupEditProfil()" style="background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 8px;">✕</button>
-    </div>
-    <div style="padding:24px 30px 28px;">
-      <div style="margin-bottom:16px;">
-        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Foto Profil</label>
-        <div class="foto-upload-area" style="cursor:pointer;" onclick="document.getElementById('editFotoInput').click()">
-          <img class="foto-preview" id="editFotoPreview" src="" alt="" style="display:none;"/>
-          <div class="foto-placeholder" id="editFotoPlaceholder"><span>📷</span>Klik untuk ganti foto</div>
-          <input type="file" class="foto-input" id="editFotoInput" accept="image/*"/>
-        </div>
-      </div>
-      <div style="margin-bottom:16px;">
-        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Kelas</label>
-        <select class="daftar-select" id="editKelas"><option value="">— Pilih Kelas —</option><option value="IPA">IPA</option><option value="IPS">IPS</option></select>
-      </div>
-      <div style="margin-bottom:16px;">
-        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Sekolah</label>
-        <select class="daftar-select" id="editSekolah"><option value="">— Pilih Sekolah —</option><option value="SMA">SMA Al Muayyad</option><option value="MA">MA Al Muayyad</option></select>
-      </div>
-      <div style="margin-bottom:20px;">
-        <label style="font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.32em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:8px;">Motto / Quote (opsional)</label>
-        <input type="text" class="daftar-input" id="editMotto" placeholder="Motto hidupmu..."/>
-      </div>
-      <div style="display:flex;gap:10px;">
-        <button onclick="simpanEditProfil()" style="flex:1;background:linear-gradient(135deg,var(--gold),#a8832a);border:none;color:var(--black);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;padding:14px;cursor:pointer;">Simpan →</button>
-        <button onclick="tutupEditProfil()" style="background:transparent;border:1px solid rgba(201,168,76,.2);color:var(--muted);font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.25em;text-transform:uppercase;padding:14px 20px;cursor:pointer;">Batal</button>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
