@@ -133,7 +133,7 @@ body::before{
 .card{
   position:relative;z-index:10;width:100%;max-width:440px;margin:24px;
   background:rgba(11,11,11,.94);border:1px solid rgba(201,168,76,.16);
-  backdrop-filter:blur(28px);overflow:hidden;
+  backdrop-filter:blur(28px);overflow:visible;
   animation:card-in .85s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;
 }
 @keyframes card-in{from{opacity:0;transform:translateY(36px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
@@ -272,7 +272,7 @@ body::before{
 .modal-ok.show{display:block;}
 
 /* Success overlay */
-.success-overlay{display:none;position:absolute;inset:0;background:var(--dark);z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.success-overlay{display:none;position:absolute;inset:0;background:var(--dark);z-index:20;flex-direction:column;align-items:center;justify-content:center;gap:16px;overflow:hidden;border-radius:inherit;}
 .success-overlay.show{display:flex;animation:sfade .5s ease forwards;}
 @keyframes sfade{from{opacity:0;}to{opacity:1;}}
 .s-icon{font-size:2.8rem;animation:sicon .55s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0;}
