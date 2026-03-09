@@ -538,8 +538,7 @@ document.getElementById('btnLogin').addEventListener('click', async () => {
   try {
     const res = await window.__doLogin(username, password);
     if(res.ok){
-      sessionStorage.setItem('antithesis_member',   res.nama);
-      sessionStorage.setItem('antithesis_username', res.username);
+      localStorage.setItem('antithesis_session', JSON.stringify({ nama: res.nama, username: res.username, lastSeen: Date.now() }));
       showSuccess(res.nama, 'Masuk ke halaman anggota\u2026');
     } else {
       errEl.innerHTML = '\u2715 &nbsp;' + res.msg; errEl.classList.add('show');
@@ -570,8 +569,7 @@ document.getElementById('btnDaftar').addEventListener('click', async () => {
   try {
     const res = await window.__doDaftar(nama, username, pass);
     if(res.ok){
-      sessionStorage.setItem('antithesis_member',   res.nama);
-      sessionStorage.setItem('antithesis_username', res.username);
+      localStorage.setItem('antithesis_session', JSON.stringify({ nama: res.nama, username: res.username, lastSeen: Date.now() }));
       showSuccess(res.nama, 'Akun berhasil dibuat! Mengalihkan\u2026', true);
     } else {
       if(res.field === 'nama') showFieldErr('dNama', res.msg);
