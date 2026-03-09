@@ -109,11 +109,12 @@ function waitReady(ms=8000) {
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;}
 body{
-  min-height:100vh; background:var(--black); color:var(--white);
+  min-height:100vh; min-height:100dvh;
+  background:var(--black); color:var(--white);
   font-family:'Cormorant Garamond',serif;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   overflow-x:hidden; position:relative;
-  padding-bottom:52px;
+  padding:60px 0 60px;
 }
 body::before{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:.55;
@@ -131,12 +132,10 @@ body::before{
 @keyframes rp{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1);}50%{opacity:.07;transform:translate(-50%,-50%) scale(1.04);}}
 
 .card{
-  position:relative;z-index:10;width:100%;max-width:440px;margin:24px;
+  position:relative;z-index:10;width:100%;max-width:440px;margin:0 24px;
   background:rgba(11,11,11,.94);border:1px solid rgba(201,168,76,.16);
   backdrop-filter:blur(28px);overflow:visible;
   animation:card-in .85s cubic-bezier(.25,.46,.45,.94) forwards;opacity:0;
-  max-height:calc(100dvh - 80px);
-  display:flex;flex-direction:column;
 }
 @keyframes card-in{from{opacity:0;transform:translateY(36px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
 .topbar{height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);}
@@ -206,7 +205,7 @@ body::before{
 .tab-btn.active::after{transform:scaleX(1);}
 .tab-btn:hover:not(.active){color:var(--cream);}
 
-.panel{display:none;padding:32px 44px 36px;animation:pfade .35s ease forwards;overflow-y:auto;flex:1;}
+.panel{display:none;padding:32px 44px 36px;animation:pfade .35s ease forwards;}
 .panel.active{display:block;}
 @keyframes pfade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
