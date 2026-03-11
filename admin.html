@@ -191,6 +191,7 @@
         <button class="sidebar-link" data-section="whitelist"><span class="sidebar-link-icon">📋</span>Whitelist</button>
         <button class="sidebar-link" data-section="accounts"><span class="sidebar-link-icon">👤</span>Akun</button>
         <button class="sidebar-link" data-section="anggota"><span class="sidebar-link-icon">👥</span>Profil Anggota</button>
+        <button class="sidebar-link" data-section="arsip"><span class="sidebar-link-icon">🖼</span>Arsip Foto</button>
       </div>
       <div class="sidebar-divider"></div>
       <div class="sidebar-section">
@@ -344,6 +345,17 @@
           <div class="admin-section-title">Profil <em>Anggota</em></div>
           <div class="admin-section-sub">Lihat dan hapus profil yang telah diisi anggota.</div>
         </div>
+      <!-- ARSIP FOTO -->
+      <div class="admin-section" id="sec-arsip">
+        <div class="admin-section-head">
+          <div class="admin-section-title">Arsip <em>Foto</em></div>
+          <div class="admin-section-sub">Semua foto yang pernah diupload anggota tersimpan di sini.</div>
+        </div>
+        <div class="ap">
+          <div class="ap-title">Total Foto Tersimpan: <span id="arsipCount">0</span></div>
+        </div>
+        <div id="arsipGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:20px;"></div>
+      </div>
         <div class="ap">
           <div class="ap-title">Semua Profil (<span id="anggotaCount">0</span>)</div>
           <div class="admin-member-grid" id="anggotaGrid">
@@ -706,6 +718,64 @@ window.lihatFoto=function(k){
     <img src="${a.foto}" style="max-width:90vw;max-height:70vh;object-fit:contain;border:1px solid rgba(201,168,76,.3);"/>
     <div style="display:flex;gap:12px;">
       <a href="${a.foto}" download="${(a.nama||'foto').replace(/\s+/g,'_')}.jpg" class="btn btn-primary" style="font-size:.45rem;">⬇ Download Foto</a>
+      <button onclick="document.getElementById('__fotoModal').remove()" class="btn btn-outline" style="font-size:.45rem;">Tutup</button>
+    </div>`;
+};
+
+// ══════════════════════
+// ARSIP FOTO
+// ══════════════════════
+let arsipData = {};
+onValue(ref(db,'antithesis/arsip_foto'), snap => {
+  arsipData = snap.val() || {};
+  renderArsip();
+});
+
+function renderArsip(){
+  const grid = document.getElementById('arsipGrid');
+  if(!grid) return;
+  const allFotos = [];
+  Object.entries(arsipData).forEach(([uid, uploads]) => {
+    Object.entries(uploads).forEach(([ts, item]) => {
+      allFotos.push({uid, ts, ...item});
+    });
+  });
+  // Sort terbaru dulu
+  allFotos.sort((a,b) => b.ts - a.ts);
+  document.getElementById('arsipCount').textContent = allFotos.length;
+  if(!allFotos.length){
+    grid.innerHTML='<div class="empty-state"><div class="empty-state-icon">🖼</div><div class="empty-state-text">Belum ada foto tersimpan.</div></div>';
+    return;
+  }
+  grid.innerHTML = allFotos.map((item,i) => {
+    const tgl = new Date(parseInt(item.ts)).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+    return`<div style="background:var(--dark3);border:1px solid var(--border);padding:12px;text-align:center;">
+      <img src="${item.foto}" style="width:100%;aspect-ratio:1;object-fit:cover;cursor:pointer;margin-bottom:8px;" onclick="lihatArsipFoto(${i})"/>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.42rem;letter-spacing:.15em;color:var(--white);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.nama||'—'}</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:.38rem;letter-spacing:.1em;color:var(--muted2);margin-bottom:8px;">${tgl}</div>
+      <a href="${item.foto}" download="${(item.nama||'foto').replace(/\s+/g,'_')}_${item.ts}.jpg" class="btn btn-outline" style="padding:4px 10px;font-size:.38rem;width:100%;justify-content:center;">⬇ Download</a>
+    </div>`;
+  }).join('');
+  window.__arsipList = allFotos;
+}
+
+window.lihatArsipFoto = function(i){
+  const item = window.__arsipList[i];
+  if(!item) return;
+  const tgl = new Date(parseInt(item.ts)).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  let modal = document.getElementById('__fotoModal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = '__fotoModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;';
+    modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `
+    <div style="font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;">${item.nama||'—'} · ${tgl}</div>
+    <img src="${item.foto}" style="max-width:90vw;max-height:65vh;object-fit:contain;border:1px solid rgba(201,168,76,.3);"/>
+    <div style="display:flex;gap:12px;">
+      <a href="${item.foto}" download="${(item.nama||'foto').replace(/\s+/g,'_')}_${item.ts}.jpg" class="btn btn-primary" style="font-size:.45rem;">⬇ Download Foto</a>
       <button onclick="document.getElementById('__fotoModal').remove()" class="btn btn-outline" style="font-size:.45rem;">Tutup</button>
     </div>`;
 };
