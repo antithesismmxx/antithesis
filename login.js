@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════
 //  ANTITHESIS — login.js
-//  Firebase Authentication (Email + Password)
+//  Firebase Auth + Whitelist + Email Verification
 // ══════════════════════════════════════════════
 
 import { initializeApp }                          from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -10,7 +10,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
   onAuthStateChanged,
+  signOut,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -32,11 +34,8 @@ const db   = getDatabase(app);
 function showErr(id, msg) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.textContent    = msg;
-  el.style.display  = 'block';
-  el.style.color    = '';
-  el.style.background = '';
-  el.style.border   = '';
+  el.textContent   = msg;
+  el.style.display = 'block';
 }
 function hideErr(id) {
   const el = document.getElementById(id);
@@ -50,27 +49,40 @@ function showOk(id, msg) {
 }
 function firebaseErrMsg(code) {
   const map = {
-    'auth/email-already-in-use':    'Email sudah terdaftar. Silakan masuk.',
-    'auth/invalid-email':           'Format email tidak valid.',
-    'auth/weak-password':           'Password minimal 6 karakter.',
-    'auth/user-not-found':          'Akun tidak ditemukan.',
-    'auth/wrong-password':          'Password salah.',
-    'auth/invalid-credential':      'Email atau password salah.',
-    'auth/too-many-requests':       'Terlalu banyak percobaan. Coba lagi nanti.',
-    'auth/user-disabled':           'Akun ini dinonaktifkan.',
-    'auth/network-request-failed':  'Periksa koneksi internet kamu.',
+    'auth/email-already-in-use':   'Email sudah terdaftar. Silakan masuk.',
+    'auth/invalid-email':          'Format email tidak valid.',
+    'auth/weak-password':          'Password minimal 6 karakter.',
+    'auth/user-not-found':         'Akun tidak ditemukan.',
+    'auth/wrong-password':         'Password salah.',
+    'auth/invalid-credential':     'Email atau password salah.',
+    'auth/too-many-requests':      'Terlalu banyak percobaan. Coba lagi nanti.',
+    'auth/user-disabled':          'Akun ini dinonaktifkan.',
+    'auth/network-request-failed': 'Periksa koneksi internet kamu.',
   };
   return map[code] || 'Terjadi kesalahan. Coba lagi.';
 }
 
-// ── Redirect jika sudah login (hanya jika bukan proses daftar/login aktif) ──
+// ── Cek nama di whitelist Firebase (case-insensitive) ──
+async function cekWhitelist(nama) {
+  const snap = await get(ref(db, 'antithesis/whitelist'));
+  if (!snap.exists()) return false;
+  const namaLower = nama.trim().toLowerCase();
+  return Object.values(snap.val()).some(item =>
+    (item.nama || item || '').toString().toLowerCase() === namaLower
+  );
+}
+
+// ── Redirect jika sudah login & sudah verifikasi email ──
 let isProcessing = false;
 onAuthStateChanged(auth, user => {
   if (user && !isProcessing) {
-    // Set session dari Firebase Auth user
-    sessionStorage.setItem('antithesis_member', user.displayName || user.email);
-    sessionStorage.setItem('antithesis_username', user.email.split('@')[0]);
-    window.location.href = 'dashboard.html';
+    if (user.emailVerified) {
+      sessionStorage.setItem('antithesis_member', user.displayName || user.email);
+      sessionStorage.setItem('antithesis_username', user.email.split('@')[0]);
+      window.location.href = 'dashboard.html';
+    } else {
+      signOut(auth);
+    }
   }
 });
 
@@ -103,22 +115,50 @@ document.getElementById('btnLogin')?.addEventListener('click', async () => {
   try {
     isProcessing = true;
     const cred = await signInWithEmailAndPassword(auth, email, pass);
-    // Set session
+
+    if (!cred.user.emailVerified) {
+      isProcessing = false;
+      await signOut(auth);
+      sessionStorage.setItem('pending_verif_email', email);
+      document.getElementById('btnResendVerif').style.display = 'block';
+      showErr('loginErr', '✕ Email belum diverifikasi. Cek inbox/spam lalu klik link verifikasi.');
+      btn.textContent = 'Masuk →'; btn.disabled = false;
+      return;
+    }
+
     sessionStorage.setItem('antithesis_member', cred.user.displayName || cred.user.email);
     sessionStorage.setItem('antithesis_username', cred.user.email.split('@')[0]);
     window.location.href = 'dashboard.html';
+
   } catch (e) {
     isProcessing = false;
     showErr('loginErr', firebaseErrMsg(e.code));
-  } finally {
     btn.textContent = 'Masuk →'; btn.disabled = false;
+  }
+});
+
+// ── Kirim ulang email verifikasi ──
+document.getElementById('btnResendVerif')?.addEventListener('click', async () => {
+  const email = sessionStorage.getItem('pending_verif_email') || '';
+  const pass  = document.getElementById('loginPass').value;
+  if (!email || !pass) return showErr('loginErr', 'Masukkan password dulu.');
+  try {
+    isProcessing = true;
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    await sendEmailVerification(cred.user);
+    await signOut(auth);
+    isProcessing = false;
+    showOk('loginOk', '✦ Email verifikasi dikirim ulang! Cek inbox kamu.');
+  } catch (e) {
+    isProcessing = false;
+    showErr('loginErr', 'Gagal kirim ulang: ' + firebaseErrMsg(e.code));
   }
 });
 
 // ── Toggle password (login) ──
 document.getElementById('toggleLoginPass')?.addEventListener('click', function() {
   const inp = document.getElementById('loginPass');
-  inp.type        = inp.type === 'password' ? 'text' : 'password';
+  inp.type         = inp.type === 'password' ? 'text' : 'password';
   this.textContent = inp.type === 'password' ? '👁' : '🙈';
 });
 
@@ -133,7 +173,7 @@ function goStep(n) {
     if (dot) {
       dot.classList.remove('active', 'done');
       if (i === n) dot.classList.add('active');
-      if (i < n)  dot.classList.add('done');
+      if (i < n)   dot.classList.add('done');
     }
   });
   document.querySelectorAll('.step-line').forEach((l, idx) => {
@@ -141,23 +181,36 @@ function goStep(n) {
   });
 }
 
-// STEP 1 → STEP 2 (validasi nama + email, lanjut ke password)
-document.getElementById('btnKirimKode')?.addEventListener('click', () => {
+// STEP 1 → cek whitelist dulu
+document.getElementById('btnKirimKode')?.addEventListener('click', async () => {
   hideErr('regErr1');
   const nama  = document.getElementById('regNama').value.trim();
   const email = document.getElementById('regEmail').value.trim();
 
-  if (!nama)                      return showErr('regErr1', 'Nama lengkap wajib diisi.');
+  if (!nama)                          return showErr('regErr1', 'Nama lengkap wajib diisi.');
   if (!email || !email.includes('@')) return showErr('regErr1', 'Format email tidak valid.');
 
-  // Simpan sementara di session
-  sessionStorage.setItem('reg_nama',  nama);
-  sessionStorage.setItem('reg_email', email);
+  const btn = document.getElementById('btnKirimKode');
+  btn.textContent = 'Memeriksa...'; btn.disabled = true;
 
-  goStep(2);
+  try {
+    const diizinkan = await cekWhitelist(nama);
+    if (!diizinkan) {
+      showErr('regErr1', '✕ Nama kamu tidak ada dalam daftar anggota. Hubungi admin.');
+      btn.textContent = 'Lanjut →'; btn.disabled = false;
+      return;
+    }
+    sessionStorage.setItem('reg_nama',  nama);
+    sessionStorage.setItem('reg_email', email);
+    btn.textContent = 'Lanjut →'; btn.disabled = false;
+    goStep(2);
+  } catch (e) {
+    showErr('regErr1', 'Gagal memeriksa data. Cek koneksi kamu.');
+    btn.textContent = 'Lanjut →'; btn.disabled = false;
+  }
 });
 
-// STEP 2 → Buat akun Firebase + kirim verifikasi
+// STEP 2 → Buat akun + kirim email verifikasi
 document.getElementById('btnDaftar')?.addEventListener('click', async () => {
   hideErr('regErr3');
   const pass  = document.getElementById('regPass').value;
@@ -174,31 +227,33 @@ document.getElementById('btnDaftar')?.addEventListener('click', async () => {
 
   try {
     isProcessing = true;
-    // Buat akun Firebase Auth
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-
-    // Set display name
     await updateProfile(cred.user, { displayName: nama });
-
-    // Simpan data ke Realtime Database
+    await sendEmailVerification(cred.user);
     await set(ref(db, 'antithesis/akun/' + cred.user.uid), {
-      nama,
-      email,
-      createdAt: Date.now(),
-      verified:  false
+      nama, email, createdAt: Date.now(), verified: false
     });
+    await signOut(auth);
+    isProcessing = false;
 
-    // Set session
-    sessionStorage.setItem('antithesis_member', nama);
-    sessionStorage.setItem('antithesis_username', email.split('@')[0]);
-
-    showOk('regOk', '✦ Akun berhasil dibuat! Mengalihkan...');
-    btn.textContent = 'Selesai'; btn.disabled = true;
-
-    // Langsung redirect ke dashboard
-    setTimeout(() => {
-      window.location.href = 'dashboard.html';
-    }, 1500);
+    document.getElementById('daftarStep2').innerHTML = `
+      <div style="text-align:center;padding:20px 0;">
+        <div style="font-size:3rem;margin-bottom:16px;">📧</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:10px;">
+          Cek <em style="color:var(--gold)">Email Kamu!</em>
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--muted);line-height:1.8;margin-bottom:24px;">
+          Link verifikasi sudah dikirim ke<br>
+          <strong style="color:var(--cream);font-style:normal;">${email}</strong><br><br>
+          Klik link di email tersebut, lalu kembali ke sini untuk masuk.
+        </div>
+        <button onclick="document.querySelector('[data-tab=masuk]').click()" class="btn btn-primary">
+          Ke Halaman Masuk →
+        </button>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:.85rem;font-style:italic;color:var(--muted2);margin-top:14px;">
+          Tidak menerima email? Cek folder spam.
+        </div>
+      </div>`;
 
   } catch (e) {
     isProcessing = false;
@@ -241,7 +296,7 @@ document.getElementById('btnGantiPass')?.addEventListener('click', async () => {
     btn.textContent = 'Terkirim!';
   } catch (e) {
     showErr('gpErr', firebaseErrMsg(e.code));
-    btn.textContent = 'Ganti Password →'; btn.disabled = false;
+    btn.textContent = 'Kirim Link Reset →'; btn.disabled = false;
   }
 });
 
