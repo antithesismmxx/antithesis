@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Verifikasi Email — ANTITHESIS</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+body { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.verify-wrap {
+  width: 100%; max-width: 480px;
+  margin: 24px;
+  background: var(--dark2);
+  border: 1px solid var(--border2);
+  position: relative;
+  overflow: hidden;
+}
+.verify-wrap::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+.verify-head {
+  padding: 40px 40px 24px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.verify-icon { font-size: 3rem; margin-bottom: 16px; }
+.verify-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; font-weight: 900;
+  color: var(--white);
+}
+.verify-title em { font-style: italic; color: var(--gold); }
+.verify-body { padding: 28px 40px 36px; }
+.verify-msg {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 24px;
+  text-align: center;
+}
+.verify-email {
+  font-style: normal;
+  color: var(--cream);
+  font-weight: 600;
+}
+.verify-status {
+  text-align: center;
+  padding: 12px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .5rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: none;
+}
+.verify-status.ok  { background: rgba(39,174,96,.08); border: 1px solid rgba(39,174,96,.2); color: #27ae60; }
+.verify-status.err { background: rgba(231,76,60,.08); border: 1px solid rgba(231,76,60,.2); color: #e74c3c; }
+.verify-status.show { display: block; }
+.verify-brand {
+  text-align: center;
+  margin-top: 28px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .48rem;
+  letter-spacing: .4em;
+  color: var(--muted2);
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div class="verify-wrap">
+  <div class="verify-head">
+    <div class="verify-icon" id="vIcon">📧</div>
+    <div class="verify-title" id="vTitle">Verifikasi <em>Email</em></div>
+  </div>
+  <div class="verify-body">
+    <div class="verify-msg" id="vMsg">Memuat...</div>
+    <div class="verify-status" id="vStatus"></div>
+    <div id="vActions"></div>
+    <div class="verify-brand">ANTITHESIS · Al Muayyad Surakarta · 2018–2020</div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth,
+  applyActionCode,
+  checkActionCode,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const app = initializeApp({
+  apiKey:            "AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
+  authDomain:        "antithesis-al-muayyad.firebaseapp.com",
+  databaseURL:       "https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "antithesis-al-muayyad",
+  storageBucket:     "antithesis-al-muayyad.firebasestorage.app",
+  messagingSenderId: "1014116431079",
+  appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
+});
+const auth = getAuth(app);
+
+// ── Ambil parameter dari URL ──
+const params  = new URLSearchParams(window.location.search);
+const mode    = params.get('mode');
+const oobCode = params.get('oobCode');
+
+const icon   = document.getElementById('vIcon');
+const title  = document.getElementById('vTitle');
+const msg    = document.getElementById('vMsg');
+const status = document.getElementById('vStatus');
+const actions= document.getElementById('vActions');
+
+function showStatus(type, txt) {
+  status.textContent = txt;
+  status.className   = 'verify-status ' + type + ' show';
+}
+
+function btnLogin() {
+  return `<a href="login.html" class="btn btn-primary btn-full" style="text-align:center;display:block;">Ke Halaman Masuk →</a>`;
+}
+
+function btnKirimUlang(email) {
+  return `
+    <div style="margin-bottom:12px;">
+      <input class="form-input" id="reEmail" type="email" placeholder="Email kamu..." value="${email||''}" style="margin-bottom:10px;"/>
+      <input class="form-input" id="rePass" type="password" placeholder="Password kamu..."/>
+    </div>
+    <button class="btn btn-primary btn-full" id="btnResend">📧 Kirim Ulang Email Verifikasi →</button>
+    <div style="margin-top:10px;">${btnLogin()}</div>`;
+}
+
+// ── Mode: verifikasi email ──
+if (mode === 'verifyEmail' && oobCode) {
+  msg.textContent = 'Sedang memverifikasi email kamu...';
+
+  try {
+    // Cek info dulu
+    const info = await checkActionCode(auth, oobCode);
+    const email = info.data.email || '';
+
+    // Apply kode verifikasi
+    await applyActionCode(auth, oobCode);
+
+    icon.textContent  = '✅';
+    title.innerHTML   = 'Email <em>Terverifikasi!</em>';
+    msg.innerHTML     = `Email <span class="verify-email">${email}</span> sudah berhasil diverifikasi.<br><br>Kamu sekarang bisa masuk ke portal ANTITHESIS.`;
+    showStatus('ok', '✦ Verifikasi berhasil!');
+    actions.innerHTML = btnLogin();
+
+  } catch (e) {
+    // Link expired atau sudah dipakai
+    icon.textContent = '⚠️';
+    title.innerHTML  = 'Link <em>Kadaluarsa</em>';
+    msg.innerHTML    = `Link verifikasi sudah tidak berlaku — mungkin sudah dipakai atau lebih dari 1 jam.<br><br>Masukkan email & password kamu untuk mendapatkan link baru.`;
+    showStatus('err', '✕ Link tidak valid atau sudah expired');
+    actions.innerHTML = btnKirimUlang('');
+
+    // Handle tombol kirim ulang
+    setTimeout(() => {
+      document.getElementById('btnResend')?.addEventListener('click', async () => {
+        const email = document.getElementById('reEmail').value.trim();
+        const pass  = document.getElementById('rePass').value;
+        const btn   = document.getElementById('btnResend');
+        if (!email || !pass) { showStatus('err', '✕ Isi email dan password dulu'); return; }
+        btn.textContent = 'Mengirim...'; btn.disabled = true;
+        try {
+          const cred = await signInWithEmailAndPassword(auth, email, pass);
+          if (cred.user.emailVerified) {
+            showStatus('ok', '✦ Email kamu sudah terverifikasi! Silakan masuk.');
+            actions.innerHTML = btnLogin();
+          } else {
+            await sendEmailVerification(cred.user);
+            auth.signOut();
+            icon.textContent = '📧';
+            title.innerHTML  = 'Email <em>Terkirim!</em>';
+            msg.innerHTML    = `Link verifikasi baru sudah dikirim ke<br><span class="verify-email">${email}</span><br><br>Cek inbox atau folder spam kamu, lalu klik link di email tersebut.`;
+            showStatus('ok', '✦ Email verifikasi baru berhasil dikirim!');
+            actions.innerHTML = btnLogin();
+          }
+        } catch (err) {
+          const errMap = {
+            'auth/invalid-credential': 'Email atau password salah.',
+            'auth/user-not-found':     'Akun tidak ditemukan.',
+            'auth/wrong-password':     'Password salah.',
+            'auth/too-many-requests':  'Terlalu banyak percobaan. Coba lagi nanti.',
+          };
+          showStatus('err', '✕ ' + (errMap[err.code] || 'Gagal. Coba lagi.'));
+          btn.textContent = '📧 Kirim Ulang Email Verifikasi →'; btn.disabled = false;
+        }
+      });
+    }, 100);
+  }
+
+} else if (mode === 'resetPassword' && oobCode) {
+  // Redirect ke login dengan parameter reset
+  window.location.href = 'login.html?mode=resetPassword&oobCode=' + oobCode;
+
+} else {
+  // Tidak ada parameter — tampilkan form kirim ulang
+  icon.textContent  = '📧';
+  title.innerHTML   = 'Verifikasi <em>Email</em>';
+  msg.innerHTML     = 'Belum menerima email verifikasi? Masukkan email dan password kamu untuk mengirim ulang.';
+  actions.innerHTML = btnKirimUlang('');
+
+  setTimeout(() => {
+    document.getElementById('btnResend')?.addEventListener('click', async () => {
+      const email = document.getElementById('reEmail').value.trim();
+      const pass  = document.getElementById('rePass').value;
+      const btn   = document.getElementById('btnResend');
+      if (!email || !pass) { showStatus('err', '✕ Isi email dan password dulu'); return; }
+      btn.textContent = 'Mengirim...'; btn.disabled = true;
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, pass);
+        if (cred.user.emailVerified) {
+          showStatus('ok', '✦ Email kamu sudah terverifikasi! Silakan masuk.');
+          actions.innerHTML = btnLogin();
+        } else {
+          await sendEmailVerification(cred.user);
+          auth.signOut();
+          showStatus('ok', '✦ Email verifikasi dikirim ke ' + email + '! Cek inbox/spam.');
+          btn.textContent = 'Terkirim!'; btn.disabled = true;
+        }
+      } catch (err) {
+        const errMap = {
+          'auth/invalid-credential': 'Email atau password salah.',
+          'auth/user-not-found':     'Akun tidak ditemukan.',
+          'auth/wrong-password':     'Password salah.',
+          'auth/too-many-requests':  'Terlalu banyak percobaan. Coba lagi nanti.',
+        };
+        showStatus('err', '✕ ' + (errMap[err.code] || 'Gagal. Coba lagi.'));
+        btn.textContent = '📧 Kirim Ulang Email Verifikasi →'; btn.disabled = false;
+      }
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
