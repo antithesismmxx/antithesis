@@ -65,7 +65,7 @@ input, textarea, select { font-family: inherit; }
 }
 .nav-brand {
   font-family: 'Montserrat', sans-serif;
-  font-size: .6rem;
+  font-size: 0.72rem;           /* was .6rem ≈ 9.6px → now 11.5px */
   letter-spacing: .55em;
   text-transform: uppercase;
   color: var(--gold);
@@ -73,7 +73,7 @@ input, textarea, select { font-family: inherit; }
 }
 .nav-brand span {
   display: block;
-  font-size: .38rem;
+  font-size: 0.58rem;           /* was .38rem ≈ 6px → now 9.3px */
   letter-spacing: .4em;
   color: var(--muted);
   margin-top: 1px;
@@ -85,7 +85,7 @@ input, textarea, select { font-family: inherit; }
 }
 .nav-links a {
   font-family: 'Montserrat', sans-serif;
-  font-size: .48rem;
+  font-size: 0.65rem;           /* was .48rem ≈ 7.7px → now 10.4px */
   letter-spacing: .32em;
   text-transform: uppercase;
   color: var(--muted);
@@ -105,7 +105,7 @@ input, textarea, select { font-family: inherit; }
 }
 .nav-user-name {
   font-family: 'Cormorant Garamond', serif;
-  font-size: .9rem;
+  font-size: 0.95rem;           /* was .9rem — fine, slight bump */
   font-style: italic;
   color: var(--cream);
 }
@@ -115,7 +115,7 @@ input, textarea, select { font-family: inherit; }
   border: 1px solid var(--border2);
   color: var(--muted);
   font-family: 'Montserrat', sans-serif;
-  font-size: .42rem;
+  font-size: 0.6rem;            /* was .42rem ≈ 6.7px → now 9.6px */
   letter-spacing: .28em;
   text-transform: uppercase;
   padding: 8px 16px;
@@ -153,7 +153,7 @@ input, textarea, select { font-family: inherit; }
 }
 .page-hero-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: .48rem;
+  font-size: 0.65rem;           /* was .48rem → now 10.4px */
   letter-spacing: .5em;
   color: var(--gold);
   text-transform: uppercase;
@@ -225,7 +225,7 @@ input, textarea, select { font-family: inherit; }
 .form-group { margin-bottom: 20px; }
 .form-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: .48rem;
+  font-size: 0.65rem;           /* was .48rem → now 10.4px */
   letter-spacing: .38em;
   color: var(--gold);
   text-transform: uppercase;
@@ -257,7 +257,7 @@ input, textarea, select { font-family: inherit; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   font-family: 'Montserrat', sans-serif;
-  font-size: .52rem;
+  font-size: 0.68rem;           /* was .52rem ≈ 8.3px → now 10.9px */
   letter-spacing: .38em;
   text-transform: uppercase;
   font-weight: 600;
@@ -297,7 +297,7 @@ input, textarea, select { font-family: inherit; }
 ══════════════════════════ */
 .sec-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: .46rem;
+  font-size: 0.62rem;           /* was .46rem → now 9.9px */
   letter-spacing: .5em;
   color: var(--gold);
   text-transform: uppercase;
@@ -333,7 +333,7 @@ input, textarea, select { font-family: inherit; }
 .badge {
   display: inline-block;
   font-family: 'Montserrat', sans-serif;
-  font-size: .38rem;
+  font-size: 0.58rem;           /* was .38rem ≈ 6px → now 9.3px */
   letter-spacing: .2em;
   text-transform: uppercase;
   padding: 3px 10px;
@@ -371,7 +371,7 @@ input, textarea, select { font-family: inherit; }
 .loading-overlay.hide { opacity: 0; pointer-events: none; }
 .loading-brand {
   font-family: 'Montserrat', sans-serif;
-  font-size: .65rem;
+  font-size: 0.78rem;           /* was .65rem → now 12.5px */
   letter-spacing: .6em;
   color: var(--gold);
   text-transform: uppercase;
@@ -395,10 +395,10 @@ input, textarea, select { font-family: inherit; }
   display: none; align-items: center; gap: 12px;
 }
 .notif-bar.show { display: flex; }
-.notif-bar-icon { color: var(--gold); font-size: .9rem; flex-shrink: 0; }
+.notif-bar-icon { color: var(--gold); font-size: 0.95rem; flex-shrink: 0; }
 .notif-bar-text {
   font-family: 'Cormorant Garamond', serif;
-  font-size: .95rem;
+  font-size: 0.95rem;
   color: var(--cream);
   flex: 1;
 }
@@ -417,14 +417,14 @@ footer {
 }
 .foot-brand {
   font-family: 'Montserrat', sans-serif;
-  font-size: .58rem;
+  font-size: 0.7rem;            /* was .58rem → now 11.2px */
   letter-spacing: .5em;
   color: var(--gold);
   text-transform: uppercase;
 }
 .foot-brand span {
   display: block;
-  font-size: .38rem;
+  font-size: 0.58rem;           /* was .38rem → now 9.3px */
   color: var(--muted);
   margin-top: 4px;
   letter-spacing: .3em;
@@ -432,7 +432,7 @@ footer {
 .foot-mid {
   text-align: center;
   font-family: 'Cormorant Garamond', serif;
-  font-size: .9rem;
+  font-size: 0.95rem;
   font-style: italic;
   color: var(--muted);
 }
@@ -441,7 +441,7 @@ footer {
 }
 .foot-links a {
   font-family: 'Montserrat', sans-serif;
-  font-size: .42rem;
+  font-size: 0.6rem;            /* was .42rem → now 9.6px */
   letter-spacing: .28em;
   color: var(--muted2);
   text-transform: uppercase;
@@ -497,7 +497,7 @@ footer {
 }
 .member-meta {
   font-family: 'Montserrat', sans-serif;
-  font-size: .42rem;
+  font-size: 0.6rem;            /* was .42rem → now 9.6px */
   letter-spacing: .22em;
   color: var(--muted);
   text-transform: uppercase;
@@ -505,7 +505,7 @@ footer {
 }
 .member-motto {
   font-family: 'Cormorant Garamond', serif;
-  font-size: .88rem;
+  font-size: 0.92rem;           /* was .88rem — slight bump */
   font-style: italic;
   color: var(--muted);
   line-height: 1.6;
@@ -545,7 +545,13 @@ footer {
 ══════════════════════════ */
 @media (max-width: 960px) {
   .nav { padding: 0 28px; }
-  .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: rgba(8,8,8,.97); border-bottom: 1px solid var(--border); padding: 20px 28px; gap: 18px; }
+  .nav-links {
+    display: none; flex-direction: column;
+    position: absolute; top: 70px; left: 0; right: 0;
+    background: rgba(8,8,8,.97);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 28px; gap: 18px;
+  }
   .nav-links.open { display: flex; }
   .nav-hamburger { display: flex; }
   .nav-user { display: none; }
