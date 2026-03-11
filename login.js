@@ -123,7 +123,7 @@ document.getElementById('toggleLoginPass')?.addEventListener('click', function()
 //  DAFTAR — MULTI STEP
 // ══════════════════════════
 function goStep(n) {
-  [1, 2, 3].forEach(i => {
+  [1, 2].forEach(i => {
     const step = document.getElementById('daftarStep' + i);
     if (step) step.style.display = i === n ? 'block' : 'none';
     const dot = document.getElementById('stepDot' + i);
@@ -242,3 +242,6 @@ document.getElementById('btnGantiPass')?.addEventListener('click', async () => {
     btn.textContent = 'Ganti Password →'; btn.disabled = false;
   }
 });
+
+// ── Tombol kembali ke step 1 ──
+document.getElementById('btnBackStep1')?.addEventListener('click', () => goStep(1));
