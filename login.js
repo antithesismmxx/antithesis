@@ -9,7 +9,6 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendEmailVerification,
   sendPasswordResetEmail,
   onAuthStateChanged,
   updateProfile
@@ -66,7 +65,7 @@ function firebaseErrMsg(code) {
 
 // ── Redirect jika sudah login ──
 onAuthStateChanged(auth, user => {
-  if (user && user.emailVerified) {
+  if (user) {
     window.location.href = 'dashboard.html';
   }
 });
@@ -99,11 +98,6 @@ document.getElementById('btnLogin')?.addEventListener('click', async () => {
 
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pass);
-    if (!cred.user.emailVerified) {
-      await auth.signOut();
-      showErr('loginErr', 'Email belum diverifikasi. Cek inbox kamu.');
-      return;
-    }
     window.location.href = 'dashboard.html';
   } catch (e) {
     showErr('loginErr', firebaseErrMsg(e.code));
@@ -184,20 +178,13 @@ document.getElementById('btnDaftar')?.addEventListener('click', async () => {
       verified:  false
     });
 
-    // Kirim email verifikasi (Firebase kirim otomatis)
-    await sendEmailVerification(cred.user);
-
-    // Logout dulu — harus verifikasi email sebelum bisa masuk
-    await auth.signOut();
-
-    showOk('regOk', '✦ Akun dibuat! Cek email ' + email + ' untuk verifikasi.');
+    showOk('regOk', '✦ Akun berhasil dibuat! Mengalihkan...');
     btn.textContent = 'Selesai'; btn.disabled = true;
 
-    // Alihkan ke tab masuk setelah 3 detik
+    // Langsung redirect ke dashboard
     setTimeout(() => {
-      document.querySelector('[data-tab="masuk"]').click();
-      document.getElementById('loginUser').value = email;
-    }, 3000);
+      window.location.href = 'dashboard.html';
+    }, 1500);
 
   } catch (e) {
     showErr('regErr3', firebaseErrMsg(e.code));
