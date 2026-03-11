@@ -4,6 +4,9 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Masuk — ANTITHESIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"/>
 <style>
 body { min-height: 100vh; display: flex; flex-direction: column; }
@@ -21,28 +24,28 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   position: relative; overflow: hidden;
   display: flex; flex-direction: column; justify-content: flex-end;
   padding: 60px;
-  background: var(--dark2);
+  background: var(--bg2);
   border-right: 1px solid var(--border);
 }
 .login-left-bg {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 80% at 30% 40%, rgba(201,168,76,.07) 0%, transparent 65%);
+  background: radial-gradient(ellipse 70% 80% at 30% 40%, rgba(0,212,170,.07) 0%, transparent 65%);
   pointer-events: none;
 }
 .login-left-grid {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(201,168,76,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201,168,76,.025) 1px, transparent 1px);
+    linear-gradient(rgba(0,212,170,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,170,.025) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
 .login-left-content { position: relative; z-index: 1; }
 .login-left-brand {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.72rem;           /* was .6rem ≈ 9.6px → now 11.5px */
   letter-spacing: .55em;
-  color: var(--gold);
+  color: var(--green-dark);
   text-transform: uppercase;
   margin-bottom: 28px;
 }
@@ -54,15 +57,15 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   margin-top: 4px;
 }
 .login-left-quote {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: clamp(1.4rem, 2.5vw, 2rem);
   font-style: italic;
-  color: var(--white);
+  color: var(--text);
   line-height: 1.5;
   margin-bottom: 12px;
 }
 .login-left-sub {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.95rem;
   font-style: italic;
   color: var(--muted);
@@ -82,7 +85,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   border-bottom: 1px solid var(--border);
 }
 .tab-btn {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.65rem;           /* was .5rem ≈ 8px → now 10.4px */
   letter-spacing: .35em;
   text-transform: uppercase;
@@ -92,7 +95,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   position: relative;
   transition: color .3s;
 }
-.tab-btn.active { color: var(--gold); }
+.tab-btn.active { color: var(--green-dark); }
 .tab-btn.active::after {
   content: '';
   position: absolute; bottom: -1px; left: 0; right: 0;
@@ -103,14 +106,14 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ── LOGIN BOX ── */
 .login-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 1.9rem;
   font-weight: 900;
-  color: var(--white);
+  color: var(--text);
   margin-bottom: 6px;
 }
 .login-sub {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 1rem;
   font-style: italic;
   color: var(--muted);
@@ -127,7 +130,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
 /* ── MESSAGES ── */
 .form-err {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.62rem;           /* was .46rem ≈ 7.4px → now 9.9px */
   letter-spacing: .18em;
   color: #e74c3c;
@@ -138,9 +141,9 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   border: 1px solid rgba(231,76,60,.2);
 }
 .form-ok {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.95rem;
-  color: var(--gold);
+  color: var(--green-dark);
   margin-top: 8px;
   display: none;
   font-style: italic;
@@ -150,12 +153,12 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 .login-link {
   text-align: center;
   margin-top: 20px;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.92rem;
   font-style: italic;
   color: var(--muted);
 }
-.login-link a { color: var(--gold); text-decoration: underline; cursor: pointer; }
+.login-link a { color: var(--green-dark); text-decoration: underline; cursor: pointer; }
 
 /* ── PASSWORD MODAL ── */
 .pass-modal {
@@ -166,7 +169,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 }
 .pass-modal.show { display: flex; }
 .pass-modal-box {
-  background: var(--dark2);
+  background: var(--bg2);
   border: 1px solid var(--border2);
   width: 100%; max-width: 400px;
   margin: 24px;
@@ -176,10 +179,10 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   border-bottom: 1px solid var(--border);
 }
 .pass-modal-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'DM Serif Display', serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--white);
+  color: var(--text);
 }
 .pass-modal-body {
   padding: 24px 28px 28px;
@@ -240,7 +243,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
   border-radius: 50%;
   border: 1px solid var(--border2);
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 0.62rem;
   font-weight: 600;
   color: var(--muted);
@@ -249,13 +252,13 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 }
 .step.active {
   background: var(--gold);
-  border-color: var(--gold);
+  border-color: var(--green-dark);
   color: var(--black);
 }
 .step.done {
   background: var(--gold-dim);
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--green-dark);
+  color: var(--green-dark);
 }
 .step-line {
   flex: 1;
@@ -304,7 +307,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
       <!-- MASUK -->
       <div class="tab-panel active" id="tab-masuk">
-        <div class="login-title">Selamat <em style="font-style:italic;color:var(--gold)">Kembali</em></div>
+        <div class="login-title">Selamat <em style="font-style:italic;color:var(--green-dark)">Kembali</em></div>
         <div class="login-sub">Masuk dengan username dan password kamu.</div>
         <div class="form-group">
           <label class="form-label">Email</label>
@@ -336,7 +339,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
         <!-- STEP 1: Nama + Email -->
         <div id="daftarStep1">
-          <div class="login-title">Buat <em style="font-style:italic;color:var(--gold)">Akun</em></div>
+          <div class="login-title">Buat <em style="font-style:italic;color:var(--green-dark)">Akun</em></div>
           <div class="login-sub">Gunakan nama lengkap sesuai daftar anggota.</div>
           <div class="form-group">
             <label class="form-label">Nama Lengkap</label>
@@ -352,7 +355,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 
         <!-- STEP 2: Buat Password -->
         <div id="daftarStep2" style="display:none;">
-          <div class="login-title">Buat <em style="font-style:italic;color:var(--gold)">Password</em></div>
+          <div class="login-title">Buat <em style="font-style:italic;color:var(--green-dark)">Password</em></div>
           <div class="login-sub">Satu langkah lagi untuk bergabung.</div>
           <div class="form-group">
             <label class="form-label">Password</label>
@@ -384,7 +387,7 @@ body { min-height: 100vh; display: flex; flex-direction: column; }
 <div class="pass-modal" id="passModal">
   <div class="pass-modal-box anim-up">
     <div class="pass-modal-head">
-      <div class="pass-modal-title">Reset <em style="font-style:italic;color:var(--gold)">Password</em></div>
+      <div class="pass-modal-title">Reset <em style="font-style:italic;color:var(--green-dark)">Password</em></div>
     </div>
     <div class="pass-modal-body">
       <div class="form-group" style="margin-bottom:0">
