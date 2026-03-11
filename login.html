@@ -6,43 +6,199 @@
 <title>Masuk — ANTITHESIS</title>
 <link rel="stylesheet" href="style.css"/>
 <style>
-body{min-height:100vh;display:flex;flex-direction:column;}
-.login-wrap{flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:100vh;}
-.login-left{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:60px;background:var(--dark2);border-right:1px solid var(--border);}
-.login-left-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 30% 40%,rgba(201,168,76,.07) 0%,transparent 65%);pointer-events:none;}
-.login-left-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(201,168,76,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.025) 1px,transparent 1px);background-size:60px 60px;}
-.login-left-deco{position:absolute;top:60px;left:60px;font-family:'Playfair Display',serif;font-size:clamp(5rem,10vw,9rem);font-weight:900;color:rgba(201,168,76,.05);line-height:1;user-select:none;}
-.login-left-content{position:relative;z-index:1;}
-.login-left-brand{font-family:'Montserrat',sans-serif;font-size:.6rem;letter-spacing:.55em;color:var(--gold);text-transform:uppercase;margin-bottom:28px;}
-.login-left-brand span{display:block;font-size:.38rem;letter-spacing:.4em;color:var(--muted);margin-top:4px;}
-.login-left-quote{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);font-style:italic;color:var(--white);line-height:1.5;margin-bottom:12px;}
-.login-left-sub{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:var(--muted);}
-.login-right{display:flex;flex-direction:column;justify-content:center;padding:80px 60px;}
-.login-box{max-width:420px;width:100%;}
-.login-tabs{display:flex;margin-bottom:40px;border-bottom:1px solid var(--border);}
-.tab-btn{font-family:'Montserrat',sans-serif;font-size:.5rem;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);background:none;border:none;padding:14px 24px 12px;position:relative;transition:color .3s;}
-.tab-btn.active{color:var(--gold);}
-.tab-btn.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:var(--gold);}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-.login-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:var(--white);margin-bottom:6px;}
-.login-sub{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--muted);margin-bottom:32px;}
-.pass-wrap{position:relative;}
-.pass-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;}
-.form-err{font-family:'Montserrat',sans-serif;font-size:.46rem;letter-spacing:.18em;color:#e74c3c;margin-top:8px;display:none;padding:8px 12px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.2);}
-.form-ok{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--gold);margin-top:8px;display:none;font-style:italic;}
-.login-link{text-align:center;margin-top:20px;font-family:'Cormorant Garamond',serif;font-size:.9rem;font-style:italic;color:var(--muted);}
-.login-link a{color:var(--gold);text-decoration:underline;cursor:pointer;}
-.pass-modal{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(14px);}
-.pass-modal.show{display:flex;}
-.pass-modal-box{background:var(--dark2);border:1px solid var(--border2);width:100%;max-width:400px;margin:24px;}
-.pass-modal-head{padding:28px 28px 18px;border-bottom:1px solid var(--border);}
-.pass-modal-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--white);}
-.pass-modal-body{padding:24px 28px 28px;display:flex;flex-direction:column;gap:14px;}
-@media(max-width:860px){
-  .login-wrap{grid-template-columns:1fr;}
-  .login-left{display:none;}
-  .login-right{padding:60px 28px;justify-content:flex-start;padding-top:100px;}
+body { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── LAYOUT ── */
+.login-wrap {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── LEFT PANEL ── */
+.login-left {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 60px;
+  background: var(--dark2);
+  border-right: 1px solid var(--border);
+}
+.login-left-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 30% 40%, rgba(201,168,76,.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.login-left-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(201,168,76,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.login-left-deco {
+  position: absolute; top: 60px; left: 60px;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(5rem, 10vw, 9rem);
+  font-weight: 900;
+  color: rgba(201,168,76,.05);
+  line-height: 1;
+  user-select: none;
+}
+.login-left-content { position: relative; z-index: 1; }
+.login-left-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;           /* was .6rem ≈ 9.6px → now 11.5px */
+  letter-spacing: .55em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.login-left-brand span {
+  display: block;
+  font-size: 0.58rem;           /* was .38rem ≈ 6px → now 9.3px */
+  letter-spacing: .4em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.login-left-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.login-left-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* ── RIGHT PANEL ── */
+.login-right {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 60px;
+}
+.login-box { max-width: 420px; width: 100%; }
+
+/* ── TABS ── */
+.login-tabs {
+  display: flex;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;           /* was .5rem ≈ 8px → now 10.4px */
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none; border: none;
+  padding: 14px 24px 12px;
+  position: relative;
+  transition: color .3s;
+}
+.tab-btn.active { color: var(--gold); }
+.tab-btn.active::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 1px; background: var(--gold);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── LOGIN BOX ── */
+.login-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.login-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+
+/* ── PASSWORD FIELD ── */
+.pass-wrap { position: relative; }
+.pass-toggle {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--muted); font-size: 0.80rem; cursor: pointer;
+}
+
+/* ── MESSAGES ── */
+.form-err {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;           /* was .46rem ≈ 7.4px → now 9.9px */
+  letter-spacing: .18em;
+  color: #e74c3c;
+  margin-top: 8px;
+  display: none;
+  padding: 8px 12px;
+  background: rgba(231,76,60,.06);
+  border: 1px solid rgba(231,76,60,.2);
+}
+.form-ok {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-top: 8px;
+  display: none;
+  font-style: italic;
+}
+
+/* ── BOTTOM LINK ── */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.92rem;
+  font-style: italic;
+  color: var(--muted);
+}
+.login-link a { color: var(--gold); text-decoration: underline; cursor: pointer; }
+
+/* ── PASSWORD MODAL ── */
+.pass-modal {
+  position: fixed; inset: 0; z-index: 800;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(14px);
+}
+.pass-modal.show { display: flex; }
+.pass-modal-box {
+  background: var(--dark2);
+  border: 1px solid var(--border2);
+  width: 100%; max-width: 400px;
+  margin: 24px;
+}
+.pass-modal-head {
+  padding: 28px 28px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.pass-modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.pass-modal-body {
+  padding: 24px 28px 28px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .login-wrap              { grid-template-columns: 1fr; }
+  .login-left              { display: none; }
+  .login-right             { padding: 60px 28px; justify-content: flex-start; padding-top: 100px; }
 }
 </style>
 </head>
@@ -50,21 +206,29 @@ body{min-height:100vh;display:flex;flex-direction:column;}
 
 <nav class="nav">
   <a href="index.html" class="nav-brand">ANTITHESIS<span>Al Muayyad Surakarta · 2018–2020</span></a>
-  <ul class="nav-links"><li><a href="index.html">← Beranda</a></li></ul>
+  <ul class="nav-links">
+    <li><a href="index.html">← Beranda</a></li>
+  </ul>
 </nav>
 
 <div class="login-wrap">
+
+  <!-- LEFT -->
   <div class="login-left">
     <div class="login-left-bg"></div>
     <div class="login-left-grid"></div>
     <div class="login-left-deco">A</div>
     <div class="login-left-content anim-up">
-      <div class="login-left-brand">ANTITHESIS<span>SMA & MA Al Muayyad Surakarta · 2018–2020</span></div>
+      <div class="login-left-brand">
+        ANTITHESIS
+        <span>SMA & MA Al Muayyad Surakarta · 2018–2020</span>
+      </div>
       <div class="login-left-quote">"Masuk dan sapa kembali mereka yang pernah mengisi hari-harimu."</div>
       <div class="login-left-sub">Portal eksklusif anggota angkatan ANTITHESIS.</div>
     </div>
   </div>
 
+  <!-- RIGHT -->
   <div class="login-right">
     <div class="login-box anim-up d1">
       <div class="login-tabs">
@@ -117,6 +281,7 @@ body{min-height:100vh;display:flex;flex-direction:column;}
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- MODAL GANTI PASSWORD -->
@@ -126,9 +291,18 @@ body{min-height:100vh;display:flex;flex-direction:column;}
       <div class="pass-modal-title">Ganti <em style="font-style:italic;color:var(--gold)">Password</em></div>
     </div>
     <div class="pass-modal-body">
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">Username</label><input class="form-input" id="gpUser" type="text" placeholder="username kamu..."/></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">Password Lama</label><input class="form-input" id="gpOld" type="password" placeholder="••••••••"/></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">Password Baru</label><input class="form-input" id="gpNew" type="password" placeholder="minimal 6 karakter..."/></div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Username</label>
+        <input class="form-input" id="gpUser" type="text" placeholder="username kamu..."/>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Password Lama</label>
+        <input class="form-input" id="gpOld" type="password" placeholder="••••••••"/>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label class="form-label">Password Baru</label>
+        <input class="form-input" id="gpNew" type="password" placeholder="minimal 6 karakter..."/>
+      </div>
       <div class="form-err" id="gpErr"></div>
       <div class="form-ok" id="gpOk">✦ Password berhasil diubah!</div>
       <button class="btn btn-primary btn-full" id="btnGantiPass">Ganti Password →</button>
