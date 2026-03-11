@@ -74,15 +74,22 @@ async function cekWhitelist(nama) {
 
 // ── Redirect jika sudah login & sudah verifikasi email ──
 let isProcessing = false;
-onAuthStateChanged(auth, user => {
+let justLoggedOut = false;
+onAuthStateChanged(auth, async user => {
+  if (justLoggedOut) return;
   if (user && !isProcessing) {
-    if (user.emailVerified) {
-      sessionStorage.setItem('antithesis_member', user.displayName || user.email);
-      sessionStorage.setItem('antithesis_username', user.email.split('@')[0]);
-      window.location.href = 'dashboard.html';
-    } else {
-      signOut(auth);
+    if (!user.emailVerified) { await signOut(auth); return; }
+
+    // Cek banned
+    const akunSnap = await get(ref(db, 'antithesis/akun'));
+    if (akunSnap.exists()) {
+      const myAkun = Object.values(akunSnap.val()).find(a => a.email === user.email);
+      if (myAkun && myAkun.banned === true) { await signOut(auth); return; }
     }
+
+    sessionStorage.setItem('antithesis_member', user.displayName || user.email);
+    sessionStorage.setItem('antithesis_username', user.email.split('@')[0]);
+    window.location.href = 'dashboard.html';
   }
 });
 
@@ -122,6 +129,22 @@ document.getElementById('btnLogin')?.addEventListener('click', async () => {
       sessionStorage.setItem('pending_verif_email', email);
       document.getElementById('btnResendVerif').style.display = 'block';
       showErr('loginErr', '✕ Email belum diverifikasi. Cek inbox/spam lalu klik link verifikasi.');
+      btn.textContent = 'Masuk →'; btn.disabled = false;
+      return;
+    }
+
+    // Cek status banned di database
+    const akunSnap = await get(ref(db, 'antithesis/akun'));
+    let isBanned = false;
+    if (akunSnap.exists()) {
+      const allAkun = akunSnap.val();
+      const myAkun = Object.values(allAkun).find(a => a.email === email);
+      if (myAkun && myAkun.banned === true) isBanned = true;
+    }
+    if (isBanned) {
+      isProcessing = false;
+      await signOut(auth);
+      showErr('loginErr', '✕ Akun kamu telah dinonaktifkan. Hubungi admin.');
       btn.textContent = 'Masuk →'; btn.disabled = false;
       return;
     }
