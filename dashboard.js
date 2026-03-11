@@ -38,6 +38,7 @@ document.getElementById('btnLogout').addEventListener('click', async () => {
     await signOut(getAuth());
   } catch(e) {}
   sessionStorage.clear();
+  sessionStorage.setItem('just_logged_out', '1');
   window.location.href = 'login.html';
 });
 
