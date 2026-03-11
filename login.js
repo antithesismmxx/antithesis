@@ -63,9 +63,13 @@ function firebaseErrMsg(code) {
   return map[code] || 'Terjadi kesalahan. Coba lagi.';
 }
 
-// ── Redirect jika sudah login ──
+// ── Redirect jika sudah login (hanya jika bukan proses daftar/login aktif) ──
+let isProcessing = false;
 onAuthStateChanged(auth, user => {
-  if (user) {
+  if (user && !isProcessing) {
+    // Set session dari Firebase Auth user
+    sessionStorage.setItem('antithesis_member', user.displayName || user.email);
+    sessionStorage.setItem('antithesis_username', user.email.split('@')[0]);
     window.location.href = 'dashboard.html';
   }
 });
@@ -97,9 +101,14 @@ document.getElementById('btnLogin')?.addEventListener('click', async () => {
   btn.textContent = 'Memproses...'; btn.disabled = true;
 
   try {
+    isProcessing = true;
     const cred = await signInWithEmailAndPassword(auth, email, pass);
+    // Set session
+    sessionStorage.setItem('antithesis_member', cred.user.displayName || cred.user.email);
+    sessionStorage.setItem('antithesis_username', cred.user.email.split('@')[0]);
     window.location.href = 'dashboard.html';
   } catch (e) {
+    isProcessing = false;
     showErr('loginErr', firebaseErrMsg(e.code));
   } finally {
     btn.textContent = 'Masuk →'; btn.disabled = false;
@@ -164,6 +173,7 @@ document.getElementById('btnDaftar')?.addEventListener('click', async () => {
   btn.textContent = 'Membuat akun...'; btn.disabled = true;
 
   try {
+    isProcessing = true;
     // Buat akun Firebase Auth
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
 
@@ -178,6 +188,10 @@ document.getElementById('btnDaftar')?.addEventListener('click', async () => {
       verified:  false
     });
 
+    // Set session
+    sessionStorage.setItem('antithesis_member', nama);
+    sessionStorage.setItem('antithesis_username', email.split('@')[0]);
+
     showOk('regOk', '✦ Akun berhasil dibuat! Mengalihkan...');
     btn.textContent = 'Selesai'; btn.disabled = true;
 
@@ -187,6 +201,7 @@ document.getElementById('btnDaftar')?.addEventListener('click', async () => {
     }, 1500);
 
   } catch (e) {
+    isProcessing = false;
     showErr('regErr3', firebaseErrMsg(e.code));
     btn.textContent = 'Selesai & Masuk →'; btn.disabled = false;
   }
