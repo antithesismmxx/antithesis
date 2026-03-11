@@ -291,6 +291,17 @@ document.getElementById('btnSaveProfil').addEventListener('click',async()=>{
 
   const key = myKey || username || nama.replace(/\s+/g,'-').toLowerCase();
   await set(ref(db,'antithesis/anggota/'+key),data);
+
+  // Backup foto ke arsip jika ada foto baru
+  if(fotoData && fotoFile){
+    const arsipKey = Date.now();
+    await set(ref(db,'antithesis/arsip_foto/'+key+'/'+arsipKey),{
+      foto: fotoData,
+      nama: nama,
+      uploadedAt: arsipKey
+    });
+  }
+
   toast('✦ Profil berhasil disimpan!');
   btn.textContent='Simpan Profil →';btn.disabled=false;
 });
