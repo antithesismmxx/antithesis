@@ -616,16 +616,35 @@ function renderAccounts(){
   document.getElementById('accCount').textContent=entries.length;
   const tbody=document.getElementById('accBody');
   if(!entries.length){tbody.innerHTML='<tr><td colspan="3" class="td-muted">Belum ada akun.</td></tr>';return;}
-  tbody.innerHTML=entries.map(([uid,data])=>`
-    <tr>
-      <td><span style="font-family:'Montserrat',sans-serif;font-size:.9rem;">${data.email||uid}</span></td>
+  tbody.innerHTML=entries.map(([uid,data])=>{
+    const isBanned=data.banned===true;
+    const badgeHtml=isBanned?'<span style="font-family:Montserrat,sans-serif;font-size:.38rem;letter-spacing:.18em;color:#e74c3c;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.2);padding:2px 8px;margin-left:8px;">BANNED</span>':'';
+    return`<tr>
+      <td><span style="font-family:'Montserrat',sans-serif;font-size:.85rem;">${data.email||uid}</span>${badgeHtml}</td>
       <td>${data.nama||'—'}</td>
-      <td><button class="btn btn-danger" style="padding:6px 12px;font-size:.42rem;" onclick="hapusAkun('${uid}','${data.email||''}')">Hapus</button></td>
-    </tr>`).join('');
+      <td style="display:flex;gap:6px;">
+        ${isBanned
+          ? `<button class="btn btn-outline" style="padding:6px 12px;font-size:.42rem;" onclick="unbanAkun('${uid}','${(data.email||'').replace(/'/g,'')}')" >Aktifkan</button>`
+          : `<button class="btn btn-danger" style="padding:6px 12px;font-size:.42rem;" onclick="banAkun('${uid}','${(data.email||'').replace(/'/g,'')}')">Nonaktifkan</button>`
+        }
+        <button class="btn btn-danger" style="padding:6px 12px;font-size:.42rem;background:transparent;border-color:rgba(231,76,60,.3);" onclick="hapusAkun('${uid}','${(data.email||'').replace(/'/g,'')}')">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
 }
+window.banAkun=function(uid,email){
+  confirm2('Nonaktifkan Akun','Akun '+email+' tidak bisa login lagi.',()=>{
+    set(ref(db,'antithesis/akun/'+uid+'/banned'),true).then(()=>toast('✦ Akun '+email+' dinonaktifkan.'));
+  });
+};
+window.unbanAkun=function(uid,email){
+  confirm2('Aktifkan Akun','Akun '+email+' bisa login kembali.',()=>{
+    set(ref(db,'antithesis/akun/'+uid+'/banned'),false).then(()=>toast('✦ Akun '+email+' diaktifkan kembali.'));
+  });
+};
 window.hapusAkun=function(uid,email){
-  confirm2('Hapus Akun','Akun '+email+' akan dihapus dari database.',()=>{
-    remove(ref(db,'antithesis/akun/'+uid)).then(()=>toast('Akun '+email+' dihapus.'));
+  confirm2('Hapus Akun','Akun '+email+' akan dihapus dari database. Akun di Firebase Auth tetap ada tapi tidak bisa login.',()=>{
+    remove(ref(db,'antithesis/akun/'+uid)).then(()=>toast('Akun '+email+' dihapus dari database.'));
   });
 };
 document.getElementById('btnResetPass').addEventListener('click',async()=>{
@@ -633,7 +652,6 @@ document.getElementById('btnResetPass').addEventListener('click',async()=>{
   const errEl=document.getElementById('rpErr');const okEl=document.getElementById('rpOk');
   errEl.style.display='none';okEl.style.display='none';
   if(!email){errEl.textContent='✕ Masukkan email akun';errEl.style.display='block';return;}
-  // Import Firebase Auth untuk kirim reset email
   const {getAuth,sendPasswordResetEmail}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
   const authAdmin=getAuth();
   try{
@@ -641,7 +659,7 @@ document.getElementById('btnResetPass').addEventListener('click',async()=>{
     okEl.textContent='✦ Link reset password dikirim ke '+email;okEl.style.display='block';
     document.getElementById('rpUser').value='';
   }catch(e){
-    errEl.textContent='✕ Gagal: '+e.message;errEl.style.display='block';
+    errEl.textContent='✕ Gagal: '+(e.message||'coba lagi');errEl.style.display='block';
   }
 });
 
