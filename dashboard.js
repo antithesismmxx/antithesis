@@ -32,13 +32,8 @@ document.getElementById('heroDate').textContent =
   `${hari[now.getDay()]}, ${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`;
 
 // ── Logout ──
-document.getElementById('btnLogout').addEventListener('click', async () => {
-  try {
-    const { getAuth, signOut } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js');
-    await signOut(getAuth());
-  } catch(e) {}
+document.getElementById('btnLogout').addEventListener('click', () => {
   sessionStorage.clear();
-  sessionStorage.setItem('just_logged_out', '1');
   window.location.href = 'login.html';
 });
 
