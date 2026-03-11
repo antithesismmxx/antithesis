@@ -91,28 +91,7 @@ onValue(ref(db, 'antithesis/anggota'),   s => document.getElementById('statProfi
 onValue(ref(db, 'antithesis/requests'),  s => document.getElementById('statUsulan').textContent   = s.val() ? Object.keys(s.val()).length : 0);
 onValue(ref(db, 'antithesis/buku'),      s => document.getElementById('statKenangan').textContent = s.val() ? Object.keys(s.val()).length : 0);
 
-// ── Profil Saya ──
-onValue(ref(db, 'antithesis/anggota'), snap => {
-  const all = snap.val() || {};
-  const myProfil = Object.values(all).find(a => a.username === username || (a.nama||'').toLowerCase() === nama.toLowerCase());
-  if (myProfil) {
-    document.getElementById('profilWrap').style.display = 'grid';
-    document.getElementById('noProfilWrap').style.display = 'none';
-    document.getElementById('profilNama').textContent = myProfil.nama || nama;
-    document.getElementById('profilKelas').textContent = myProfil.kelas ? 'Kelas ' + myProfil.kelas : '';
-    document.getElementById('profilSekolah').innerHTML = myProfil.sekolah
-      ? `<span class="badge badge-${myProfil.sekolah.toLowerCase()}">${myProfil.sekolah} Al Muayyad</span>` : '';
-    document.getElementById('profilMotto').textContent = myProfil.motto ? `"${myProfil.motto}"` : '';
-    if (myProfil.foto) {
-      document.getElementById('profilFoto').src = myProfil.foto;
-      document.getElementById('profilFoto').style.display = 'block';
-      document.getElementById('profilPh').style.display = 'none';
-    }
-  } else {
-    document.getElementById('profilWrap').style.display = 'none';
-    document.getElementById('noProfilWrap').style.display = 'block';
-  }
-});
+
 
 // ── Scroll reveal ──
 const obs = new IntersectionObserver(es => es.forEach(e => {
