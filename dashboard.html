@@ -275,6 +275,12 @@
   .countdown-units   { gap: 14px; }
   .cu-num            { font-size: 2.2rem; }
 }
+/* Logout mobile */
+.nav-mobile-logout { display: none; }
+@media (max-width: 960px) {
+  .nav-mobile-logout { display: block; padding: 8px 24px 16px; }
+  .nav-mobile-logout .btn-logout { width: 100%; text-align: center; padding: 12px; }
+}
 </style>
 </head>
 <body>
@@ -287,6 +293,7 @@
     <li><a href="polling.html">Polling</a></li>
     <li><a href="galeri.html">Kenangan</a></li>
     <li><a href="acara.html">Acara</a></li>
+    <li class="nav-mobile-logout"><button class="btn-logout" id="btnLogoutMobile">Keluar</button></li>
   </ul>
   <div class="nav-user">
     <span class="nav-user-name">Halo, <span id="navNama">—</span></span>
@@ -393,5 +400,11 @@
 </footer>
 
 <script type="module" src="dashboard.js"></script>
+<script>
+document.getElementById('btnLogoutMobile')?.addEventListener('click', () => {
+  sessionStorage.clear();
+  window.location.href = 'login.html';
+});
+</script>
 </body>
 </html>
