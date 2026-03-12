@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="style.css"/>
 <style>
 /* ── HERO ── */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 80px;overflow:hidden;}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:80px 44px;overflow:hidden;text-align:center;}
 .hero-media{position:absolute;inset:0;z-index:0;}
 .hero-media-bg{
   width:100%;height:100%;
@@ -23,7 +23,7 @@
   -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
 }
 .hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(240,165,0,.08) 0%,transparent 65%);pointer-events:none;}
-.hero-content{position:relative;z-index:1;max-width:900px;padding:0 44px;}
+.hero-content{position:relative;z-index:1;max-width:900px;width:100%;}
 .hero-eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;display:inline-flex;align-items:center;gap:8px;background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.2);padding:6px 14px;border-radius:980px;}
 .hero-eyebrow::before{content:'✦';font-size:.6rem;}
 .hero h1{
@@ -36,7 +36,7 @@
   white-space:nowrap;
   font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;
 }
-.hero-sub{font-size:clamp(1rem,1.8vw,1.25rem);color:var(--gray2);margin-top:20px;line-height:1.6;max-width:560px;font-weight:300;}
+.hero-sub{font-size:clamp(1rem,1.8vw,1.25rem);color:var(--gray2);margin-top:20px;line-height:1.6;max-width:560px;font-weight:300;margin-left:auto;margin-right:auto;}
 .hero-actions{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap;}
 .hero-stats-row{position:relative;z-index:1;display:flex;gap:0;padding:0 44px;margin-top:0;}
 .hero-stat{flex:1;border-top:1px solid rgba(255,255,255,.1);padding:28px 0;display:flex;flex-direction:column;gap:4px;}
@@ -46,58 +46,52 @@
 .hero-stat:first-child{padding-right:32px;}
 .hero-stat:not(:first-child){padding-left:32px;}
 
-/* ── MARQUEE STRIP ── */
-.marquee-strip{background:rgba(240,165,0,.06);border-top:1px solid rgba(240,165,0,.12);border-bottom:1px solid rgba(240,165,0,.12);padding:12px 0;overflow:hidden;white-space:nowrap;}
-.marquee-inner{display:inline-flex;animation:marquee 30s linear infinite;}
-.marquee-item{font-size:.72rem;font-weight:600;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;padding:0 40px;opacity:.7;}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* ── FEATURES GRID ── */
-.features{padding:100px 44px;}
-.features-intro{max-width:600px;margin-bottom:56px;}
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);}
-.feat{background:var(--dark);padding:36px 32px;transition:var(--trans);cursor:pointer;text-decoration:none;display:block;}
-.feat:hover{background:var(--dark3);}
-.feat-icon{font-size:2rem;margin-bottom:16px;}
-.feat-name{font-size:1rem;font-weight:600;color:var(--off-white);margin-bottom:6px;letter-spacing:-.01em;}
-.feat-desc{font-size:.85rem;color:var(--gray3);line-height:1.6;}
-.feat-arrow{display:inline-flex;align-items:center;gap:4px;font-size:.8rem;font-weight:500;color:var(--gold);margin-top:14px;transition:gap .25s;}
-.feat:hover .feat-arrow{gap:8px;}
+/* ── FEATURES — Apple style list ── */
+.features{padding:100px 44px;border-top:1px solid var(--border);}
+.features-intro{max-width:700px;margin:0 auto 64px;text-align:center;}
+.features-intro h2{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-.04em;color:var(--white);line-height:1.1;font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;}
+.features-intro p{font-size:1rem;color:var(--gray2);margin-top:12px;font-weight:300;line-height:1.6;}
+.features-list{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:0;}
+.feat{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:var(--trans);gap:24px;}
+.feat:first-child{border-top:1px solid var(--border);}
+.feat:hover .feat-name{color:var(--gold);}
+.feat-left{display:flex;align-items:center;gap:18px;}
+.feat-icon{font-size:1.3rem;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;flex-shrink:0;}
+.feat-name{font-size:1rem;font-weight:500;color:var(--off-white);letter-spacing:-.01em;transition:color .25s;}
+.feat-desc{font-size:.85rem;color:var(--gray3);margin-top:2px;}
+.feat-arrow{font-size:.82rem;font-weight:500;color:var(--gray4);flex-shrink:0;transition:var(--trans);}
+.feat:hover .feat-arrow{color:var(--gold);transform:translateX(4px);}
 
 /* ── TENTANG ── */
-.tentang{padding:100px 44px;background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
-.tentang-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1100px;margin:0 auto;}
-.tentang-quote{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:600;color:var(--white);line-height:1.3;letter-spacing:-.03em;}
+.tentang{padding:100px 44px;border-top:1px solid var(--border);}
+.tentang-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1000px;margin:0 auto;}
+.tentang-quote{font-size:clamp(1.5rem,3vw,2.4rem);font-weight:600;color:var(--white);line-height:1.3;letter-spacing:-.03em;font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;}
 .tentang-quote .hl{background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .tentang-text p{font-size:.95rem;color:var(--gray2);line-height:1.8;margin-bottom:14px;font-weight:300;}
 
-/* ── PENGUMUMAN ── */
-.pg-section{padding:80px 44px;text-align:center;}
-.pg-card{max-width:720px;margin:32px auto 0;background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;text-align:left;position:relative;display:none;}
+/* ── PENGUMUMAN — hanya tampil kalau ada isi ── */
+.pg-section{padding:80px 44px;border-top:1px solid var(--border);}
+.pg-card{max-width:660px;margin:0 auto;background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px;display:none;}
 .pg-card.show{display:block;}
 .pg-card-tag{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;font-weight:600;letter-spacing:.06em;color:var(--gold);text-transform:uppercase;background:var(--gold-dim);border:1px solid rgba(240,165,0,.2);padding:5px 12px;border-radius:980px;margin-bottom:14px;}
-.pg-text{font-size:1rem;color:var(--off-white);line-height:1.7;font-weight:300;}
+.pg-text{font-size:.98rem;color:var(--off-white);line-height:1.7;font-weight:300;}
 
 /* ── MOTTO ── */
 .motto-section{padding:120px 44px;text-align:center;border-top:1px solid var(--border);position:relative;overflow:hidden;}
-.motto-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(240,165,0,.06) 0%,transparent 65%);pointer-events:none;}
-.motto-text{font-size:clamp(2rem,5vw,4rem);font-weight:700;letter-spacing:-.04em;color:var(--white);line-height:1.15;max-width:800px;margin:0 auto 20px;}
+.motto-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(240,165,0,.05) 0%,transparent 65%);pointer-events:none;}
+.motto-text{font-size:clamp(2rem,5vw,4rem);font-weight:700;letter-spacing:-.04em;color:var(--white);line-height:1.15;max-width:800px;margin:0 auto 20px;font-family:-apple-system,'SF Pro Display','Inter',system-ui,sans-serif;}
 .motto-text .hl{background:linear-gradient(135deg,var(--gold-pale),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.motto-sub{font-size:.78rem;font-weight:500;letter-spacing:.1em;color:var(--gray3);text-transform:uppercase;}
+.motto-sub{font-size:.75rem;font-weight:400;letter-spacing:.08em;color:var(--gray4);text-transform:uppercase;}
 
 @media(max-width:960px){
-  .hero{padding:0 0 48px;}
-  .hero-content{padding:0 20px;}
-  .hero-stats-row{padding:0 20px;flex-wrap:wrap;}
-  .hero-stat{flex:1 0 40%;}
+  .hero{padding:80px 20px;}
   .features{padding:64px 20px;}
-  .features-grid{grid-template-columns:1fr 1fr;}
   .tentang{padding:64px 20px;}
   .tentang-grid{grid-template-columns:1fr;gap:36px;}
   .pg-section{padding:64px 20px;}
   .motto-section{padding:80px 20px;}
 }
-@media(max-width:580px){.features-grid{grid-template-columns:1fr;}}
+@media(max-width:580px){.feat{flex-wrap:wrap;}}
 </style>
 </head>
 <body>
@@ -129,76 +123,53 @@
   </div>
 </section>
 
-<!-- MARQUEE -->
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span class="marquee-item">ANTITHESIS</span>
-    <span class="marquee-item">Al Muayyad Surakarta</span>
-    <span class="marquee-item">2018 – 2020</span>
-    <span class="marquee-item">Selamanya Bersama</span>
-    <span class="marquee-item">Selamanya Bangga</span>
-    <span class="marquee-item">ANTITHESIS</span>
-    <span class="marquee-item">Al Muayyad Surakarta</span>
-    <span class="marquee-item">2018 – 2020</span>
-    <span class="marquee-item">Selamanya Bersama</span>
-    <span class="marquee-item">Selamanya Bangga</span>
-    <span class="marquee-item">ANTITHESIS</span>
-    <span class="marquee-item">Al Muayyad Surakarta</span>
-    <span class="marquee-item">2018 – 2020</span>
-    <span class="marquee-item">Selamanya Bersama</span>
-    <span class="marquee-item">Selamanya Bangga</span>
-  </div>
-</div>
-
-<!-- NOTIF -->
+<!-- NOTIF — hanya muncul kalau ada pengumuman -->
 <div class="notif-bar" id="pgBar">
   <span class="notif-bar-icon">📢</span>
   <span class="notif-bar-text" id="pgText"></span>
 </div>
 
-<!-- FEATURES GRID -->
+<!-- FEATURES — Apple list style -->
 <section class="features" id="portal">
   <div class="features-intro rv">
-    <div class="sec-label">Portal Anggota</div>
-    <h2 class="sec-h">Semua yang kamu butuhkan,<br>dalam satu tempat.</h2>
-    <p style="font-size:.95rem;color:var(--gray2);margin-top:12px;font-weight:300;">Akses direktori, polling, kenangan, dan info acara — khusus untuk anggota ANTITHESIS.</p>
+    <h2>Semua yang kamu butuhkan,<br>dalam satu tempat.</h2>
+    <p>Akses direktori, polling, kenangan, dan info acara — khusus untuk anggota ANTITHESIS.</p>
   </div>
-  <div class="features-grid rv d1">
+  <div class="features-list rv d1">
     <a href="dashboard.html" class="feat">
-      <div class="feat-icon">🏠</div>
-      <div class="feat-name">Dashboard</div>
-      <div class="feat-desc">Beranda personal, countdown acara, dan ringkasan komunitas.</div>
-      <div class="feat-arrow">Buka <span>→</span></div>
+      <div class="feat-left">
+        <div class="feat-icon">🏠</div>
+        <div><div class="feat-name">Dashboard</div><div class="feat-desc">Beranda personal, countdown acara, ringkasan komunitas</div></div>
+      </div>
+      <div class="feat-arrow">→</div>
     </a>
     <a href="anggota.html" class="feat">
-      <div class="feat-icon">👥</div>
-      <div class="feat-name">Direktori Anggota</div>
-      <div class="feat-desc">Temukan dan kenali kembali profil semua teman angkatan.</div>
-      <div class="feat-arrow">Lihat <span>→</span></div>
+      <div class="feat-left">
+        <div class="feat-icon">👥</div>
+        <div><div class="feat-name">Direktori Anggota</div><div class="feat-desc">Profil semua teman angkatan</div></div>
+      </div>
+      <div class="feat-arrow">→</div>
     </a>
     <a href="polling.html" class="feat">
-      <div class="feat-icon">🗳️</div>
-      <div class="feat-name">Polling Acara</div>
-      <div class="feat-desc">Vote jenis acara angkatan dan kirim usulan detail.</div>
-      <div class="feat-arrow">Vote <span>→</span></div>
+      <div class="feat-left">
+        <div class="feat-icon">🗳️</div>
+        <div><div class="feat-name">Polling Acara</div><div class="feat-desc">Vote jenis acara dan kirim usulan</div></div>
+      </div>
+      <div class="feat-arrow">→</div>
     </a>
     <a href="galeri.html" class="feat">
-      <div class="feat-icon">📖</div>
-      <div class="feat-name">Buku Kenangan</div>
-      <div class="feat-desc">Tulis pesan anonim dan baca kenangan dari seluruh angkatan.</div>
-      <div class="feat-arrow">Baca <span>→</span></div>
+      <div class="feat-left">
+        <div class="feat-icon">📖</div>
+        <div><div class="feat-name">Buku Kenangan</div><div class="feat-desc">Tulis dan baca pesan anonim dari seluruh angkatan</div></div>
+      </div>
+      <div class="feat-arrow">→</div>
     </a>
     <a href="acara.html" class="feat">
-      <div class="feat-icon">📅</div>
-      <div class="feat-name">Info Acara</div>
-      <div class="feat-desc">Detail acara resmi yang telah ditetapkan beserta countdown.</div>
-      <div class="feat-arrow">Detail <span>→</span></div>
-    </a>
-    <a href="login.html" class="feat" style="background:var(--gold-dim);border-left:2px solid var(--gold);">
-      <div class="feat-icon">🔐</div>
-      <div class="feat-name">Masuk Portal</div>
-      <div class="feat-desc">Login atau daftar akun baru menggunakan nama lengkapmu.</div>
-      <div class="feat-arrow" style="color:var(--gold);">Mulai <span>→</span></div>
+      <div class="feat-left">
+        <div class="feat-icon">📅</div>
+        <div><div class="feat-name">Info Acara</div><div class="feat-desc">Detail acara resmi beserta countdown</div></div>
+      </div>
+      <div class="feat-arrow">→</div>
     </a>
   </div>
 </section>
@@ -208,30 +179,22 @@
   <div class="tentang-grid">
     <div class="rv">
       <div class="tentang-quote">"Kami bukan sekadar angkatan — kami adalah <span class="hl">ikatan yang tidak lekang</span> oleh waktu."</div>
-
+    </div>
     <div class="rv d2">
       <div class="sec-label">Tentang ANTITHESIS</div>
       <div class="tentang-text">
         <p>ANTITHESIS adalah nama yang kami pilih bersama — bukan karena kami berlawanan, melainkan karena kami percaya perbedaan adalah kekuatan. Lahir dari lorong-lorong Al Muayyad, kami tumbuh menjadi lebih dari sekadar teman sekelas.</p>
-        <p>Portal ini adalah ruang digital kami: tempat berbagi kabar, mengusulkan acara, dan menjaga kenangan tetap hidup — meski jarak memisahkan langkah kami.</p>
-  
-      <a href="login.html" class="btn btn-outline" style="margin-top:20px;">Bergabung Sekarang →</a>
-
+        <p>Portal ini adalah ruang digital kami: tempat berbagi kabar, mengusulkan acara, dan menjaga kenangan tetap hidup.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- PENGUMUMAN -->
-<section class="pg-section" id="pengumuman">
-  <div class="rv">
-    <div class="sec-label" style="justify-content:center;display:block;">Info Terkini</div>
-    <h2 class="sec-h">Pengumuman <em>Komunitas</em></h2>
-  </div>
-  <div class="pg-card rv d2" id="pgCard">
+<!-- PENGUMUMAN — hanya muncul kalau ada isi -->
+<section class="pg-section" id="pengumuman" style="display:none;" id="pgSection">
+  <div class="pg-card" id="pgCard">
     <div class="pg-card-tag">📢 Pengumuman</div>
     <p class="pg-text" id="pgCardText"></p>
-  </div>
-  <div id="pgEmpty" class="rv d2">
-    <div class="empty-state"><div class="empty-state-icon">📢</div><div class="empty-state-text">Belum ada pengumuman saat ini.</div></div>
   </div>
 </section>
 
@@ -250,15 +213,24 @@
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getDatabase,ref,onValue,get}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getDatabase,ref,onValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const db=getDatabase(initializeApp({databaseURL:"https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",apiKey:"AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",authDomain:"antithesis-al-muayyad.firebaseapp.com",projectId:"antithesis-al-muayyad",storageBucket:"antithesis-al-muayyad.appspot.com",messagingSenderId:"1014116431079",appId:"1:1014116431079:web:5f490096bf6ecdf7011e42"}));
 onValue(ref(db,'antithesis/pengumuman'),s=>{
   const t=s.val()||'';
-  if(t){document.getElementById('pgText').textContent=t;document.getElementById('pgCardText').textContent=t;document.getElementById('pgBar').classList.add('show');document.getElementById('pgCard').classList.add('show');document.getElementById('pgEmpty').style.display='none';}
-  else{document.getElementById('pgBar').classList.remove('show');document.getElementById('pgCard').classList.remove('show');document.getElementById('pgEmpty').style.display='';}
+  const bar=document.getElementById('pgBar');
+  const card=document.getElementById('pgCard');
+  const sec=document.getElementById('pgSection');
+  if(t){
+    document.getElementById('pgText').textContent=t;
+    document.getElementById('pgCardText').textContent=t;
+    bar.classList.add('show');
+    card.classList.add('show');
+    if(sec) sec.style.display='';
+  } else {
+    bar.classList.remove('show');
+    if(sec) sec.style.display='none';
+  }
 });
-get(ref(db,'antithesis/accounts')).then(s=>document.getElementById('statAnggota').textContent=s.val()?Object.keys(s.val()).length:0);
-get(ref(db,'antithesis/anggota')).then(s=>document.getElementById('statProfil').textContent=s.val()?Object.keys(s.val()).length:0);
 document.getElementById('navHam').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
