@@ -22,6 +22,24 @@
 
 <link rel="stylesheet" href="style.css"/>
 <style>
+
+/* ── Override vars for dark theme ── */
+:root {
+  --bg: var(--dark);
+  --bg2: var(--dark2);
+  --bg3: var(--dark3);
+  --gold: rgba(255,255,255,.7);
+  --gold-pale: rgba(255,255,255,.4);
+  --text: var(--white);
+  --text2: rgba(245,245,247,.75);
+  --muted: rgba(255,255,255,.5);
+  --muted2: rgba(255,255,255,.3);
+  --black: rgba(255,255,255,.9);
+  --border: rgba(255,255,255,.1);
+  --border2: rgba(255,255,255,.06);
+  --trans: all .2s ease;
+}
+
 /* ── HERO ── */
 .hero {
   position: relative;
@@ -34,15 +52,13 @@
 }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 20% 60%, rgba(0,0,0,.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 50% at 85% 20%, rgba(0,0,0,.04) 0%, transparent 55%);
+  background: linear-gradient(160deg,#1a1a2e 0%,#111111 50%,#16213e 100%);
 }
 .hero-grid {
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(0,0,0,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,.03) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
   background-size: 80px 80px;
 }
 .hero-content {
@@ -52,14 +68,14 @@
   font-family: 'Instrument Sans', sans-serif;
   font-size: 0.65rem;           /* was .46rem ≈ 7.4px → now 10.4px */
   letter-spacing: .55em;
-  color: var(--black);
+  color: rgba(255,255,255,.4);
   text-transform: uppercase;
   margin-bottom: 20px;
   display: flex; align-items: center; gap: 14px;
 }
 .hero-eyebrow::before {
   content: ''; display: block;
-  width: 40px; height: 1px; background: var(--gold);
+  width: 40px; height: 1px; background: rgba(255,255,255,.3);
 }
 .hero h1 {
   font-family: 'Instrument Serif', serif;
@@ -129,7 +145,7 @@
   background: var(--bg2);
   padding: 100px 60px;
   border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,.07);
 }
 .tentang-grid {
   display: grid;
@@ -269,7 +285,7 @@
   font-family: 'Instrument Sans', sans-serif;
   font-size: 0.65rem;           /* was .48rem ≈ 7.7px → now 10.4px */
   letter-spacing: .3em;
-  color: var(--black);
+  color: rgba(255,255,255,.4);
   text-transform: uppercase;
   margin-bottom: 6px;
 }
