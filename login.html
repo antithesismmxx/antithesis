@@ -78,13 +78,13 @@ body{min-height:100vh;display:flex;flex-direction:column;}
         <button class="btn btn-primary btn-full" id="btnLogin" style="margin-top:4px;background:#0a84ff;color:#fff;border-radius:10px;">Masuk →</button>
         <div class="login-link" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;text-align:center;">
           <a id="btnOpenPass" style="color:#0a84ff;font-size:.82rem;cursor:pointer;transition:color .25s;" onmouseover="this.style.color='#5ac8fa'" onmouseout="this.style.color='#0a84ff'">Lupa password?</a>
-          <a id="btnShowDaftar" style="color:#a1a1a6;font-size:.82rem;cursor:pointer;transition:color .25s;" onmouseover="this.style.color='#f5f5f7'" onmouseout="this.style.color='#a1a1a6'">Belum punya akun? <span style="color:#0a84ff;">Daftar di sini</span></a>
+          <a onclick="showDaftar()" style="color:#a1a1a6;font-size:.82rem;cursor:pointer;transition:color .25s;" onmouseover="this.style.color='#f5f5f7'" onmouseout="this.style.color='#a1a1a6'">Belum punya akun? <span style="color:#0a84ff;">Daftar di sini</span></a>
         </div>
       </div>
       <!-- DAFTAR (tersembunyi, muncul saat klik link) -->
       <div id="tab-daftar" style="display:none;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-          <button id="btnBackMasuk" style="background:none;border:none;color:#6e6e73;font-size:.82rem;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;" onmouseover="this.style.color='#f5f5f7'" onmouseout="this.style.color='#6e6e73'">← Kembali</button>
+          <button onclick="showMasuk()" style="background:none;border:none;color:#6e6e73;font-size:.82rem;cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;" onmouseover="this.style.color='#f5f5f7'" onmouseout="this.style.color='#6e6e73'">← Kembali</button>
         </div>
         <div class="login-title">Buat Akun</div>
         <div class="login-sub">Gunakan nama lengkap sesuai daftar anggota.</div>
@@ -115,6 +115,17 @@ body{min-height:100vh;display:flex;flex-direction:column;}
     </div>
   </div>
 </div>
+
+<script>
+function showDaftar(){
+  document.getElementById('tab-masuk').style.display='none';
+  document.getElementById('tab-daftar').style.display='block';
+}
+function showMasuk(){
+  document.getElementById('tab-daftar').style.display='none';
+  document.getElementById('tab-masuk').style.display='block';
+}
+</script>
 <script type="module" src="login.js"></script>
 </body>
 </html>
