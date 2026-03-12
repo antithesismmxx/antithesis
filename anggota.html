@@ -4,63 +4,47 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Direktori Anggota — ANTITHESIS</title>
->
->
->
-
-
-
 <link rel="stylesheet" href="style.css"/>
 <style>
-/* FILTER BAR */
-.filter-bar{background:var(--dark2);border-bottom:1px solid var(--border);padding:20px 60px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:70px;z-index:100;backdrop-filter:blur(10px);}
+.filter-bar{background:var(--bg2);border-bottom:.5px solid var(--border2);padding:16px 48px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:52px;z-index:100;backdrop-filter:blur(20px);}
 .search-wrap{position:relative;flex:1;min-width:200px;}
-.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.8rem;}
-.search-input{width:100%;background:var(--dark2);border:1px solid var(--border);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:1rem;padding:11px 14px 11px 36px;outline:none;transition:border-color .3s;}
-.search-input:focus{border-color:rgba(0,0,0,.4);}
-.search-input::placeholder{color:var(--muted);}
-.filter-pills{display:flex;gap:8px;flex-wrap:wrap;}
-.filter-pill{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.44rem;letter-spacing:.25em;text-transform:uppercase;padding:9px 16px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:var(--trans);}
-.filter-pill:hover{border-color:var(--border2);color:var(--text2);}
-.filter-pill.active{border-color:var(--blue);color:var(--black);background:var(--gold-dim);}
-.filter-count{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.85rem;font-style:italic;color:var(--muted);white-space:nowrap;}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:.75rem;}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:.88rem;padding:9px 14px 9px 32px;border-radius:var(--r);outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--blue);background:rgba(0,113,227,.05);}
+.search-input::placeholder{color:var(--muted2);}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.filter-pill{font-family:var(--font);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;background:transparent;border:.5px solid var(--border2);color:var(--muted);cursor:pointer;border-radius:var(--r);transition:var(--trans);}
+.filter-pill:hover{border-color:var(--border);color:var(--text2);}
+.filter-pill.active{border-color:var(--blue);color:var(--white);background:rgba(0,113,227,.1);}
+.filter-count{font-size:.8rem;color:var(--muted2);white-space:nowrap;}
 
-/* GRID */
-.anggota-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-top:36px;}
+.anggota-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:28px;}
 
-/* EDIT MODAL */
-.modal-overlay{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(16px);}
+.modal-overlay{position:fixed;inset:0;z-index:800;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(16px);}
 .modal-overlay.show{display:flex;}
-.modal-box{background:var(--dark2);border:1px solid var(--border2);width:100%;max-width:520px;margin:24px;max-height:90vh;overflow-y:auto;}
-.modal-head{padding:28px 28px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-title{font-family:'New York','Georgia',serif;font-size:1.4rem;font-weight:700;color:var(--text);}
-.modal-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;transition:color .3s;}
-.modal-close:hover{color:var(--black);}
-.modal-body{padding:24px 28px 28px;display:flex;flex-direction:column;gap:16px;}
+.modal-box{background:var(--bg2);border:.5px solid var(--border);width:100%;max-width:500px;margin:24px;max-height:90vh;overflow-y:auto;border-radius:var(--r-lg);}
+.modal-head{padding:24px 28px 18px;border-bottom:.5px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:var(--font-serif);font-size:1.3rem;font-weight:400;color:var(--white);letter-spacing:-.02em;}
+.modal-close{background:rgba(255,255,255,.07);border:none;color:var(--muted);font-size:1rem;cursor:pointer;width:28px;height:28px;border-radius:50%;transition:background .15s;}
+.modal-close:hover{background:rgba(255,255,255,.12);}
+.modal-body{padding:22px 28px 28px;display:flex;flex-direction:column;gap:14px;}
 
-/* FORM DAFTAR PROFIL */
-.daftar-panel{background:var(--dark2);border:1px solid var(--border);padding:40px;margin-bottom:40px;}
-.foto-area{border:1px dashed rgba(0,0,0,.25);background:rgba(0,0,0,.02);width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden;transition:border-color .3s;}
-.foto-area:hover{border-color:rgba(0,0,0,.5);}
+.daftar-panel{background:var(--bg2);border:.5px solid var(--border2);padding:32px;margin-bottom:32px;border-radius:var(--r-lg);}
+.foto-area{border:.5px dashed rgba(255,255,255,.15);background:rgba(255,255,255,.03);width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden;transition:border-color .2s;}
+.foto-area:hover{border-color:rgba(255,255,255,.3);}
 .foto-area img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
-.foto-area-ph{font-size:1.4rem;color:var(--muted);pointer-events:none;}
+.foto-area-ph{font-size:1.3rem;color:var(--muted);pointer-events:none;}
 .foto-input{position:absolute;inset:0;opacity:0;cursor:pointer;}
-.nama-err{display:none;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.46rem;letter-spacing:.18em;color:#e74c3c;margin-top:6px;padding:6px 10px;background:rgba(231,76,60,.06);border:1px solid rgba(231,76,60,.15);}
-.date-row{display:grid;grid-template-columns:2fr 3fr 2fr;gap:10px;}
-.lokasi-pills{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
-.lp{border:1px solid var(--border);background:transparent;color:var(--muted);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;padding:11px 10px;text-align:center;transition:var(--trans);cursor:pointer;}
-.lp:hover{border-color:var(--border2);color:var(--text2);}
-.lp.active{border-color:var(--blue);color:var(--black);background:var(--gold-dim);}
+.nama-err{display:none;font-family:var(--font);font-size:.78rem;color:#ff6b6b;margin-top:6px;padding:6px 10px;background:rgba(255,69,58,.05);border-left:2px solid #ff453a;}
 
 @media(max-width:960px){
-  .filter-bar{padding:14px 20px;}
-  .anggota-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
-  .daftar-panel{padding:24px 20px;}
+  .filter-bar{padding:12px 20px;}
+  .anggota-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
+  .daftar-panel{padding:20px;}
 }
 </style>
 </head>
 <body>
-
 <nav class="nav" id="mainNav">
   <a href="index.html" class="nav-brand">ANTITHESIS<span>Al Muayyad Surakarta · 2018–2020</span></a>
   <ul class="nav-links" id="navLinks">
@@ -70,7 +54,6 @@
     <li><a href="galeri.html">Kenangan</a></li>
     <li><a href="acara.html">Acara</a></li>
     <li><a href="profil.html">Profil</a></li>
-
     <li class="nav-mobile-logout"><button class="btn-logout" onclick="sessionStorage.clear();window.location.href='login.html'">Keluar</button></li>
   </ul>
   <div class="nav-user">
@@ -81,19 +64,16 @@
 </nav>
 
 <div class="page">
-  <!-- HERO -->
   <div class="page-hero">
     <div class="page-hero-label">Komunitas</div>
-    <h1 class="page-hero-deco" style="right:40px;top:50%;">👥</h1>
     <h1>Direktori <em>Anggota</em></h1>
     <p class="page-hero-sub">Temukan dan kenali kembali teman-teman angkatanmu.</p>
   </div>
 
-  <!-- FILTER BAR -->
   <div class="filter-bar">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" id="searchInput" type="text" placeholder="Cari nama..."/>
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="Cari nama anggota..."/>
     </div>
     <div class="filter-pills">
       <button class="filter-pill active" data-filter="all">Semua</button>
@@ -104,10 +84,7 @@
   </div>
 
   <div class="container section">
-    <!-- PROFIL SAYA / FORM DAFTAR -->
     <div id="profilFormWrap"></div>
-
-    <!-- GRID ANGGOTA -->
     <div class="sec-label rv">Semua Anggota</div>
     <div class="anggota-grid" id="anggotaGrid">
       <div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-text">Memuat data...</div></div>
@@ -115,46 +92,37 @@
   </div>
 </div>
 
-<!-- MODAL EDIT PROFIL -->
 <div class="modal-overlay" id="editModal">
   <div class="modal-box">
     <div class="modal-head">
-      <div class="modal-title">Edit <em style="font-style:italic;color:var(--black)">Profil</em></div>
+      <div class="modal-title">Edit <em style="font-style:italic;color:var(--text3)">Profil</em></div>
       <button class="modal-close" id="btnCloseEdit">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-group" style="margin-bottom:0;display:flex;gap:20px;align-items:center;">
         <div class="foto-area" id="editFotoArea">
           <img id="editFotoPreview" src="" alt="" style="display:none;"/>
-          <div class="foto-area-ph" id="editFotoPh">📷</div>
+          <div class="foto-area-ph" id="editFotoPh">◎</div>
           <input type="file" class="foto-input" id="editFotoInput" accept="image/*"/>
         </div>
         <div style="flex:1;">
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.95rem;font-style:italic;color:var(--muted);">Klik foto untuk mengganti gambar profil</div>
-          <div style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:.42rem;letter-spacing:.18em;color:var(--muted);margin-top:6px;text-transform:uppercase;">Max 150×150 px · JPEG</div>
+          <div style="font-size:.88rem;color:var(--muted);">Klik untuk mengganti foto profil</div>
+          <div style="font-size:.7rem;color:var(--muted2);margin-top:5px;">Max 150×150px · JPEG</div>
         </div>
       </div>
       <div class="form-group" style="margin-bottom:0;">
-        <label class="form-label">Kelas</label>
-        <select class="form-select" id="editKelas">
-          <option value="">— Pilih Kelas —</option>
-          <option value="IPA">IPA</option>
-          <option value="IPS">IPS</option>
-        </select>
+        <label class="form-label">Jurusan</label>
+        <select class="form-select" id="editKelas"><option value="">— Pilih Jurusan —</option><option value="IPA">IPA</option><option value="IPS">IPS</option></select>
       </div>
       <div class="form-group" style="margin-bottom:0;">
         <label class="form-label">Sekolah</label>
-        <select class="form-select" id="editSekolah">
-          <option value="">— Pilih Sekolah —</option>
-          <option value="SMA">SMA Al Muayyad</option>
-          <option value="MA">MA Al Muayyad</option>
-        </select>
+        <select class="form-select" id="editSekolah"><option value="">— Pilih Sekolah —</option><option value="SMA">SMA Al Muayyad</option><option value="MA">MA Al Muayyad</option></select>
       </div>
       <div class="form-group" style="margin-bottom:0;">
         <label class="form-label">Motto / Quote</label>
         <input class="form-input" id="editMotto" type="text" placeholder="Motto hidupmu..."/>
       </div>
-      <div class="form-err" id="editErr" style="display:none;"></div>
+      <div class="form-err" id="editErr" style="display:none;margin-bottom:0;"></div>
       <button class="btn btn-primary btn-full" id="btnSaveEdit">Simpan Perubahan →</button>
     </div>
   </div>
@@ -167,134 +135,54 @@
 </footer>
 
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getDatabase,ref,onValue,get,set,push,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-const db=getDatabase(initializeApp({databaseURL:"https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",apiKey:"AIzaSyExample",projectId:"antithesis-al-muayyad",appId:"1:1014116431079:web:5f490096bf6ecdf7011e42"}));
+import{initializeApp,getApps}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getDatabase,ref,onValue,get,push,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const nama=sessionStorage.getItem('antithesis_member');
 const username=sessionStorage.getItem('antithesis_username');
 if(!nama){window.location.href='login.html';}
+const app=getApps().length===0?initializeApp({apiKey:"AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",authDomain:"antithesis-al-muayyad.firebaseapp.com",databaseURL:"https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"antithesis-al-muayyad",storageBucket:"antithesis-al-muayyad.appspot.com",messagingSenderId:"1014116431079",appId:"1:1014116431079:web:5f490096bf6ecdf7011e42"}):getApps()[0];
+const db=getDatabase(app);
 document.getElementById('navNama').textContent=nama;
 document.getElementById('btnLogout').addEventListener('click',()=>{sessionStorage.clear();window.location.href='login.html';});
 document.getElementById('navHam').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
-
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
-
 let allAnggota=[],myProfilKey=null,filterActive='all';
-
-// ── Foto compress ──
-function compressFoto(file){
-  return new Promise(res=>{
-    const img=new Image();img.onload=()=>{
-      const c=document.createElement('canvas');
-      const max=150;const r=Math.min(max/img.width,max/img.height,1);
-      c.width=img.width*r;c.height=img.height*r;
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      let q=0.5;let out=c.toDataURL('image/jpeg',q);
-      while(out.length>50000&&q>0.2){q-=0.05;out=c.toDataURL('image/jpeg',q);}
-      res(out);
-    };img.src=URL.createObjectURL(file);
-  });
-}
-
-// ── Render grid ──
+function compressFoto(file){return new Promise(res=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const max=150;const r=Math.min(max/img.width,max/img.height,1);c.width=img.width*r;c.height=img.height*r;c.getContext('2d').drawImage(img,0,0,c.width,c.height);let q=0.5;let out=c.toDataURL('image/jpeg',q);while(out.length>50000&&q>0.2){q-=0.05;out=c.toDataURL('image/jpeg',q);}res(out);};img.src=URL.createObjectURL(file);});}
 function renderGrid(){
   const q=document.getElementById('searchInput').value.toLowerCase();
-  const filtered=allAnggota.filter(a=>{
-    if(filterActive!=='all'&&a.sekolah!==filterActive)return false;
-    if(q&&!(a.nama||'').toLowerCase().includes(q))return false;
-    return true;
-  });
+  const filtered=allAnggota.filter(a=>{if(filterActive!=='all'&&a.sekolah!==filterActive)return false;if(q&&!(a.nama||'').toLowerCase().includes(q))return false;return true;});
   document.getElementById('filterCount').textContent=filtered.length+' anggota';
   const grid=document.getElementById('anggotaGrid');
-  if(!filtered.length){grid.innerHTML='<div class="empty-state"><div class="empty-state-icon">🔍</div><div class="empty-state-text">Tidak ditemukan.</div></div>';return;}
+  if(!filtered.length){grid.innerHTML='<div class="empty-state"><div class="empty-state-icon">◎</div><div class="empty-state-text">Tidak ditemukan.</div></div>';return;}
   grid.innerHTML=filtered.map(a=>{
     const isMe=a.__key===myProfilKey;
-    const avatar=a.foto?`<img class="member-avatar" src="${a.foto}" alt=""/>`:`<div class="member-avatar-placeholder">👤</div>`;
-    const editBtn=isMe?`<button onclick="openEdit()" class="btn btn-outline" style="font-size:.42rem;padding:8px 14px;margin-top:12px;">Edit Profil</button>`:'';
-    return`<div class="member-card">
-      ${avatar}
-      <div class="member-name">${a.nama}</div>
-      <div class="member-meta">${a.kelas?a.kelas+' · ':''}${a.sekolah?a.sekolah+' Al Muayyad':''}</div>
-      ${a.motto?`<div class="member-motto">"${a.motto}"</div>`:''}
-      ${editBtn}
-    </div>`;
+    const avatar=a.foto?`<img class="member-avatar" src="${a.foto}" alt=""/>`:`<div class="member-avatar-placeholder">◎</div>`;
+    const editBtn=isMe?`<button onclick="openEdit()" class="btn btn-outline btn-sm" style="margin-top:12px;font-size:.68rem;">Edit</button>`:'';
+    return`<div class="member-card">${avatar}<div class="member-name">${a.nama}</div><div class="member-meta">${a.kelas?a.kelas+' · ':''}${a.sekolah?a.sekolah+' Al Muayyad':''}</div>${a.motto?`<div class="member-motto">"${a.motto}"</div>`:''}${editBtn}</div>`;
   }).join('');
 }
-
-// ── Firebase listener ──
 onValue(ref(db,'antithesis/anggota'),snap=>{
   const raw=snap.val()||{};
   allAnggota=Object.entries(raw).map(([k,v])=>({__key:k,...v}));
   myProfilKey=null;
-  allAnggota.forEach(a=>{
-    if((a.username===username)||(a.nama||'').toLowerCase()===nama.toLowerCase())myProfilKey=a.__key;
-  });
+  allAnggota.forEach(a=>{if((a.username===username)||(a.nama||'').toLowerCase()===nama.toLowerCase())myProfilKey=a.__key;});
   renderGrid();
   renderProfilForm();
 });
-
-// ── Search & filter ──
 document.getElementById('searchInput').addEventListener('input',renderGrid);
-document.querySelectorAll('.filter-pill').forEach(p=>p.addEventListener('click',function(){
-  document.querySelectorAll('.filter-pill').forEach(x=>x.classList.remove('active'));
-  this.classList.add('active');filterActive=this.dataset.filter;renderGrid();
-}));
-
-// ── Form daftar / edit button ──
+document.querySelectorAll('.filter-pill').forEach(p=>p.addEventListener('click',function(){document.querySelectorAll('.filter-pill').forEach(x=>x.classList.remove('active'));this.classList.add('active');filterActive=this.dataset.filter;renderGrid();}));
 function renderProfilForm(){
   const wrap=document.getElementById('profilFormWrap');
   if(myProfilKey){
-    wrap.innerHTML=`<div class="daftar-panel rv" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:32px;">
-      <div><div class="sec-label" style="margin-bottom:4px;">Profilmu</div><div style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',system-ui,sans-serif;font-size:1rem;font-style:italic;color:var(--muted);">Profil kamu sudah ada di direktori.</div></div>
-      <button onclick="openEdit()" class="btn btn-outline">Edit Profil →</button>
-    </div>`;
-  }else{
-    wrap.innerHTML=renderDaftarForm();
-    bindDaftarForm();
-  }
-  obs.observe(wrap.querySelector('.daftar-panel'));
+    wrap.innerHTML=`<div class="daftar-panel rv" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:28px;"><div><div class="sec-label" style="margin-bottom:4px;">Profilmu</div><div style="font-size:.9rem;color:var(--muted);">Profilmu sudah ada di direktori.</div></div><button onclick="openEdit()" class="btn btn-outline btn-sm">Edit Profil →</button></div>`;
+  }else{wrap.innerHTML='';}
+  const el=wrap.querySelector('.daftar-panel');
+  if(el)obs.observe(el);
 }
-
-function renderDaftarForm(){
-  return``;
-}
-
-function bindDaftarForm(){
-  let fotoData=null;
-  const inp=document.getElementById('daftarFotoInput');
-  if(inp)inp.addEventListener('change',async function(){
-    if(!this.files[0])return;
-    fotoData=await compressFoto(this.files[0]);
-    document.getElementById('daftarFotoPreview').src=fotoData;
-    document.getElementById('daftarFotoPreview').style.display='block';
-    document.getElementById('daftarFotoPh').style.display='none';
-  });
-  const btn=document.getElementById('btnSubmitDaftar');
-  if(btn)btn.addEventListener('click',async()=>{
-    const nmVal=document.getElementById('dfNama').value.trim();
-    const sekolah=document.getElementById('dfSekolah').value;
-    const kelas=document.getElementById('dfKelas').value;
-    const motto=document.getElementById('dfMotto').value.trim();
-    const errEl=document.getElementById('daftarErr');
-    errEl.style.display='none';
-    if(!sekolah){errEl.textContent='✕ Pilih sekolah';errEl.style.display='block';return;}
-    // Cek whitelist
-    const wlSnap=await get(ref(db,'antithesis/whitelist'));
-    const wl=wlSnap.val()||{};
-    const ok=Object.values(wl).some(v=>{const n=typeof v==='string'?v:(v.nama||'');return n.toLowerCase()===nmVal.toLowerCase();});
-    if(!ok){document.getElementById('namaErr').style.display='block';return;}
-    document.getElementById('namaErr').style.display='none';
-    const data={nama:nmVal,sekolah,kelas,motto,username,foto:fotoData||''};
-    push(ref(db,'antithesis/anggota'),data);
-  });
-}
-
-// ── Edit modal ──
 let editFotoData=null;
 window.openEdit=function(){
-  const me=allAnggota.find(a=>a.__key===myProfilKey);
-  if(!me)return;
+  const me=allAnggota.find(a=>a.__key===myProfilKey);if(!me)return;
   document.getElementById('editKelas').value=me.kelas||'';
   document.getElementById('editSekolah').value=me.sekolah||'';
   document.getElementById('editMotto').value=me.motto||'';
@@ -305,13 +193,7 @@ window.openEdit=function(){
 };
 document.getElementById('btnCloseEdit').addEventListener('click',()=>document.getElementById('editModal').classList.remove('show'));
 document.getElementById('editModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');});
-document.getElementById('editFotoInput').addEventListener('change',async function(){
-  if(!this.files[0])return;
-  editFotoData=await compressFoto(this.files[0]);
-  document.getElementById('editFotoPreview').src=editFotoData;
-  document.getElementById('editFotoPreview').style.display='block';
-  document.getElementById('editFotoPh').style.display='none';
-});
+document.getElementById('editFotoInput').addEventListener('change',async function(){if(!this.files[0])return;editFotoData=await compressFoto(this.files[0]);document.getElementById('editFotoPreview').src=editFotoData;document.getElementById('editFotoPreview').style.display='block';document.getElementById('editFotoPh').style.display='none';});
 document.getElementById('btnSaveEdit').addEventListener('click',async()=>{
   const kelas=document.getElementById('editKelas').value;
   const sekolah=document.getElementById('editSekolah').value;
