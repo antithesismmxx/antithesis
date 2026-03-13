@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Daftar Akun — ANTITHESIS</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.login-page{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;}
+@media(max-width:768px){.login-page{grid-template-columns:1fr;}}
+
+.login-left{
+  position:relative;
+  background:radial-gradient(ellipse at 30% 60%,rgba(201,168,76,.08) 0%,transparent 70%),#0a0a0a;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:36px 48px 48px;
+  overflow:hidden;
+}
+@media(max-width:768px){.login-left{display:none;}}
+.login-left-quote{
+  font-family:var(--font-serif);font-size:2.4rem;font-weight:400;
+  line-height:1.25;color:var(--white);max-width:380px;
+}
+.login-left-quote .highlight{color:#c9a84c;font-style:normal;}
+
+.login-right{
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:48px 40px;
+}
+@media(max-width:480px){.login-right{padding:32px 20px;}}
+
+.login-box{width:100%;max-width:400px;}
+.login-title{font-size:1.9rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.login-sub{font-size:.9rem;color:var(--muted);margin-bottom:24px;}
+
+.field-group{margin-bottom:16px;}
+.field-label{display:block;font-size:.78rem;font-weight:500;color:var(--muted);margin-bottom:7px;}
+.field-hint{font-size:.7rem;color:var(--muted2);margin-top:5px;font-style:italic;}
+.field-input-wrap{position:relative;}
+.field-input{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:.5px solid rgba(255,255,255,.1);
+  color:var(--white);
+  font-family:var(--font);font-size:.92rem;
+  padding:11px 14px;
+  border-radius:var(--r);
+  outline:none;
+  transition:border-color .15s;
+}
+.field-input:focus{border-color:var(--blue);}
+.field-input::placeholder{color:var(--muted2);}
+.field-input.has-toggle{padding-right:44px;}
+
+.btn-toggle-pass{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--muted2);font-size:.9rem;line-height:1;
+  padding:4px;transition:color .15s;
+}
+.btn-toggle-pass:hover{color:var(--white);}
+
+.msg-err{
+  font-size:.78rem;color:#ff6b6b;
+  background:rgba(255,69,58,.06);border:.5px solid rgba(255,69,58,.2);
+  padding:10px 14px;border-radius:var(--r);
+  margin-bottom:14px;display:none;
+}
+
+.btn-login{
+  width:100%;
+  background:var(--blue);color:#fff;
+  font-family:var(--font);font-size:.92rem;font-weight:500;
+  padding:12px;
+  border:none;border-radius:var(--r);
+  cursor:pointer;
+  transition:background .15s,opacity .15s;
+}
+.btn-login:hover:not(:disabled){background:var(--blue2);}
+.btn-login:disabled{opacity:.45;cursor:not-allowed;}
+
+.login-footer{
+  margin-top:22px;text-align:center;
+  font-size:.82rem;color:var(--muted);
+}
+.login-footer a{color:var(--blue);text-decoration:none;transition:opacity .15s;}
+.login-footer a:hover{opacity:.75;}
+.login-footer-sep{display:block;margin-top:8px;}
+
+.info-box{
+  font-size:.76rem;color:rgba(201,168,76,.8);
+  background:rgba(201,168,76,.05);border:.5px solid rgba(201,168,76,.2);
+  padding:10px 14px;border-radius:var(--r);
+  margin-bottom:20px;line-height:1.7;
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a href="index.html" class="nav-brand">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="19" stroke="currentColor" stroke-width="1.2" opacity=".4"/>
+      <path d="M20 8 L28 28 H12 Z" stroke="currentColor" stroke-width="1.4" fill="none" opacity=".7"/>
+    </svg>
+  </a>
+  <nav class="nav-links">
+    <a href="login.html" class="nav-link">← Masuk</a>
+  </nav>
+</header>
+
+<div class="login-page">
+
+  <div class="login-left">
+    <div></div>
+    <div class="login-left-quote">
+      Bergabunglah dan jadilah bagian dari<br>
+      kenangan yang <span class="highlight">tidak terlupakan.</span>
+    </div>
+    <div></div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-box">
+
+      <h1 class="login-title">Buat Akun</h1>
+      <p class="login-sub">Gunakan nama lengkap sesuai daftar anggota.</p>
+
+      <div class="info-box">
+        ✦ Hanya anggota ANTITHESIS yang terdaftar yang dapat membuat akun. Setelah daftar, cek email untuk verifikasi.
+      </div>
+
+      <!-- Nama Lengkap -->
+      <div class="field-group">
+        <label class="field-label" for="regNama">Nama Lengkap</label>
+        <input class="field-input" type="text" id="regNama"
+               placeholder="Sesuai daftar anggota..." autocomplete="name"/>
+        <div class="field-hint">Harus sesuai dengan nama di database anggota.</div>
+      </div>
+
+      <!-- Email -->
+      <div class="field-group">
+        <label class="field-label" for="regEmail">Email</label>
+        <input class="field-input" type="email" id="regEmail"
+               placeholder="nama@email.com" autocomplete="email"/>
+        <div class="field-hint">Link verifikasi akan dikirim ke email ini.</div>
+      </div>
+
+      <!-- Username -->
+      <div class="field-group">
+        <label class="field-label" for="regUsername">Username</label>
+        <input class="field-input" type="text" id="regUsername"
+               placeholder="Bebas, tanpa spasi..." autocomplete="username"/>
+        <div class="field-hint">Ditampilkan di profil dan aktivitas kamu.</div>
+      </div>
+
+      <!-- Password -->
+      <div class="field-group">
+        <label class="field-label" for="regPass">Password</label>
+        <div class="field-input-wrap">
+          <input class="field-input has-toggle" type="password" id="regPass"
+                 placeholder="Min. 8 karakter..." autocomplete="new-password"/>
+          <button class="btn-toggle-pass" id="togglePass" tabindex="-1" type="button">👁</button>
+        </div>
+        <div class="field-hint">Min. 8 karakter, harus ada huruf besar dan angka.</div>
+      </div>
+
+      <!-- Konfirmasi Password -->
+      <div class="field-group">
+        <label class="field-label" for="regPass2">Konfirmasi Password</label>
+        <div class="field-input-wrap">
+          <input class="field-input has-toggle" type="password" id="regPass2"
+                 placeholder="Ulangi password..." autocomplete="new-password"/>
+          <button class="btn-toggle-pass" id="togglePass2" tabindex="-1" type="button">👁</button>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div class="msg-err" id="regErr"></div>
+
+      <!-- Tombol -->
+      <button class="btn-login" id="btnDaftar">Daftar →</button>
+
+      <div class="login-footer">
+        <span class="login-footer-sep">
+          Sudah punya akun? <a href="login.html">Masuk di sini</a>
+        </span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="module" src="register.js"></script>
+</body>
+</html>
