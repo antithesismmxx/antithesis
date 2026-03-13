@@ -46,8 +46,10 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center;just
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,applyActionCode,checkActionCode,sendEmailVerification,signInWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getAuth,applyActionCode,checkActionCode,sendEmailVerification,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getDatabase,ref,get}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 const app=initializeApp({apiKey:"AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",authDomain:"antithesis-al-muayyad.firebaseapp.com",databaseURL:"https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"antithesis-al-muayyad",storageBucket:"antithesis-al-muayyad.firebasestorage.app",messagingSenderId:"1014116431079",appId:"1:1014116431079:web:5f490096bf6ecdf7011e42"});
+const db=getDatabase(app);
 const auth=getAuth(app);
 const params=new URLSearchParams(window.location.search);
 const mode=params.get('mode');const oobCode=params.get('oobCode');
@@ -69,7 +71,27 @@ function bindResend(){
 }
 if(mode==='verifyEmail'&&oobCode){
   msg.textContent='Sedang memverifikasi email kamu...';
-  try{const info=await checkActionCode(auth,oobCode);const email=info.data.email||'';await applyActionCode(auth,oobCode);icon.textContent='✅';title.innerHTML='Email <em>Terverifikasi!</em>';msg.innerHTML=`Email <span class="verify-email">${email}</span> berhasil diverifikasi.<br><br>Kamu sekarang bisa masuk ke portal ANTITHESIS.`;showStatus('ok','✦ Verifikasi berhasil!');actions.innerHTML=btnLogin();}
+  try{const info=await checkActionCode(auth,oobCode);const email=info.data.email||'';await applyActionCode(auth,oobCode);
+  // Ambil data akun dari DB lalu set session dan redirect ke dashboard
+  const user=auth.currentUser;
+  if(user){
+    const snap=await get(ref(db,'antithesis/akun/'+user.uid));
+    const data=snap.val()||{};
+    const nama=data.nama||user.displayName||email.split('@')[0];
+    const username=data.username||user.displayName||email.split('@')[0];
+    sessionStorage.setItem('antithesis_member',nama);
+    sessionStorage.setItem('antithesis_username',username);
+    sessionStorage.setItem('antithesis_uid',user.uid);
+    icon.textContent='✅';title.innerHTML='Email <em>Terverifikasi!</em>';
+    msg.innerHTML=`Selamat datang, <span class="verify-email">${nama}</span>!<br><br>Mengalihkan ke dashboard...`;
+    showStatus('ok','✦ Verifikasi berhasil! Mengalihkan...');
+    setTimeout(()=>{window.location.href='dashboard.html';},2000);
+  }else{
+    // Fallback: user tidak ter-auth otomatis, minta login manual
+    icon.textContent='✅';title.innerHTML='Email <em>Terverifikasi!</em>';
+    msg.innerHTML=`Email <span class="verify-email">${email}</span> berhasil diverifikasi.<br><br>Kamu sekarang bisa masuk ke portal ANTITHESIS.`;
+    showStatus('ok','✦ Verifikasi berhasil!');actions.innerHTML=btnLogin();
+  }}
   catch(e){icon.textContent='⚠️';title.innerHTML='Link <em>Kadaluarsa</em>';msg.innerHTML='Link verifikasi sudah tidak berlaku. Masukkan email & password untuk mendapatkan link baru.';showStatus('err','Link tidak valid atau sudah expired');actions.innerHTML=inputForm('');bindResend();}
 }else if(mode==='resetPassword'&&oobCode){window.location.href='login.html?mode=resetPassword&oobCode='+oobCode;}
 else{icon.textContent='📧';title.innerHTML='Verifikasi <em>Email</em>';msg.innerHTML='Belum menerima email verifikasi? Masukkan email dan password untuk mengirim ulang.';actions.innerHTML=inputForm('');bindResend();}
