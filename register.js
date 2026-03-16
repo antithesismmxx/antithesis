@@ -1,18 +1,13 @@
 // ══════════════════════════════════════════════
 //  register.js — Pendaftaran Akun ANTITHESIS
+//  OTP via EmailJS (tanpa link verifikasi)
 // ══════════════════════════════════════════════
 
-import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  signOut,
-  updateProfile
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getDatabase, ref, get, set
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, remove }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
@@ -23,6 +18,11 @@ const firebaseConfig = {
   messagingSenderId: "1014116431079",
   appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
 };
+
+// EmailJS config
+const EJS_SERVICE  = "service_0ol6msu";
+const EJS_TEMPLATE = "ruyjgfi";
+const EJS_KEY      = "1fX9LqfKW5TjfdabInwWJ";
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -42,7 +42,7 @@ function hideErr() {
 function setLoading(loading) {
   const btn = document.getElementById('btnDaftar');
   if (!btn) return;
-  btn.disabled = loading;
+  btn.disabled    = loading;
   btn.style.opacity = loading ? '0.6' : '1';
   btn.textContent = loading ? 'Memproses...' : 'Daftar →';
 }
@@ -53,9 +53,22 @@ function friendlyError(code) {
     'auth/invalid-email':           '✕  Format email tidak valid',
     'auth/weak-password':           '✕  Password terlalu lemah (min 6 karakter)',
     'auth/network-request-failed':  '✕  Gagal terhubung ke server',
-    'PERMISSION_DENIED':            '✕  Akses ditolak — hubungi admin untuk update rules Firebase',
   };
   return map[code] || '✕  Terjadi kesalahan: ' + code;
+}
+
+// ── Generate OTP 6 digit ──
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
+}
+
+// ── Kirim OTP via EmailJS ──
+async function kirimOTP(toEmail, nama, otp) {
+  await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+    to_email: toEmail,
+    nama:     nama,
+    otp_code: otp
+  }, EJS_KEY);
 }
 
 // ── Toggle password ──
@@ -92,17 +105,13 @@ async function doDaftar() {
   setLoading(true);
 
   try {
-    // ── 1. Cek whitelist (butuh rules: whitelist .read = true) ──
+    // ── 1. Cek whitelist ──
     let whitelist = {};
     try {
       const wSnap = await get(ref(db, 'antithesis/whitelist'));
       whitelist = wSnap.val() || {};
-    } catch (e) {
-      // Jika whitelist tidak bisa dibaca, lewati cek (akan divalidasi admin)
-      console.warn('Whitelist tidak bisa dibaca:', e.message);
-    }
+    } catch(e) { console.warn('Whitelist skip:', e.message); }
 
-    // Cek nama di whitelist (skip jika whitelist kosong/tidak bisa dibaca)
     if (Object.keys(whitelist).length > 0) {
       const namaLower = nama.toLowerCase().trim();
       const cocok = Object.values(whitelist).find(v => {
@@ -118,32 +127,36 @@ async function doDaftar() {
     // ── 2. Buat akun Firebase Auth ──
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     const user = cred.user;
-
-    // ── 3. Update display name ──
     await updateProfile(user, { displayName: nama });
-
-    // ── 4. Simpan ke database ──
-    try {
-      await set(ref(db, 'antithesis/akun/' + user.uid), {
-        nama:      nama,
-        email:     email,
-        banned:    false,
-        createdAt: Date.now()
-      });
-    } catch (e) {
-      // Auth berhasil tapi DB gagal — tetap lanjut verifikasi email
-      console.warn('Gagal simpan ke DB:', e.message);
-    }
-
-    // ── 5. Kirim email verifikasi ──
-    await sendEmailVerification(user);
     await signOut(auth);
 
-    // ── 6. Redirect ke verify ──
-    const hint = btoa(email).replace(/=/g, '');
-    window.location.href = `verify.html?hint=${hint}&reason=newreg`;
+    // ── 3. Simpan data akun (belum verified) ──
+    await set(ref(db, 'antithesis/akun/' + user.uid), {
+      nama,
+      email,
+      banned:   false,
+      verified: false,
+      createdAt: Date.now()
+    });
 
-  } catch (err) {
+    // ── 4. Generate & simpan OTP ──
+    const otp     = generateOTP();
+    const expired = Date.now() + (10 * 60 * 1000); // 10 menit
+    await set(ref(db, 'antithesis/otp/' + user.uid), {
+      kode:    otp,
+      email:   email,
+      expired: expired
+    });
+
+    // ── 5. Kirim OTP via EmailJS ──
+    await kirimOTP(email, nama, otp);
+
+    // ── 6. Redirect ke verify ──
+    const uidEnc = btoa(user.uid).replace(/=/g, '');
+    const hint   = btoa(email).replace(/=/g, '');
+    window.location.href = `verify.html?uid=${uidEnc}&hint=${hint}&reason=newreg`;
+
+  } catch(err) {
     console.error('Register error:', err);
     showErr(friendlyError(err.code || err.message));
     setLoading(false);
