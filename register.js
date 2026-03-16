@@ -1,12 +1,12 @@
 // ══════════════════════════════════════════════
 //  register.js — Pendaftaran Akun ANTITHESIS
-//  OTP via EmailJS (tanpa link verifikasi)
+//  OTP via EmailJS + rollback jika DB gagal
 // ══════════════════════════════════════════════
 
 import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, updateProfile, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, get, set, remove }
+import { getDatabase, ref, get, set }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
@@ -19,7 +19,6 @@ const firebaseConfig = {
   appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
 };
 
-// EmailJS config
 const EJS_SERVICE  = "service_0ol6msu";
 const EJS_TEMPLATE = "ruyjgfi";
 const EJS_KEY      = "1fX9LqfKW5TjfdabInwWJ";
@@ -42,9 +41,9 @@ function hideErr() {
 function setLoading(loading) {
   const btn = document.getElementById('btnDaftar');
   if (!btn) return;
-  btn.disabled    = loading;
+  btn.disabled      = loading;
   btn.style.opacity = loading ? '0.6' : '1';
-  btn.textContent = loading ? 'Memproses...' : 'Daftar →';
+  btn.textContent   = loading ? 'Memproses...' : 'Daftar →';
 }
 
 function friendlyError(code) {
@@ -57,12 +56,10 @@ function friendlyError(code) {
   return map[code] || '✕  Terjadi kesalahan: ' + code;
 }
 
-// ── Generate OTP 6 digit ──
 function generateOTP() {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
-// ── Kirim OTP via EmailJS ──
 async function kirimOTP(toEmail, nama, otp) {
   await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
     to_email: toEmail,
@@ -71,7 +68,6 @@ async function kirimOTP(toEmail, nama, otp) {
   }, EJS_KEY);
 }
 
-// ── Toggle password ──
 function setupToggle(btnId, inputId) {
   const btn = document.getElementById(btnId);
   if (!btn) return;
@@ -92,17 +88,13 @@ async function doDaftar() {
   const pass  = document.getElementById('regPass')?.value;
   const pass2 = document.getElementById('regPass2')?.value;
 
-  if (!nama || !email || !pass || !pass2) {
-    showErr('✕  Lengkapi semua field'); return;
-  }
-  if (pass.length < 6) {
-    showErr('✕  Password minimal 6 karakter'); return;
-  }
-  if (pass !== pass2) {
-    showErr('✕  Password tidak cocok'); return;
-  }
+  if (!nama || !email || !pass || !pass2) { showErr('✕  Lengkapi semua field'); return; }
+  if (pass.length < 6)  { showErr('✕  Password minimal 6 karakter'); return; }
+  if (pass !== pass2)   { showErr('✕  Password tidak cocok'); return; }
 
   setLoading(true);
+
+  let userCreated = null; // simpan referensi user untuk rollback
 
   try {
     // ── 1. Cek whitelist ──
@@ -126,23 +118,23 @@ async function doDaftar() {
 
     // ── 2. Buat akun Firebase Auth ──
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const user = cred.user;
-    await updateProfile(user, { displayName: nama });
-    await signOut(auth);
+    userCreated = cred.user;
+    await updateProfile(userCreated, { displayName: nama });
+    // Belum signOut — masih perlu user aktif untuk rollback jika gagal
 
-    // ── 3. Simpan data akun (belum verified) ──
-    await set(ref(db, 'antithesis/akun/' + user.uid), {
+    // ── 3. Simpan data akun ke DB ──
+    await set(ref(db, 'antithesis/akun/' + userCreated.uid), {
       nama,
       email,
-      banned:   false,
-      verified: false,
+      banned:    false,
+      verified:  false,
       createdAt: Date.now()
     });
 
     // ── 4. Generate & simpan OTP ──
     const otp     = generateOTP();
     const expired = Date.now() + (10 * 60 * 1000); // 10 menit
-    await set(ref(db, 'antithesis/otp/' + user.uid), {
+    await set(ref(db, 'antithesis/otp/' + userCreated.uid), {
       kode:    otp,
       email:   email,
       expired: expired
@@ -151,14 +143,27 @@ async function doDaftar() {
     // ── 5. Kirim OTP via EmailJS ──
     await kirimOTP(email, nama, otp);
 
-    // ── 6. Redirect ke verify ──
-    const uidEnc = btoa(user.uid).replace(/=/g, '');
+    // ── 6. Semua sukses → logout & redirect ──
+    const uidEnc = btoa(userCreated.uid).replace(/=/g, '');
     const hint   = btoa(email).replace(/=/g, '');
+    await signOut(auth);
     window.location.href = `verify.html?uid=${uidEnc}&hint=${hint}&reason=newreg`;
 
   } catch(err) {
     console.error('Register error:', err);
-    showErr(friendlyError(err.code || err.message));
+
+    // ── Rollback: hapus akun Auth supaya email bisa didaftarkan ulang ──
+    if (userCreated) {
+      try { await userCreated.delete(); console.log('Rollback Auth berhasil'); }
+      catch(re) { console.warn('Rollback gagal:', re.message); }
+    }
+
+    // Pesan error yang ramah
+    if (err.message && err.message.includes('PERMISSION_DENIED')) {
+      showErr('✕  Akses ditolak — minta admin update Firebase Rules');
+    } else {
+      showErr(friendlyError(err.code || err.message));
+    }
     setLoading(false);
   }
 }
