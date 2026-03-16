@@ -10,80 +10,74 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center;just
 .verify-wrap{width:100%;max-width:460px;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r-xl);position:relative;overflow:hidden;}
 .verify-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:linear-gradient(to right,transparent,rgba(201,168,76,.35),transparent);}
 
-/* Head */
 .verify-head{padding:36px 36px 24px;border-bottom:.5px solid var(--border2);text-align:center;}
 .verify-icon{font-size:2.8rem;margin-bottom:14px;display:block;}
 .verify-title{font-family:var(--font-serif);font-size:1.7rem;font-weight:400;color:var(--white);letter-spacing:-.025em;}
 .verify-title em{font-style:italic;color:var(--text3);}
 
-/* Body */
 .verify-body{padding:28px 36px 32px;}
 
-/* Info konteks */
-.verify-context{
-  background:rgba(201,168,76,.06);
-  border:.5px solid rgba(201,168,76,.2);
-  border-radius:var(--r);
-  padding:14px 16px;
-  margin-bottom:22px;
-}
-.verify-context-step{
-  display:flex;align-items:flex-start;gap:12px;
-  font-size:.84rem;color:rgba(201,168,76,.85);
-  line-height:1.6;
-}
-.verify-context-step + .verify-context-step{margin-top:10px;padding-top:10px;border-top:.5px solid rgba(201,168,76,.12);}
-.step-num{
-  min-width:22px;height:22px;border-radius:50%;
-  background:rgba(201,168,76,.15);border:.5px solid rgba(201,168,76,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;font-weight:700;color:#c9a84c;
-  margin-top:1px;flex-shrink:0;
-}
+/* Steps */
+.verify-context{background:rgba(201,168,76,.06);border:.5px solid rgba(201,168,76,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:22px;}
+.verify-context-step{display:flex;align-items:flex-start;gap:12px;font-size:.84rem;color:rgba(201,168,76,.85);line-height:1.6;}
+.verify-context-step+.verify-context-step{margin-top:10px;padding-top:10px;border-top:.5px solid rgba(201,168,76,.12);}
+.step-num{min-width:22px;height:22px;border-radius:50%;background:rgba(201,168,76,.15);border:.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#c9a84c;margin-top:1px;flex-shrink:0;}
+.step-done{color:#30d158 !important;background:rgba(48,209,88,.12) !important;border-color:rgba(48,209,88,.3) !important;}
 
 /* Email badge */
-.email-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.1);
-  border-radius:var(--r);padding:10px 14px;
-  font-size:.88rem;color:var(--white);font-weight:500;
-  margin-bottom:20px;width:100%;
-}
-.email-badge-icon{opacity:.5;font-size:.9rem;}
-.email-badge-label{font-size:.65rem;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px;}
+.email-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.1);border-radius:var(--r);padding:10px 14px;font-size:.88rem;color:var(--white);font-weight:500;margin-bottom:20px;width:100%;box-sizing:border-box;}
+.email-badge-icon{opacity:.45;font-size:1rem;}
+.email-badge-label{font-size:.62rem;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px;}
 
-/* Pesan biasa */
-.verify-msg{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:20px;text-align:center;}
+/* OTP Input */
+.otp-wrap{display:flex;gap:10px;justify-content:center;margin:20px 0;}
+.otp-input{
+  width:48px;height:58px;
+  background:rgba(255,255,255,.05);
+  border:.5px solid rgba(255,255,255,.15);
+  border-radius:var(--r);
+  color:var(--white);
+  font-family:var(--font-serif);
+  font-size:1.6rem;font-weight:400;
+  text-align:center;outline:none;
+  transition:border-color .15s, background .15s;
+  caret-color:transparent;
+}
+.otp-input:focus{border-color:var(--blue);background:rgba(0,113,227,.08);}
+.otp-input.filled{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05);}
+.otp-input.err{border-color:rgba(255,69,58,.5) !important;background:rgba(255,69,58,.05) !important;}
 
 /* Status */
-.verify-status{text-align:center;padding:10px 16px;font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:18px;display:none;border-radius:var(--r);}
+.verify-status{text-align:center;padding:10px 16px;font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;display:none;border-radius:var(--r);}
 .verify-status.ok{background:rgba(48,209,88,.06);border:.5px solid rgba(48,209,88,.18);color:rgba(48,209,88,.9);}
 .verify-status.err{background:rgba(255,69,58,.06);border:.5px solid rgba(255,69,58,.18);color:#ff6b6b;}
 .verify-status.show{display:block;}
 
-/* Input */
-.dark-input-wrap{position:relative;margin-bottom:10px;}
-.dark-input{width:100%;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font);font-size:.9rem;padding:11px 14px;border-radius:var(--r);outline:none;transition:border-color .15s;box-sizing:border-box;}
-.dark-input:focus{border-color:var(--blue);}
-.dark-input::placeholder{color:var(--muted2);}
+.verify-msg{font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:16px;text-align:center;}
 
 /* Tombol */
-.btn-vf{width:100%;background:var(--blue);color:#fff;font-family:var(--font);font-size:.88rem;font-weight:500;padding:12px;border:none;border-radius:var(--r);cursor:pointer;transition:background .15s;margin-top:4px;display:block;text-align:center;text-decoration:none;}
-.btn-vf:hover{background:var(--blue2);}
+.btn-vf{width:100%;background:var(--blue);color:#fff;font-family:var(--font);font-size:.88rem;font-weight:500;padding:12px;border:none;border-radius:var(--r);cursor:pointer;transition:background .15s,opacity .15s;display:block;text-align:center;text-decoration:none;box-sizing:border-box;}
+.btn-vf:hover:not(:disabled){background:var(--blue2);}
 .btn-vf:disabled{opacity:.35;cursor:not-allowed;}
-.btn-vf-outline{width:100%;background:transparent;color:var(--muted);font-family:var(--font);font-size:.85rem;font-weight:400;padding:11px;border:.5px solid var(--border2);border-radius:var(--r);cursor:pointer;transition:all .15s;margin-top:8px;display:block;text-align:center;text-decoration:none;}
+.btn-vf-outline{width:100%;background:transparent;color:var(--muted);font-family:var(--font);font-size:.84rem;padding:11px;border:.5px solid var(--border2);border-radius:var(--r);cursor:pointer;transition:all .15s;margin-top:8px;display:block;text-align:center;text-decoration:none;box-sizing:border-box;}
 .btn-vf-outline:hover{border-color:var(--muted2);color:var(--white);}
 
-/* Divider */
-.verify-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--muted2);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;}
-.verify-divider::before,.verify-divider::after{content:'';flex:1;height:.5px;background:var(--border2);}
+/* Timer */
+.resend-wrap{text-align:center;margin-top:14px;font-size:.82rem;color:var(--muted2);}
+.resend-wrap button{background:none;border:none;color:var(--blue);font-family:var(--font);font-size:.82rem;cursor:pointer;padding:0;transition:opacity .15s;}
+.resend-wrap button:hover:not(:disabled){opacity:.75;}
+.resend-wrap button:disabled{color:var(--muted2);cursor:default;}
+.resend-timer{font-variant-numeric:tabular-nums;color:var(--white);font-weight:600;}
 
-/* Brand */
+.verify-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted2);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
+.verify-divider::before,.verify-divider::after{content:'';flex:1;height:.5px;background:var(--border2);}
 .verify-brand{text-align:center;margin-top:24px;font-size:.58rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2);}
 
 @media(max-width:480px){
   .verify-body{padding:20px 20px 24px;}
   .verify-head{padding:28px 20px 20px;}
+  .otp-input{width:40px;height:50px;font-size:1.3rem;}
+  .otp-wrap{gap:7px;}
 }
 </style>
 </head>
@@ -94,21 +88,27 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center;just
     <div class="verify-title" id="vTitle">Verifikasi <em>Email</em></div>
   </div>
   <div class="verify-body">
-    <div id="vContent">
-      <div class="verify-msg">Memuat...</div>
-    </div>
+    <div id="vContent"><p class="verify-msg">Memuat...</p></div>
     <div class="verify-status" id="vStatus"></div>
     <div id="vActions"></div>
     <div class="verify-brand">ANTITHESIS · Al Muayyad Surakarta · 2018–2020</div>
   </div>
 </div>
 
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, applyActionCode, checkActionCode,
-  sendEmailVerification, signInWithEmailAndPassword, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, remove }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const EJS_SERVICE  = "service_0ol6msu";
+const EJS_TEMPLATE = "ruyjgfi";
+const EJS_KEY      = "1fX9LqfKW5TjfdabInwWJ";
+emailjs.init(EJS_KEY);
 
 const app  = initializeApp({
   apiKey:            "AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
@@ -120,17 +120,18 @@ const app  = initializeApp({
   appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
 });
 const auth = getAuth(app);
+const db   = getDatabase(app);
 
-const params  = new URLSearchParams(window.location.search);
-const mode    = params.get('mode');
-const oobCode = params.get('oobCode');
-const reason  = params.get('reason'); // 'newreg' = baru daftar
+const params = new URLSearchParams(window.location.search);
+const reason = params.get('reason');
 
-// Ambil email hint dari URL
-let emailHint = '';
+// Decode uid & email dari URL
+let uid = '', emailHint = '';
 try {
-  const hint = params.get('hint');
-  if (hint) emailHint = atob(hint + '=='.slice((hint.length * 3) % 4 === 0 ? 4 : (hint.length * 3) % 4));
+  const u = params.get('uid');
+  const h = params.get('hint');
+  if (u) uid       = atob(u + '=='.slice((u.length * 3) % 4 === 0 ? 4 : (u.length * 3) % 4));
+  if (h) emailHint = atob(h + '=='.slice((h.length * 3) % 4 === 0 ? 4 : (h.length * 3) % 4));
 } catch(e) {}
 
 const icon    = document.getElementById('vIcon');
@@ -141,11 +142,7 @@ const actions = document.getElementById('vActions');
 
 function showStatus(type, txt) {
   status.textContent = txt;
-  status.className = 'verify-status ' + type + ' show';
-}
-
-function btnLogin() {
-  return `<a href="login.html" class="btn-vf-outline">← Ke Halaman Masuk</a>`;
+  status.className   = 'verify-status ' + type + ' show';
 }
 
 function emailBadge(email) {
@@ -153,131 +150,237 @@ function emailBadge(email) {
   return `<div class="email-badge">
     <span class="email-badge-icon">✉</span>
     <div>
-      <span class="email-badge-label">Email terdaftar</span>
+      <span class="email-badge-label">Kode dikirim ke</span>
       <span>${email}</span>
     </div>
   </div>`;
 }
 
-function resendForm(email = '') {
-  return `
-    <div class="dark-input-wrap">
-      <input class="dark-input" id="reEmail" type="email" placeholder="Email kamu..." value="${email}" autocomplete="email"/>
-    </div>
-    <div class="dark-input-wrap">
-      <input class="dark-input" id="rePass" type="password" placeholder="Password kamu..." autocomplete="current-password"/>
-    </div>
-    <button class="btn-vf" id="btnResend">Kirim Ulang Verifikasi →</button>
-    <div class="verify-divider">atau</div>
-    ${btnLogin()}
-  `;
+function generateOTP() {
+  return String(Math.floor(100000 + Math.random() * 900000));
 }
 
-function bindResend() {
-  setTimeout(() => {
-    document.getElementById('btnResend')?.addEventListener('click', async () => {
-      const email = document.getElementById('reEmail').value.trim();
-      const pass  = document.getElementById('rePass').value;
-      const btn   = document.getElementById('btnResend');
-      if (!email || !pass) { showStatus('err', 'Isi email dan password dulu'); return; }
-      btn.textContent = 'Mengirim...'; btn.disabled = true;
-      try {
-        const cred = await signInWithEmailAndPassword(auth, email, pass);
-        if (cred.user.emailVerified) {
-          showStatus('ok', 'Email sudah terverifikasi! Silakan masuk.');
-          actions.innerHTML = `<a href="login.html" class="btn-vf">Masuk Sekarang →</a>`;
-        } else {
-          await sendEmailVerification(cred.user);
-          await signOut(auth);
-          icon.textContent = '✅';
-          title.innerHTML  = 'Email <em>Terkirim!</em>';
-          content.innerHTML = `
-            ${emailBadge(email)}
-            <p class="verify-msg">Link verifikasi baru telah dikirim.<br>Cek <strong style="color:var(--white)">inbox</strong> atau folder <strong style="color:var(--white)">spam</strong> kamu.</p>
-          `;
-          showStatus('ok', '✦ Email verifikasi berhasil dikirim!');
-          actions.innerHTML = btnLogin();
-        }
-      } catch(err) {
-        const errMap = {
-          'auth/invalid-credential': 'Email atau password salah.',
-          'auth/user-not-found':     'Akun tidak ditemukan.',
-          'auth/wrong-password':     'Password salah.',
-          'auth/too-many-requests':  'Terlalu banyak percobaan, tunggu sebentar.',
-        };
-        showStatus('err', errMap[err.code] || 'Gagal mengirim, coba lagi.');
-        btn.textContent = 'Kirim Ulang Verifikasi →'; btn.disabled = false;
+// ── OTP Input 6 kotak ──
+function renderOTPInput() {
+  return `<div class="otp-wrap" id="otpWrap">
+    ${[0,1,2,3,4,5].map(i =>
+      `<input class="otp-input" id="otp${i}" type="text" inputmode="numeric"
+        maxlength="1" pattern="[0-9]" autocomplete="one-time-code"/>`
+    ).join('')}
+  </div>`;
+}
+
+function bindOTPInput() {
+  const inputs = Array.from({length:6}, (_,i) => document.getElementById('otp'+i));
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', e => {
+      const val = e.target.value.replace(/\D/g,'');
+      inp.value = val ? val[0] : '';
+      inp.classList.toggle('filled', !!inp.value);
+      if (val && i < 5) inputs[i+1].focus();
+      // Auto verifikasi jika semua terisi
+      if (inputs.every(x => x.value)) {
+        setTimeout(() => document.getElementById('btnVerif')?.click(), 100);
       }
     });
-  }, 100);
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) {
+        inputs[i-1].value = '';
+        inputs[i-1].classList.remove('filled');
+        inputs[i-1].focus();
+      }
+      if (e.key === 'ArrowLeft'  && i > 0) inputs[i-1].focus();
+      if (e.key === 'ArrowRight' && i < 5) inputs[i+1].focus();
+    });
+    inp.addEventListener('paste', e => {
+      e.preventDefault();
+      const paste = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
+      paste.split('').forEach((c, j) => {
+        if (inputs[j]) { inputs[j].value = c; inputs[j].classList.add('filled'); }
+      });
+      if (paste.length > 0) inputs[Math.min(paste.length, 5)].focus();
+      if (paste.length === 6) setTimeout(() => document.getElementById('btnVerif')?.click(), 100);
+    });
+  });
 }
 
-// ════════════════════════════════
-//  ROUTING UTAMA
-// ════════════════════════════════
+function getOTPValue() {
+  return Array.from({length:6}, (_,i) => document.getElementById('otp'+i)?.value || '').join('');
+}
 
-if (mode === 'verifyEmail' && oobCode) {
-  // ── Klik link verifikasi dari email ──
-  content.innerHTML = `<p class="verify-msg">Sedang memverifikasi email kamu...</p>`;
+function setOTPError() {
+  Array.from({length:6}, (_,i) => {
+    const el = document.getElementById('otp'+i);
+    if (el) el.classList.add('err');
+  });
+  setTimeout(() => {
+    Array.from({length:6}, (_,i) => {
+      const el = document.getElementById('otp'+i);
+      if (el) { el.classList.remove('err'); el.value = ''; el.classList.remove('filled'); }
+    });
+    document.getElementById('otp0')?.focus();
+  }, 600);
+}
+
+// ── Timer countdown kirim ulang ──
+let timerInterval = null;
+const COOLDOWN = 60;
+
+function startTimer() {
+  const btn   = document.getElementById('btnResend');
+  const timer = document.getElementById('timerCount');
+  const wrap  = document.getElementById('timerWrap');
+  if (!btn || !timer || !wrap) return;
+
+  let sisa = COOLDOWN;
+  btn.disabled = true;
+  btn.style.display  = 'none';
+  wrap.style.display = 'block';
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    sisa--;
+    timer.textContent = sisa + 's';
+    if (sisa <= 0) {
+      clearInterval(timerInterval);
+      wrap.style.display = 'none';
+      btn.style.display  = 'inline';
+      btn.disabled       = false;
+    }
+  }, 1000);
+}
+
+// ── Kirim ulang OTP ──
+async function kirimUlang() {
+  if (!uid) { showStatus('err', 'Data tidak valid, daftar ulang'); return; }
+  const btn = document.getElementById('btnResend');
+  if (btn) btn.disabled = true;
+
   try {
-    const info  = await checkActionCode(auth, oobCode);
-    const email = info.data.email || emailHint;
-    await applyActionCode(auth, oobCode);
+    const snap = await get(ref(db, 'antithesis/akun/' + uid));
+    if (!snap.exists()) { showStatus('err', 'Akun tidak ditemukan'); return; }
+    const { nama, email } = snap.val();
+
+    const otp     = generateOTP();
+    const expired = Date.now() + (10 * 60 * 1000);
+    await set(ref(db, 'antithesis/otp/' + uid), { kode: otp, email, expired });
+
+    await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+      to_email: email, nama, otp_code: otp
+    }, EJS_KEY);
+
+    showStatus('ok', '✦ Kode baru berhasil dikirim!');
+    startTimer();
+
+  } catch(e) {
+    showStatus('err', 'Gagal kirim ulang, coba lagi');
+    if (btn) btn.disabled = false;
+  }
+}
+
+// ── Verifikasi OTP ──
+async function doVerif() {
+  const kodeInput = getOTPValue();
+  if (kodeInput.length < 6) { showStatus('err', 'Masukkan 6 digit kode'); return; }
+
+  const btn = document.getElementById('btnVerif');
+  if (btn) { btn.disabled = true; btn.textContent = 'Memverifikasi...'; }
+
+  try {
+    const snap = await get(ref(db, 'antithesis/otp/' + uid));
+    if (!snap.exists()) {
+      showStatus('err', 'Kode tidak ditemukan, kirim ulang');
+      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
+      return;
+    }
+
+    const { kode, expired } = snap.val();
+
+    if (Date.now() > expired) {
+      showStatus('err', 'Kode sudah kadaluarsa, kirim ulang');
+      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
+      return;
+    }
+
+    if (kodeInput !== kode) {
+      showStatus('err', 'Kode salah, coba lagi');
+      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
+      return;
+    }
+
+    // ── Kode benar → tandai verified ──
+    await set(ref(db, 'antithesis/akun/' + uid + '/verified'), true);
+    await remove(ref(db, 'antithesis/otp/' + uid));
+
+    clearInterval(timerInterval);
     icon.textContent = '✅';
     title.innerHTML  = 'Email <em>Terverifikasi!</em>';
-    content.innerHTML = `
-      ${emailBadge(email)}
-      <p class="verify-msg">Email kamu berhasil diverifikasi.<br>Sekarang kamu bisa masuk ke portal ANTITHESIS.</p>
-    `;
+    content.innerHTML = `<p class="verify-msg">Akun kamu berhasil diverifikasi.<br>Sekarang kamu bisa masuk ke portal ANTITHESIS.</p>`;
     showStatus('ok', '✦ Verifikasi berhasil!');
     actions.innerHTML = `<a href="login.html" class="btn-vf">Masuk Sekarang →</a>`;
-  } catch(e) {
-    icon.textContent = '⚠️';
-    title.innerHTML  = 'Link <em>Tidak Valid</em>';
-    content.innerHTML = `
-      <p class="verify-msg" style="margin-bottom:16px;">Link verifikasi sudah <strong style="color:var(--white)">kadaluarsa</strong> atau tidak valid.<br>Kirim ulang link verifikasi dengan memasukkan email dan password kamu.</p>
-      ${resendForm(emailHint)}
-    `;
-    bindResend();
-  }
 
-} else if (reason === 'newreg') {
-  // ── Baru selesai registrasi ──
+  } catch(e) {
+    showStatus('err', 'Terjadi kesalahan, coba lagi');
+    if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
+  }
+}
+
+// ════════════════════════
+//  RENDER HALAMAN
+// ════════════════════════
+
+if (reason === 'newreg' && uid) {
   icon.textContent = '📬';
   title.innerHTML  = 'Cek <em>Email Kamu</em>';
   content.innerHTML = `
-    ${emailHint ? emailBadge(emailHint) : ''}
+    ${emailBadge(emailHint)}
     <div class="verify-context">
       <div class="verify-context-step">
-        <div class="step-num">1</div>
-        <div>Akun kamu berhasil dibuat. Kami telah mengirim <strong>link verifikasi</strong> ke email di atas.</div>
+        <div class="step-num step-done">✓</div>
+        <div>Akun berhasil dibuat. Kode verifikasi 6 digit telah dikirim ke email di atas.</div>
       </div>
       <div class="verify-context-step">
         <div class="step-num">2</div>
-        <div>Buka emailmu, cari pesan dari <strong>ANTITHESIS</strong>, lalu klik link <em>"Verify Email"</em> di dalamnya.</div>
+        <div>Buka emailmu, cari pesan dari <strong>ANTITHESIS</strong>, lalu masukkan kode di bawah.</div>
       </div>
       <div class="verify-context-step">
         <div class="step-num">3</div>
         <div>Setelah terverifikasi, kamu bisa langsung masuk ke portal.</div>
       </div>
     </div>
-    <p class="verify-msg" style="font-size:.8rem;margin-bottom:4px;">Tidak menemukan emailnya? Cek folder <strong style="color:var(--white)">Spam</strong> atau kirim ulang di bawah.</p>
+    <p class="verify-msg" style="font-size:.8rem;margin-bottom:0;">Masukkan kode 6 digit dari email:</p>
+    ${renderOTPInput()}
   `;
+
   actions.innerHTML = `
-    <div class="verify-divider">kirim ulang</div>
-    ${resendForm(emailHint)}
+    <button class="btn-vf" id="btnVerif">Verifikasi →</button>
+    <div class="resend-wrap">
+      Tidak dapat email?
+      <button id="btnResend">Kirim Ulang</button>
+      <span id="timerWrap" style="display:none;">
+        Kirim ulang dalam <span class="resend-timer" id="timerCount">${COOLDOWN}s</span>
+      </span>
+    </div>
+    <div class="verify-divider">atau</div>
+    <a href="login.html" class="btn-vf-outline">← Ke Halaman Masuk</a>
   `;
-  bindResend();
+
+  bindOTPInput();
+  startTimer();
+
+  setTimeout(() => {
+    document.getElementById('btnVerif')?.addEventListener('click', doVerif);
+    document.getElementById('btnResend')?.addEventListener('click', kirimUlang);
+    document.getElementById('otp0')?.focus();
+  }, 100);
 
 } else {
-  // ── Akses langsung / dari login ──
-  icon.textContent = '📧';
-  title.innerHTML  = 'Verifikasi <em>Email</em>';
-  content.innerHTML = `
-    <p class="verify-msg" style="margin-bottom:16px;">Email kamu belum diverifikasi. Masukkan email dan password untuk mengirim ulang link verifikasi.</p>
-    ${resendForm(emailHint)}
-  `;
-  bindResend();
+  // Akses langsung tanpa konteks
+  icon.textContent = '⚠️';
+  title.innerHTML  = 'Akses <em>Tidak Valid</em>';
+  content.innerHTML = `<p class="verify-msg">Halaman ini hanya dapat diakses setelah proses pendaftaran.</p>`;
+  actions.innerHTML = `<a href="register.html" class="btn-vf">Daftar Akun</a>
+    <a href="login.html" class="btn-vf-outline" style="margin-top:8px;">← Ke Halaman Masuk</a>`;
 }
 </script>
 </body>
