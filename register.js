@@ -19,7 +19,7 @@ const firebaseConfig = {
 };
 
 const EJS_SERVICE  = "service_0ol6msu";
-const EJS_TEMPLATE = "ruyjgfi";
+const EJS_TEMPLATE = "template_63gnuve";
 const EJS_KEY      = "JTW0LCDn6Cl5MP5IR";
 
 const app  = initializeApp(firebaseConfig);
