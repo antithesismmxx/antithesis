@@ -35,18 +35,18 @@
   --blue-dim: rgba(0,113,227,.1);
 
   /* Gold lebih warm & rich */
-  --gold:        #c8a55a;
-  --gold-light:  #e2c98a;
-  --gold-pale:   #f0e4c0;
-  --gold-dim:    rgba(200,165,90,.07);
-  --gold-border: rgba(200,165,90,.2);
+  --gold:        #a0a0aa;
+  --gold-light:  #c8c8d0;
+  --gold-pale:   #e8e8f0;
+  --gold-dim:    rgba(160,160,170,.07);
+  --gold-border: rgba(160,160,170,.2);
 
   /* Legacy compat */
   --dark:  #070709;
   --dark2: #0d0d10;
   --dark3: #131318;
   --dark4: #1a1a20;
-  --black: rgba(200,165,90,.9);
+  --black: rgba(160,160,170,.9);
   --text3-compat: #9c9890;
 
   --r-xs:  3px;  --r-sm:  5px;  --r: 8px;
