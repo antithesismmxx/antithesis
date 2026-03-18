@@ -1,386 +1,333 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Verifikasi Email — ANTITHESIS</title>
-<link rel="stylesheet" href="style.css"/>
+<title>Verifikasi — ANTITHESIS</title>
 <style>
-body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);padding:16px;}
-.verify-wrap{width:100%;max-width:460px;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r-xl);position:relative;overflow:hidden;}
-.verify-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:.5px;background:linear-gradient(to right,transparent,rgba(201,168,76,.35),transparent);}
+:root{--ease:cubic-bezier(.25,.46,.45,.94);--ease-spring:cubic-bezier(.34,1.56,.64,1);--dur:.32s;}
+[data-theme="dark"]{--bg:#000;--bg2:#0a0a0a;--surface:#141414;--border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.05);--text:#f5f5f7;--text2:#a1a1a6;--text3:#636366;--accent:#0a84ff;--accent2:#0071e3;--err:#ff453a;--ok:#30d158;--input-bg:rgba(255,255,255,.06);--input-border:rgba(255,255,255,.1);--input-focus:rgba(10,132,255,.4);--shadow:0 32px 80px rgba(0,0,0,.9);--toggle-bg:rgba(255,255,255,.1);}
+[data-theme="light"]{--bg:#f5f5f7;--bg2:#fff;--surface:#fff;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.05);--text:#1d1d1f;--text2:#6e6e73;--text3:#aeaeb2;--accent:#0071e3;--accent2:#0077ed;--err:#ff3b30;--ok:#34c759;--input-bg:rgba(0,0,0,.04);--input-border:rgba(0,0,0,.1);--input-focus:rgba(0,113,227,.3);--shadow:0 20px 60px rgba(0,0,0,.12);--toggle-bg:rgba(0,0,0,.08);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased;transition:background var(--dur),color var(--dur);}
 
-.verify-head{padding:36px 36px 24px;border-bottom:.5px solid var(--border2);text-align:center;}
-.verify-icon{font-size:2.8rem;margin-bottom:14px;display:block;}
-.verify-title{font-family:var(--font-serif);font-size:1.7rem;font-weight:400;color:var(--white);letter-spacing:-.025em;}
-.verify-title em{font-style:italic;color:var(--text3);}
+/* Topbar */
+.topbar{position:fixed;top:24px;right:28px;display:flex;align-items:center;gap:10px;}
+.theme-toggle{width:44px;height:24px;background:var(--toggle-bg);border:.5px solid var(--border);border-radius:100px;cursor:pointer;position:relative;transition:background var(--dur);}
+.theme-toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--text2);transition:transform var(--dur) var(--ease-spring);}
+[data-theme="light"] .theme-toggle::after{transform:translateX(20px);background:var(--accent);}
+.theme-icon{font-size:.82rem;color:var(--text3);}
 
-.verify-body{padding:28px 36px 32px;}
+/* Card */
+.verify-card{width:100%;max-width:440px;background:var(--surface);border:.5px solid var(--border);border-radius:24px;overflow:hidden;box-shadow:var(--shadow);animation:cardReveal .6s var(--ease) both;}
+@keyframes cardReveal{from{opacity:0;transform:translateY(24px) scale(.98);}to{opacity:1;transform:none;}}
 
-/* Steps */
-.verify-context{background:rgba(201,168,76,.06);border:.5px solid rgba(201,168,76,.2);border-radius:var(--r);padding:14px 16px;margin-bottom:22px;}
-.verify-context-step{display:flex;align-items:flex-start;gap:12px;font-size:.84rem;color:rgba(201,168,76,.85);line-height:1.6;}
-.verify-context-step+.verify-context-step{margin-top:10px;padding-top:10px;border-top:.5px solid rgba(201,168,76,.12);}
-.step-num{min-width:22px;height:22px;border-radius:50%;background:rgba(201,168,76,.15);border:.5px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#c9a84c;margin-top:1px;flex-shrink:0;}
-.step-done{color:#30d158 !important;background:rgba(48,209,88,.12) !important;border-color:rgba(48,209,88,.3) !important;}
+/* Head */
+.card-head{padding:40px 40px 28px;border-bottom:.5px solid var(--border2);text-align:center;position:relative;overflow:hidden;}
+.card-head-glow{position:absolute;width:200px;height:200px;border-radius:50%;filter:blur(60px);top:-60px;left:50%;transform:translateX(-50%);pointer-events:none;background:rgba(160,160,170,.1);transition:background var(--dur);}
+.card-icon{font-size:2.6rem;margin-bottom:16px;display:block;position:relative;animation:iconBounce .6s var(--ease-spring) .2s both;}
+@keyframes iconBounce{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.card-title{font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;font-size:1.8rem;font-weight:400;color:var(--text);letter-spacing:-.025em;position:relative;}
+.card-title em{font-style:italic;color:var(--text2);}
+
+/* Body */
+.card-body{padding:28px 40px 36px;}
+.card-msg{font-size:.88rem;color:var(--text2);line-height:1.75;margin-bottom:20px;text-align:center;}
 
 /* Email badge */
-.email-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.1);border-radius:var(--r);padding:10px 14px;font-size:.88rem;color:var(--white);font-weight:500;margin-bottom:20px;width:100%;box-sizing:border-box;}
-.email-badge-icon{opacity:.45;font-size:1rem;}
-.email-badge-label{font-size:.62rem;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px;}
+.email-badge{display:flex;align-items:center;gap:10px;background:var(--input-bg);border:.5px solid var(--border2);border-radius:10px;padding:11px 14px;margin-bottom:24px;}
+.email-badge-icon{font-size:.9rem;opacity:.4;flex-shrink:0;}
+.email-badge-info{flex:1;}
+.email-badge-label{font-size:.58rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:2px;}
+.email-badge-val{font-size:.88rem;color:var(--text);font-weight:500;}
+
+/* Steps */
+.steps{background:rgba(160,160,170,.04);border:.5px solid rgba(160,160,170,.1);border-radius:12px;padding:16px;margin-bottom:24px;}
+[data-theme="light"] .steps{background:rgba(160,160,170,.03);border-color:rgba(160,160,170,.1);}
+.step-item{display:flex;align-items:flex-start;gap:12px;font-size:.82rem;color:var(--text2);line-height:1.6;}
+.step-item+.step-item{margin-top:10px;padding-top:10px;border-top:.5px solid var(--border2);}
+.step-dot{width:20px;height:20px;border-radius:50%;border:.5px solid var(--border);background:var(--toggle-bg);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600;color:var(--text3);flex-shrink:0;margin-top:1px;}
+.step-dot.done{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:var(--ok);}
 
 /* OTP Input */
-.otp-wrap{display:flex;gap:10px;justify-content:center;margin:20px 0;}
-.otp-input{
-  width:48px;height:58px;
-  background:rgba(255,255,255,.05);
-  border:.5px solid rgba(255,255,255,.15);
-  border-radius:var(--r);
-  color:var(--white);
-  font-family:var(--font-serif);
-  font-size:1.6rem;font-weight:400;
+.otp-label{font-size:.72rem;font-weight:500;color:var(--text2);margin-bottom:12px;display:block;text-align:center;letter-spacing:.02em;}
+.otp-wrap{display:flex;gap:10px;justify-content:center;margin-bottom:8px;}
+.otp-cell{
+  width:52px;height:62px;
+  background:var(--input-bg);
+  border:.5px solid var(--input-border);
+  border-radius:12px;
+  color:var(--text);
+  font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+  font-size:1.7rem;font-weight:400;
   text-align:center;outline:none;
-  transition:border-color .15s, background .15s;
+  transition:border-color var(--dur),background var(--dur),box-shadow var(--dur),transform var(--dur) var(--ease-spring);
   caret-color:transparent;
 }
-.otp-input:focus{border-color:var(--blue);background:rgba(0,113,227,.08);}
-.otp-input.filled{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.05);}
-.otp-input.err{border-color:rgba(255,69,58,.5) !important;background:rgba(255,69,58,.05) !important;}
+.otp-cell:focus{border-color:var(--accent);background:var(--input-bg);box-shadow:0 0 0 3px var(--input-focus);transform:scale(1.05);}
+.otp-cell.filled{border-color:rgba(48,209,88,.3);background:rgba(48,209,88,.04);}
+.otp-cell.err{border-color:rgba(255,69,58,.4)!important;background:rgba(255,69,58,.05)!important;animation:shake .4s var(--ease);}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
 
 /* Status */
-.verify-status{text-align:center;padding:10px 16px;font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:16px;display:none;border-radius:var(--r);}
-.verify-status.ok{background:rgba(48,209,88,.06);border:.5px solid rgba(48,209,88,.18);color:rgba(48,209,88,.9);}
-.verify-status.err{background:rgba(255,69,58,.06);border:.5px solid rgba(255,69,58,.18);color:#ff6b6b;}
-.verify-status.show{display:block;}
+.status-msg{text-align:center;padding:9px 14px;font-size:.75rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;margin-bottom:16px;display:none;border-radius:8px;}
+.status-msg.ok{background:rgba(48,209,88,.07);border:.5px solid rgba(48,209,88,.18);color:var(--ok);}
+.status-msg.err{background:rgba(255,69,58,.07);border:.5px solid rgba(255,69,58,.18);color:var(--err);}
+.status-msg.show{display:block;}
 
-.verify-msg{font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:16px;text-align:center;}
+/* Buttons */
+.btn-main{width:100%;background:var(--accent2);color:#fff;font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;font-size:.95rem;font-weight:500;padding:14px;border:none;border-radius:10px;cursor:pointer;transition:transform var(--dur) var(--ease),opacity var(--dur),box-shadow var(--dur);letter-spacing:-.01em;margin-top:4px;}
+.btn-main:hover:not(:disabled){transform:scale(1.01);box-shadow:0 4px 20px rgba(160,160,170,.35);}
+.btn-main:active:not(:disabled){transform:scale(.98);}
+.btn-main:disabled{opacity:.4;cursor:not-allowed;}
+.btn-outline{width:100%;background:transparent;color:var(--text2);font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;font-size:.88rem;padding:12px;border:.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all var(--dur);margin-top:8px;display:block;text-align:center;text-decoration:none;}
+.btn-outline:hover{border-color:var(--border);background:var(--input-bg);color:var(--text);}
 
-/* Tombol */
-.btn-vf{width:100%;background:var(--blue);color:#fff;font-family:var(--font);font-size:.88rem;font-weight:500;padding:12px;border:none;border-radius:var(--r);cursor:pointer;transition:background .15s,opacity .15s;display:block;text-align:center;text-decoration:none;box-sizing:border-box;}
-.btn-vf:hover:not(:disabled){background:var(--blue2);}
-.btn-vf:disabled{opacity:.35;cursor:not-allowed;}
-.btn-vf-outline{width:100%;background:transparent;color:var(--muted);font-family:var(--font);font-size:.84rem;padding:11px;border:.5px solid var(--border2);border-radius:var(--r);cursor:pointer;transition:all .15s;margin-top:8px;display:block;text-align:center;text-decoration:none;box-sizing:border-box;}
-.btn-vf-outline:hover{border-color:var(--muted2);color:var(--white);}
+/* Resend */
+.resend-wrap{text-align:center;margin-top:16px;font-size:.82rem;color:var(--text3);}
+.resend-wrap button{background:none;border:none;color:var(--accent);font-family:-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;font-size:.82rem;cursor:pointer;padding:0;transition:opacity var(--dur);}
+.resend-wrap button:hover:not(:disabled){opacity:.7;}
+.resend-wrap button:disabled{color:var(--text3);cursor:default;}
+.resend-timer{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums;}
 
-/* Timer */
-.resend-wrap{text-align:center;margin-top:14px;font-size:.82rem;color:var(--muted2);}
-.resend-wrap button{background:none;border:none;color:var(--blue);font-family:var(--font);font-size:.82rem;cursor:pointer;padding:0;transition:opacity .15s;}
-.resend-wrap button:hover:not(:disabled){opacity:.75;}
-.resend-wrap button:disabled{color:var(--muted2);cursor:default;}
-.resend-timer{font-variant-numeric:tabular-nums;color:var(--white);font-weight:600;}
+.card-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text3);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;}
+.card-divider::before,.card-divider::after{content:'';flex:1;height:.5px;background:var(--border2);}
 
-.verify-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted2);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;}
-.verify-divider::before,.verify-divider::after{content:'';flex:1;height:.5px;background:var(--border2);}
-.verify-brand{text-align:center;margin-top:24px;font-size:.58rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2);}
+.card-brand{text-align:center;padding:0 0 8px;font-size:.58rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--text3);}
 
 @media(max-width:480px){
-  .verify-body{padding:20px 20px 24px;}
-  .verify-head{padding:28px 20px 20px;}
-  .otp-input{width:40px;height:50px;font-size:1.3rem;}
-  .otp-wrap{gap:7px;}
+  .card-body{padding:24px 24px 30px;}
+  .card-head{padding:32px 24px 22px;}
+  .otp-cell{width:42px;height:52px;font-size:1.4rem;border-radius:10px;}
+  .otp-wrap{gap:8px;}
 }
 </style>
 </head>
 <body>
-<div class="verify-wrap">
-  <div class="verify-head">
-    <span class="verify-icon" id="vIcon">📧</span>
-    <div class="verify-title" id="vTitle">Verifikasi <em>Email</em></div>
+
+<div class="topbar">
+  <span class="theme-icon">☀</span>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"></button>
+  <span class="theme-icon">☽</span>
+</div>
+
+<div class="verify-card">
+  <div class="card-head">
+    <div class="card-head-glow" id="cardGlow"></div>
+    <span class="card-icon" id="vIcon">📧</span>
+    <div class="card-title" id="vTitle">Verifikasi <em>Email</em></div>
   </div>
-  <div class="verify-body">
-    <div id="vContent"><p class="verify-msg">Memuat...</p></div>
-    <div class="verify-status" id="vStatus"></div>
+  <div class="card-body">
+    <div id="vContent"><p class="card-msg">Memuat...</p></div>
+    <div class="status-msg" id="vStatus"></div>
     <div id="vActions"></div>
-    <div class="verify-brand">ANTITHESIS · Al Muayyad Surakarta · 2018–2020</div>
+    <div class="card-brand">ANTITHESIS · Al Muayyad Surakarta · 2018–2020</div>
   </div>
 </div>
 
-<!-- EmailJS SDK -->
+<script>
+const html = document.documentElement;
+const saved = localStorage.getItem('antithesis_theme') || 'dark';
+html.setAttribute('data-theme', saved);
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('antithesis_theme', next);
+});
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getDatabase, ref, get, set, remove }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const EJS_SERVICE  = "service_0ol6msu";
 const EJS_TEMPLATE = "template_63gnuve";
 const EJS_KEY      = "JTW0LCDn6Cl5MP5IR";
-emailjs.init(EJS_KEY);
+if (window.emailjs) window.emailjs.init({ publicKey: EJS_KEY });
 
 const app  = initializeApp({
-  apiKey:            "AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
-  authDomain:        "antithesis-al-muayyad.firebaseapp.com",
-  databaseURL:       "https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:         "antithesis-al-muayyad",
-  storageBucket:     "antithesis-al-muayyad.appspot.com",
-  messagingSenderId: "1014116431079",
-  appId:             "1:1014116431079:web:5f490096bf6ecdf7011e42"
+  apiKey:"AIzaSyDF7IAbFI3acQXIHxxoea5cgPTumiUjSMg",
+  authDomain:"antithesis-al-muayyad.firebaseapp.com",
+  databaseURL:"https://antithesis-al-muayyad-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"antithesis-al-muayyad",
+  storageBucket:"antithesis-al-muayyad.appspot.com",
+  messagingSenderId:"1014116431079",
+  appId:"1:1014116431079:web:5f490096bf6ecdf7011e42"
 });
 const auth = getAuth(app);
 const db   = getDatabase(app);
 
 const params = new URLSearchParams(window.location.search);
 const reason = params.get('reason');
-
-// Decode uid & email dari URL
 let uid = '', emailHint = '';
 try {
-  const u = params.get('uid');
-  const h = params.get('hint');
-  if (u) uid       = atob(u + '=='.slice((u.length * 3) % 4 === 0 ? 4 : (u.length * 3) % 4));
-  if (h) emailHint = atob(h + '=='.slice((h.length * 3) % 4 === 0 ? 4 : (h.length * 3) % 4));
-} catch(e) {}
+  const u = params.get('uid'), h = params.get('hint');
+  if (u) uid       = atob(u + '=='.slice((u.length*3)%4===0?4:(u.length*3)%4));
+  if (h) emailHint = atob(h + '=='.slice((h.length*3)%4===0?4:(h.length*3)%4));
+} catch(e){}
 
 const icon    = document.getElementById('vIcon');
 const title   = document.getElementById('vTitle');
 const content = document.getElementById('vContent');
 const status  = document.getElementById('vStatus');
 const actions = document.getElementById('vActions');
+const glow    = document.getElementById('cardGlow');
 
 function showStatus(type, txt) {
   status.textContent = txt;
-  status.className   = 'verify-status ' + type + ' show';
+  status.className = 'status-msg ' + type + ' show';
+  if (type === 'ok') glow.style.background = 'rgba(48,209,88,.12)';
+  if (type === 'err') glow.style.background = 'rgba(255,69,58,.08)';
 }
 
 function emailBadge(email) {
   if (!email) return '';
   return `<div class="email-badge">
     <span class="email-badge-icon">✉</span>
-    <div>
+    <div class="email-badge-info">
       <span class="email-badge-label">Kode dikirim ke</span>
-      <span>${email}</span>
+      <span class="email-badge-val">${email}</span>
     </div>
   </div>`;
 }
 
-function generateOTP() {
-  return String(Math.floor(100000 + Math.random() * 900000));
-}
+function generateOTP() { return String(Math.floor(100000 + Math.random() * 900000)); }
 
-// ── OTP Input 6 kotak ──
-function renderOTPInput() {
-  return `<div class="otp-wrap" id="otpWrap">
+// OTP 6 kotak
+function renderOTP() {
+  return `<span class="otp-label">Masukkan kode 6 digit dari email</span>
+  <div class="otp-wrap" id="otpWrap">
     ${[0,1,2,3,4,5].map(i =>
-      `<input class="otp-input" id="otp${i}" type="text" inputmode="numeric"
-        maxlength="1" pattern="[0-9]" autocomplete="one-time-code"/>`
+      `<input class="otp-cell" id="otp${i}" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="one-time-code"/>`
     ).join('')}
   </div>`;
 }
 
-function bindOTPInput() {
-  const inputs = Array.from({length:6}, (_,i) => document.getElementById('otp'+i));
-  inputs.forEach((inp, i) => {
-    inp.addEventListener('input', e => {
-      const val = e.target.value.replace(/\D/g,'');
-      inp.value = val ? val[0] : '';
-      inp.classList.toggle('filled', !!inp.value);
-      if (val && i < 5) inputs[i+1].focus();
-      // Auto verifikasi jika semua terisi
-      if (inputs.every(x => x.value)) {
-        setTimeout(() => document.getElementById('btnVerif')?.click(), 100);
-      }
+function bindOTP() {
+  const inputs = Array.from({length:6},(_,i)=>document.getElementById('otp'+i));
+  inputs.forEach((inp,i)=>{
+    inp.addEventListener('input',e=>{
+      const v=e.target.value.replace(/\D/g,'');
+      inp.value=v?v[0]:'';
+      inp.classList.toggle('filled',!!inp.value);
+      if(v&&i<5)inputs[i+1].focus();
+      if(inputs.every(x=>x.value)) setTimeout(()=>document.getElementById('btnVerif')?.click(),120);
     });
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !inp.value && i > 0) {
-        inputs[i-1].value = '';
-        inputs[i-1].classList.remove('filled');
-        inputs[i-1].focus();
-      }
-      if (e.key === 'ArrowLeft'  && i > 0) inputs[i-1].focus();
-      if (e.key === 'ArrowRight' && i < 5) inputs[i+1].focus();
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!inp.value&&i>0){inputs[i-1].value='';inputs[i-1].classList.remove('filled');inputs[i-1].focus();}
+      if(e.key==='ArrowLeft'&&i>0)inputs[i-1].focus();
+      if(e.key==='ArrowRight'&&i<5)inputs[i+1].focus();
     });
-    inp.addEventListener('paste', e => {
+    inp.addEventListener('paste',e=>{
       e.preventDefault();
-      const paste = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
-      paste.split('').forEach((c, j) => {
-        if (inputs[j]) { inputs[j].value = c; inputs[j].classList.add('filled'); }
-      });
-      if (paste.length > 0) inputs[Math.min(paste.length, 5)].focus();
-      if (paste.length === 6) setTimeout(() => document.getElementById('btnVerif')?.click(), 100);
+      const p=e.clipboardData.getData('text').replace(/\D/g,'').slice(0,6);
+      p.split('').forEach((c,j)=>{if(inputs[j]){inputs[j].value=c;inputs[j].classList.add('filled');}});
+      if(p.length>0)inputs[Math.min(p.length,5)].focus();
+      if(p.length===6)setTimeout(()=>document.getElementById('btnVerif')?.click(),120);
     });
   });
 }
 
-function getOTPValue() {
-  return Array.from({length:6}, (_,i) => document.getElementById('otp'+i)?.value || '').join('');
+function getOTPVal(){return Array.from({length:6},(_,i)=>document.getElementById('otp'+i)?.value||'').join('');}
+function setOTPErr(){
+  Array.from({length:6},(_,i)=>{const el=document.getElementById('otp'+i);if(el)el.classList.add('err');});
+  setTimeout(()=>{Array.from({length:6},(_,i)=>{const el=document.getElementById('otp'+i);if(el){el.classList.remove('err');el.value='';el.classList.remove('filled');}});document.getElementById('otp0')?.focus();},650);
 }
 
-function setOTPError() {
-  Array.from({length:6}, (_,i) => {
-    const el = document.getElementById('otp'+i);
-    if (el) el.classList.add('err');
-  });
-  setTimeout(() => {
-    Array.from({length:6}, (_,i) => {
-      const el = document.getElementById('otp'+i);
-      if (el) { el.classList.remove('err'); el.value = ''; el.classList.remove('filled'); }
-    });
-    document.getElementById('otp0')?.focus();
-  }, 600);
-}
-
-// ── Timer countdown kirim ulang ──
-let timerInterval = null;
-const COOLDOWN = 60;
-
-function startTimer() {
-  const btn   = document.getElementById('btnResend');
-  const timer = document.getElementById('timerCount');
-  const wrap  = document.getElementById('timerWrap');
-  if (!btn || !timer || !wrap) return;
-
-  let sisa = COOLDOWN;
-  btn.disabled = true;
-  btn.style.display  = 'none';
-  wrap.style.display = 'block';
-
+// Timer
+let timerInterval=null;
+const COOLDOWN=60;
+function startTimer(){
+  const btn=document.getElementById('btnResend'),timer=document.getElementById('timerCount'),wrap=document.getElementById('timerWrap');
+  if(!btn||!timer||!wrap)return;
+  let sisa=COOLDOWN;btn.disabled=true;btn.style.display='none';wrap.style.display='inline';
   clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    sisa--;
-    timer.textContent = sisa + 's';
-    if (sisa <= 0) {
-      clearInterval(timerInterval);
-      wrap.style.display = 'none';
-      btn.style.display  = 'inline';
-      btn.disabled       = false;
-    }
-  }, 1000);
+  timerInterval=setInterval(()=>{sisa--;timer.textContent=sisa+'s';if(sisa<=0){clearInterval(timerInterval);wrap.style.display='none';btn.style.display='inline';btn.disabled=false;}},1000);
 }
 
-// ── Kirim ulang OTP ──
-async function kirimUlang() {
-  if (!uid) { showStatus('err', 'Data tidak valid, daftar ulang'); return; }
-  const btn = document.getElementById('btnResend');
-  if (btn) btn.disabled = true;
-
-  try {
-    const snap = await get(ref(db, 'antithesis/akun/' + uid));
-    if (!snap.exists()) { showStatus('err', 'Akun tidak ditemukan'); return; }
-    const { nama, email } = snap.val();
-
-    const otp     = generateOTP();
-    const expired = Date.now() + (10 * 60 * 1000);
-    await set(ref(db, 'antithesis/otp/' + uid), { kode: otp, email, expired });
-
-    await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
-      to_email: email, nama, otp_code: otp
-    }, EJS_KEY);
-
-    showStatus('ok', '✦ Kode baru berhasil dikirim!');
+// Kirim ulang
+async function kirimUlang(){
+  if(!uid){showStatus('err','Data tidak valid');return;}
+  const btn=document.getElementById('btnResend');if(btn)btn.disabled=true;
+  try{
+    const snap=await get(ref(db,'antithesis/akun/'+uid));
+    if(!snap.exists()){showStatus('err','Akun tidak ditemukan');return;}
+    const{nama,email}=snap.val();
+    const otp=generateOTP(),expired=Date.now()+(10*60*1000);
+    await set(ref(db,'antithesis/otp/'+uid),{kode:otp,email,expired});
+    await window.emailjs.send(EJS_SERVICE,EJS_TEMPLATE,{to_email:email,nama,otp_code:otp},{publicKey:EJS_KEY});
+    showStatus('ok','✦ Kode baru berhasil dikirim!');
     startTimer();
-
-  } catch(e) {
-    showStatus('err', 'Gagal kirim ulang, coba lagi');
-    if (btn) btn.disabled = false;
-  }
+  }catch(e){showStatus('err','Gagal kirim ulang, coba lagi');if(btn)btn.disabled=false;}
 }
 
-// ── Verifikasi OTP ──
-async function doVerif() {
-  const kodeInput = getOTPValue();
-  if (kodeInput.length < 6) { showStatus('err', 'Masukkan 6 digit kode'); return; }
+// Verifikasi
+async function doVerif(){
+  const kode=getOTPVal();
+  if(kode.length<6){showStatus('err','Masukkan 6 digit kode');return;}
+  const btn=document.getElementById('btnVerif');
+  if(btn){btn.disabled=true;btn.textContent='Memverifikasi...';}
+  try{
+    const snap=await get(ref(db,'antithesis/otp/'+uid));
+    if(!snap.exists()){showStatus('err','Kode tidak ditemukan, kirim ulang');setOTPErr();if(btn){btn.disabled=false;btn.textContent='Verifikasi →';}return;}
+    const{kode:k,expired}=snap.val();
+    if(Date.now()>expired){showStatus('err','Kode kadaluarsa, kirim ulang');setOTPErr();if(btn){btn.disabled=false;btn.textContent='Verifikasi →';}return;}
+    if(kode!==k){showStatus('err','Kode salah, coba lagi');setOTPErr();if(btn){btn.disabled=false;btn.textContent='Verifikasi →';}return;}
 
-  const btn = document.getElementById('btnVerif');
-  if (btn) { btn.disabled = true; btn.textContent = 'Memverifikasi...'; }
-
-  try {
-    const snap = await get(ref(db, 'antithesis/otp/' + uid));
-    if (!snap.exists()) {
-      showStatus('err', 'Kode tidak ditemukan, kirim ulang');
-      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
-      return;
-    }
-
-    const { kode, expired } = snap.val();
-
-    if (Date.now() > expired) {
-      showStatus('err', 'Kode sudah kadaluarsa, kirim ulang');
-      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
-      return;
-    }
-
-    if (kodeInput !== kode) {
-      showStatus('err', 'Kode salah, coba lagi');
-      setOTPError(); if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
-      return;
-    }
-
-    // ── Kode benar → tandai verified ──
-    await set(ref(db, 'antithesis/akun/' + uid + '/verified'), true);
-    await remove(ref(db, 'antithesis/otp/' + uid));
-
+    await set(ref(db,'antithesis/akun/'+uid+'/verified'),true);
+    await remove(ref(db,'antithesis/otp/'+uid));
     clearInterval(timerInterval);
-    icon.textContent = '✅';
-    title.innerHTML  = 'Email <em>Terverifikasi!</em>';
-    content.innerHTML = `<p class="verify-msg">Akun kamu berhasil diverifikasi.<br>Sekarang kamu bisa masuk ke portal ANTITHESIS.</p>`;
-    showStatus('ok', '✦ Verifikasi berhasil!');
-    actions.innerHTML = `<a href="login.html" class="btn-vf">Masuk Sekarang →</a>`;
 
-  } catch(e) {
-    showStatus('err', 'Terjadi kesalahan, coba lagi');
-    if (btn) { btn.disabled = false; btn.textContent = 'Verifikasi →'; }
+    icon.textContent='✅';
+    title.innerHTML='Email <em>Terverifikasi!</em>';
+    glow.style.background='rgba(48,209,88,.15)';
+    content.innerHTML=`<p class="card-msg" style="margin-bottom:0;">Akun kamu berhasil diverifikasi.<br>Sekarang kamu bisa masuk ke portal ANTITHESIS.</p>`;
+    showStatus('ok','✦ Verifikasi berhasil!');
+    actions.innerHTML=`<a href="login.html" class="btn-main" style="display:block;text-align:center;text-decoration:none;margin-top:20px;">Masuk Sekarang →</a>`;
+  }catch(e){
+    showStatus('err','Terjadi kesalahan, coba lagi');
+    if(btn){btn.disabled=false;btn.textContent='Verifikasi →';}
   }
 }
 
-// ════════════════════════
-//  RENDER HALAMAN
-// ════════════════════════
-
-if (reason === 'newreg' && uid) {
-  icon.textContent = '📬';
-  title.innerHTML  = 'Cek <em>Email Kamu</em>';
-  content.innerHTML = `
+// Render
+if(reason==='newreg'&&uid){
+  icon.textContent='📬';
+  title.innerHTML='Cek <em>Email Kamu</em>';
+  content.innerHTML=`
     ${emailBadge(emailHint)}
-    <div class="verify-context">
-      <div class="verify-context-step">
-        <div class="step-num step-done">✓</div>
-        <div>Akun berhasil dibuat. Kode verifikasi 6 digit telah dikirim ke email di atas.</div>
-      </div>
-      <div class="verify-context-step">
-        <div class="step-num">2</div>
-        <div>Buka emailmu, cari pesan dari <strong>ANTITHESIS</strong>, lalu masukkan kode di bawah.</div>
-      </div>
-      <div class="verify-context-step">
-        <div class="step-num">3</div>
-        <div>Setelah terverifikasi, kamu bisa langsung masuk ke portal.</div>
-      </div>
+    <div class="steps">
+      <div class="step-item"><div class="step-dot done">✓</div><div>Akun berhasil dibuat. Kode 6 digit telah dikirim ke emailmu.</div></div>
+      <div class="step-item"><div class="step-dot">2</div><div>Buka email, cari pesan dari <strong>ANTITHESIS</strong>, masukkan kode di bawah.</div></div>
+      <div class="step-item"><div class="step-dot">3</div><div>Setelah terverifikasi, kamu bisa langsung masuk.</div></div>
     </div>
-    <p class="verify-msg" style="font-size:.8rem;margin-bottom:0;">Masukkan kode 6 digit dari email:</p>
-    ${renderOTPInput()}
+    ${renderOTP()}
   `;
-
-  actions.innerHTML = `
-    <button class="btn-vf" id="btnVerif">Verifikasi →</button>
+  actions.innerHTML=`
+    <button class="btn-main" id="btnVerif" style="margin-top:16px;">Verifikasi →</button>
     <div class="resend-wrap">
       Tidak dapat email?
       <button id="btnResend">Kirim Ulang</button>
-      <span id="timerWrap" style="display:none;">
-        Kirim ulang dalam <span class="resend-timer" id="timerCount">${COOLDOWN}s</span>
-      </span>
+      <span id="timerWrap" style="display:none;">Kirim ulang dalam <span class="resend-timer" id="timerCount">${COOLDOWN}s</span></span>
     </div>
-    <div class="verify-divider">atau</div>
-    <a href="login.html" class="btn-vf-outline">← Ke Halaman Masuk</a>
+    <div class="card-divider">atau</div>
+    <a href="login.html" class="btn-outline">← Ke Halaman Masuk</a>
   `;
-
-  bindOTPInput();
+  bindOTP();
   startTimer();
-
-  setTimeout(() => {
-    document.getElementById('btnVerif')?.addEventListener('click', doVerif);
-    document.getElementById('btnResend')?.addEventListener('click', kirimUlang);
+  setTimeout(()=>{
+    document.getElementById('btnVerif')?.addEventListener('click',doVerif);
+    document.getElementById('btnResend')?.addEventListener('click',kirimUlang);
     document.getElementById('otp0')?.focus();
-  }, 100);
-
+  },100);
 } else {
-  // Akses langsung tanpa konteks
-  icon.textContent = '⚠️';
-  title.innerHTML  = 'Akses <em>Tidak Valid</em>';
-  content.innerHTML = `<p class="verify-msg">Halaman ini hanya dapat diakses setelah proses pendaftaran.</p>`;
-  actions.innerHTML = `<a href="register.html" class="btn-vf">Daftar Akun</a>
-    <a href="login.html" class="btn-vf-outline" style="margin-top:8px;">← Ke Halaman Masuk</a>`;
+  icon.textContent='⚠️';
+  title.innerHTML='Akses <em>Tidak Valid</em>';
+  content.innerHTML=`<p class="card-msg">Halaman ini hanya dapat diakses setelah proses pendaftaran.</p>`;
+  actions.innerHTML=`<a href="register.html" class="btn-main" style="display:block;text-align:center;text-decoration:none;">Daftar Akun</a><a href="login.html" class="btn-outline">← Ke Halaman Masuk</a>`;
 }
 </script>
 </body>
